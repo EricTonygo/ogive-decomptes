@@ -1,0 +1,68 @@
+<header>
+    <div class="ui inverted segment">
+        <div class="ui container">
+            <div class="ui inverted secondary menu app_main_menu">
+                <div class="ui left inverted secondary menu">
+                    <a class="active item" href="{{ path('ogive_project_homepage') }}">
+                        LOGO
+                    </a>
+                    <a class="item">
+                        About us
+                    </a>
+                    <a class="item">
+                        How it works?
+                    </a>
+                    <a class="item">
+                        Help
+                    </a>
+                </div>
+                <div class="ui right inverted secondary menu">
+
+                    <div class="item">
+                        <div class="ui icon input">
+                            <input type="text" placeholder="Search...">
+                            <i class="search icon"></i>
+                        </div>
+                    </div>
+                    {% if app.user %}
+                        <div class="ui dropdown top right pointing item"> 
+                            <i class="plus icon"></i>
+                            <div class="menu">
+                                <a href="" class="ui item">
+                                    New project
+                                </a>
+                                <a href="" class="ui item">
+                                    New lot
+                                </a>
+                                <a href="" class="ui item">
+                                    New task                        
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ui dropdown top right pointing item"> 
+                            <i class="user circle icon"></i>
+                            <div class="menu">
+                                <h2 class="header">Signed in as {{ app.user.username }}</h2>
+                                <div class="divider"></div>
+                                <a href='{{path('fos_user_profile_show')}}' class="ui item">
+                                    Profile                        
+                                </a>
+                                <div class="divider"></div>
+                                <a href="{{ path('fos_user_security_logout') }}" class="ui item">
+                                    Sign out
+                                </a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a class="ui item" href="{{path('fos_user_security_login')}}">
+                            Sign in
+                        </a>
+                        <a class="item" href="{{path("fos_user_registration_register")}}">
+                            Sign up
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

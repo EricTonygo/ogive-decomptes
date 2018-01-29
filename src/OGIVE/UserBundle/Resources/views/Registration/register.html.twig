@@ -1,0 +1,224 @@
+{% extends "OGIVEProjectBundle::layout.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block title %}Create Account{% endblock %}
+
+{% block content %}
+    {#<div class="ui singup_contenair basic segment container">
+        <div class="ui centered card">
+            <div class="first content text center aligned">
+                <h2 class="header">Créer un compte utilisateur</h2>
+            </div>
+            <div class="content">
+                <p>Veuillez renseigner les informations de l'utilisateur ici                    
+                    {{ form_start(form, {'method': 'POST', 'action': path('fos_user_registration_register'), 'attr': {'class': 'ui form', 'id': 'register_form'} }) }}
+
+                <div class="inline fields">
+                    <label>Privilège: </label>
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input type="radio" name="role" value="ROLE_ADMIN" checked="checked">
+                                <label>Administrateur</label>
+                            </div>
+                        </div>
+                    {%endif %}
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            <input type="radio" name="role" value="REDACTEUR">
+                            <label>Rédacteur</label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            <input type="radio" name="role" value="FACTURIER">
+                            <label>Facturier</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    {{ form_label(form.username,"Username") }}
+                    <div class="ui error message">
+                        <i class="close icon"></i>
+                        {{ form_errors(form.username, {'attr': {'class': 'list'}})}}
+                    </div>
+                    {{ form_widget(form.username,{'attr':{'placeholder':'Username', 'data-validate': 'username'}})}}
+                </div>
+
+                <div class="field">
+                    {{ form_label(form.email,"Adresse email") }}
+                    <div class="ui error message">
+                        <i class="close icon"></i>
+                        {{ form_errors(form.email, {'attr': {'class': 'list'}})}}
+                    </div>
+                    {{ form_widget(form.email,{'attr':{'placeholder':'Adresse email', 'data-validate': 'email'}})}}
+                </div>
+
+                <div class="field">
+                    {{ form_label(form.lastname,"Nom") }}
+                    <div class="ui error message">
+                        <i class="close icon"></i>
+                        {{ form_errors(form.lastname, {'attr': {'class': 'list'}})}}
+                    </div>
+                    {{ form_widget(form.lastname,{'attr':{'placeholder': 'Nom', 'data-validate': 'lastname'}})}}
+                </div>
+
+                <div class="field">
+                    {{ form_label(form.firstname,"Prénom") }}
+                    <div class="ui error message">
+                        <i class="close icon"></i>
+                        {{ form_errors(form.firstname, {'attr': {'class': 'list'}})}}
+                    </div>
+                    {{ form_widget(form.firstname,{'attr':{'placeholder': 'Prénom', 'data-validate': 'firstname'}})}}
+                </div>
+
+                <div class="field">
+                    {{ form_label(form.plainPassword.first,"Mot de passe") }}
+                    <div class="ui error message">
+                        <i class="close icon"></i>
+                        {{ form_errors(form.plainPassword.first, {'attr': {'class': 'list'}})}}
+                    </div>
+                    {{ form_widget(form.plainPassword.first,{'attr':{'placeholder':'Mot de passe', 'data-validate': 'password'}})}}
+                </div>
+
+                <div class="field">
+                    {{ form_label(form.plainPassword.second,"Confirmation mot de passe") }}
+                    <div class="ui error message">
+                        <i class="close icon"></i>
+                        {{ form_errors(form.plainPassword.second, {'attr': {'class': 'list'}})}}
+                    </div>
+                    {{ form_widget(form.plainPassword.second,{'attr':{'placeholder':'Confirmation mot de passe', 'data-validate': 'passwordConfirm'}})}}
+                </div>
+
+                <div class="field">
+                    {{ form_label(form.file, "Photo de profil")}}
+                    <div class="ui error message">
+                        <i class="close icon"></i>
+                        {{ form_errors(form.file, {'attr': {'class': 'list'}})}}
+                    </div>
+                    {{ form_widget(form.file, { 'attr' : {'class' : 'inputfile' }}) }}
+                </div>
+
+                <div class="field">
+                    {{form_rest(form)}}
+                </div>
+
+                <button class="ui right floated primary button" type="submit">Créer le compte</button>
+                <button class="ui right floated red button" type="reset">Effacer tout</button>
+                {{ form_end(form) }}
+            </div>
+        </div> 
+    </div>#}
+    <div class="ui basic fixed segment content signup_segment">
+        <div class='ui container signup_page_container'>
+            <div class="ui centered card page_title">
+                <div class="content">
+                    <h2>Join OGIVE-DC</h2>
+                    <span class="description_app">The best way to drive your exécution project, manage decomptes</span>
+                </div>
+            </div>
+            <div class="ui centered card page_title">
+                <div class="content">
+                    <div class="ui fluid tablet stackable steps">
+                        <div class="step">
+                            <i class="yellow user icon"></i>
+                            <div class="content">
+                                <div class="title">Step 1:</div>
+                                <div class="description">Create personal account</div>
+                            </div>
+                        </div>
+                        <div class="disabled step">
+                            <i class="dollar icon"></i>
+                            <div class="content">
+                                <div class="title">Step 2:</div>
+                                <div class="description">Choose your plan</div>
+                            </div>
+                        </div>
+                        <div class="disabled step">
+                            <i class="info circle icon"></i>
+                            <div class="content">
+                                <div class="title">Step 3:</div>
+                                <div class="description">Confirm informations</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui centered card">
+                <div class="content">
+                    <div class="ui two column stackable grid padded">
+                        <div class="ten wide column">
+                            {{ form_start(form, {'method': 'POST', 'action': path('fos_user_registration_register'), 'attr': {'class': 'ui form', 'id': 'register_form'} }) }}
+                            <div class="field">
+                                <label>Owner's name</label>
+                                {{ form_widget(form.lastname,{'attr':{'placeholder': "Enter your owner's name", 'data-validate': 'lastname'}})}}
+                            </div>
+                            <div class="field">
+                                <label>Username</label>
+                                {{ form_widget(form.username,{'attr':{'placeholder':'Pick a username', 'data-validate': 'username'}})}}
+                            </div>
+                            <div class="field">
+                                <label>Email address</label>
+                                {{ form_widget(form.email,{'attr':{'placeholder':'you@example.com', 'data-validate': 'email'}})}}
+                            </div>
+                            <div class="field">
+                                <label>Password</label>
+                                {{ form_widget(form.plainPassword.first,{'attr':{'placeholder':'Create a password', 'data-validate': 'password'}})}}
+                            </div>
+                            
+                            <div class="field">
+                                <label>Confirm password</label>
+                                {{ form_widget(form.plainPassword.second,{'attr':{'placeholder':'Confirm a password', 'data-validate': 'passwordConfirm'}})}}
+                            </div>
+                            <div class="field">
+                                <div class="ui checkbox">
+                                    <input type="checkbox" tabindex="0" class="">
+                                    <label>I agree to the Terms and Conditions</label>
+                                </div>
+                            </div>
+                            <div class="field">
+                                {{form_rest(form)}}
+                            </div>
+                            <button id="submit_register_form" class="ui yellow button" type="submit">Create an account</button>
+                            {{ form_end(form) }}
+                        </div>
+                        <div class="six wide column">
+                            <div class="ui card">
+                                <div class="content">
+                                    <h2 class='header'>You'll love OGIVE-DC</h2>
+                                </div>
+                                <div class="content">
+                                    <div class="ui list">
+                                        <div class="item">
+                                            <i class="green checkmark icon"></i>
+                                            <div class="content">
+                                                Managing of projects
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <i class="green checkmark icon"></i>
+                                            <div class="content">
+                                                Collaboration 
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <i class="green checkmark icon"></i>
+                                            <div class="content">
+                                                Facturation
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent()}}
+    <script type="text/javascript" src="{{ asset('bundles/ogiveuser/js/user.js')}}"></script>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "OGIVEUserBundle::layout.html.twig" %}
+
+{% block body %}
+    <div class="ui singup_contenair basic segment container">
+        <p>{{ 'registration.confirmed'|trans({'%username%': user.username}, 'FOSUserBundle') }}</p>
+        {% if app.session is not empty %}
+            {% set targetUrl = app.session.get('_security.' ~ app.security.token.providerKey ~ '.target_path') %}
+            {% if targetUrl is not empty %}<p><a href="{{ targetUrl }}">{{ 'registration.back'|trans({}, 'FOSUserBundle') }}</a></p>{% endif %}
+        {% endif %}
+    </div>
+{% endblock body %}

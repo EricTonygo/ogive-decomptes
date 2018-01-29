@@ -1,0 +1,11 @@
+{% extends "OGIVEProjectBundle::layout.html.twig" %}
+{% trans_default_domain 'OGIVEProjectBundle' %}
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+    {%if app.user %}
+        {% include('OGIVEProjectBundle::content_index_logged_in.html.twig') %}
+    {%else%}
+        {% include('OGIVEProjectBundle::content_index_logged_out.html.twig') %}
+    {%endif%}
+{% endblock %}

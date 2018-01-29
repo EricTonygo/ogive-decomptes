@@ -1,0 +1,157 @@
+{% import _self as forms %}
+{% extends "OGIVEProjectBundle::layout.html.twig" %}
+{% trans_default_domain 'OGIVEProjectBundle' %}
+{% block title %}Add new project{% endblock %}
+
+{% block content %}
+    <div class="ui basic fixed segment content">
+        <div class='ui container od_add_project_container'>
+            <div class="ui column stackable grid padded">
+                <div class="wide column">
+                    <div id="od_nav_menu" class="ui tiny menu">
+                        <div class="left menu">
+                            <a class="item" href="../index.html">Home</a>
+                            <div class="item" style="padding-left: 0; padding-right: 0;"><i class="small right chevron icon divider"></i></div>
+                            <a class="item" href="index.html">Projects</a>
+                            <div class="item" style="padding-left: 0; padding-right: 0;"><i class="small right chevron icon divider"></i></div>
+                            <div class="item">Add a new project</div>
+                        </div>
+                    </div>
+                    <div class="ui container">
+                        <div class="ui fluid card od_add_project_card">
+                            <div class="content">
+                                <div class="header">
+                                    Add a project
+                                </div>
+                            </div>
+                            <div class="content description">
+                                {{ form_start(form, {'method': 'POST', 'action': path('project_add_post'), 'attr': {'class': 'ui mini form', 'id': 'od_add_project_form', "autocomplete":"off"} }) }}
+                                <h4 class="ui dividing header">Project Information</h4>
+
+                                <div class="field">
+                                    {{ form_label(form.numeroMarche,"N° du marché") }}
+                                    {{ form_widget(form.numeroMarche,{'attr':{'placeholder':"Numéro du marché", 'data-validate': 'numero-marche'}})}}
+                                </div>
+
+                                <div class="field">
+                                    {{ form_label(form.subject,"Objet") }}
+                                    {{ form_widget(form.subject,{'attr':{'placeholder':"Objet du marché", 'data-validate': 'objet'}})}}
+                                </div>
+                                <div class="ui field">
+                                    <label>Coût du projet</label>
+                                    <div class="ui fields">
+                                        <div class="five wide field">
+                                            {{ form_widget(form.projectCostCurrency,{'attr':{'data-validate': 'projectCostCurrency', 'class': 'ui search dropdown'}})}}
+                                        </div>
+                                        <div class="eleven wide field">
+                                            {{ form_widget(form.projectCost,{'attr':{'placeholder':"Amount", 'data-validate': 'project-cost-amount'}})}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="two fields">                                        
+                                    <div class="ui field">
+                                        <label>Lot (cas d'un marché alloti)<em>*</em></label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.numeroLot,{'attr':{'placeholder':"Lot", 'data-validate': 'numero-lot'}})}}
+                                        </div>
+                                    </div>
+                                    <div class="ui field">
+                                        <label>Lieu d'exécution</label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.lieuExecution,{'attr':{'placeholder':"Lieu d'exécution", 'data-validate': 'lieu-execution'}})}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="two fields">                                        
+                                    <div class="ui field">
+                                        <label>Région<em>*</em></label>
+                                        {{ form_widget(form.region,{'attr':{'placeholder':"Région", 'data-validate': 'region'}})}}
+                                    </div>
+                                    <div class="ui field">
+                                        <label>Département</label>
+                                        {{ form_widget(form.departement,{'attr':{'placeholder':"departement", 'data-validate': 'departement'}})}}
+                                    </div>
+                                </div>
+                                <h4 class="ui dividing header">Maitre d'oeuvre</h4>
+
+                                <div class="ui field">
+                                    <table class="ui very basic table">
+                                        <thead>
+                                            <tr><th>Nom</th>
+                                                <th>Téléphone</th>
+                                                <th>Email</th>
+                                                <th class="right aligned">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tbody class="owners" data-prototype="{{ forms.owner_prototype(form.owners.vars.prototype)|e }}">
+                                            {% for owner in form.owners %}
+                                                <tr>
+                                                    {{ forms.owner_prototype(owner) }}
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                        {% macro owner_prototype(childForm) %}
+                                            <td>{{ form_widget(childForm.nom,{'attr':{'data-validate': 'owner_name'}}) }}</td>
+                                            <td>{{ form_widget(childForm.phone,{'attr':{'data-validate': 'owner_phone'}}) }}</td>
+                                            <td>{{ form_widget(childForm.email,{'attr':{'data-validate': 'owner_email'}}) }}</td> 
+                                        {% endmacro %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="ui field">
+                                    <a><i class="plus icon"></i> Add new M.O</a>
+                                </div>
+
+                                <h4 class="ui dividing header">Titulaire</h4>
+
+                                <div class="ui field">
+                                    <table class="ui very basic table">
+                                        <thead>
+                                            <tr><th>Nom</th>
+                                                <th>Téléphone</th>
+                                                <th>Email</th>
+                                                <th class="right aligned">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="ui field">
+                                    <a><i class="plus icon"></i> Add new titulaire</a>
+                                </div>
+
+
+                                <h4 class="ui dividing header">Lots (Pour les tâches)</h4>
+                                <div class="ui field">
+                                    <table class="ui very basic table">
+                                        <thead>
+                                            <tr><th>Numero</th>
+                                                <th>Nom</th>
+                                                <th>start date</th>
+                                                <th>end date</th>
+                                                <th class="right aligned">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="ui field">
+                                    <a><i class="plus icon"></i> Add new lot</a>
+                                </div>
+                                {{form_widget(form._token)}}
+                                <div class="field">
+                                    <button  class="ui mini olive button" type="submit">Save</button>
+                                    <a  class="ui mini red button"  href="index.html">Cancel</a>
+                                </div>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

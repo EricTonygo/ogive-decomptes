@@ -1,0 +1,58 @@
+{% extends "OGIVEUserBundle::layout.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block title %}Log in{% endblock %}
+
+{% block body %}
+    <div class="ui bottom attached segment pushable od_app_content signin_pushable">
+        <div class="ui left vertical sidebar mini menu">
+
+        </div>
+        <div class="pusher">
+            <div class="ui basic fixed segment content signin_page">
+                <div class='ui container'>
+                    <div class="ui centered card page_title">
+                        <div class="content">
+                            <h2>Sign in to OGIVE-DC</h2>
+                        </div>
+                    </div>
+                    <div class="ui centered card">
+                        <div class="content">
+                            {% if error %}
+                                <div class="ui negative message">
+                                    <i class="close icon"></i>
+                                    <span class="">{{ error|trans({}, 'FOSUserBundle') }} </span>
+                                </div>
+                            {% endif %}
+                            <form id="login_form" class="ui form" action="{{ path("fos_user_security_check") }}" method="post">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+                                <div class="field">
+                                    <label>Username or email address</label>
+                                    <input type="text" name="_username" placeholder="Username or email">
+                                </div>
+                                <div class="field">
+                                    <label>Password <a class='right floated'>Forgot password?</a></label>
+                                    <input type="password" name="_password" placeholder="Password">
+                                </div>
+
+                                <div class="field">
+                                    <div class="ui checkbox">
+                                        <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
+                                        <label>{{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}</label>
+                                    </div>
+                                </div>
+{#                                <input type="submit" id="submit_login_form" name="_submit" class="ui fluid yellow button" value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}" />#}
+                                <button type="butt" id="submit_login_form" class="ui fluid yellow button" name="_submit">{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="ui centered card signup_message">
+                        <div class="ui message">
+                            <p align='center'>New to OGIVE-DC? <a href="{{path("fos_user_registration_register")}}">Create an account</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include('OGIVEProjectBundle::footer.html.twig') %}
+    </div>
+{% endblock %}

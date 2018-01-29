@@ -1,0 +1,18 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+    {% include('OGIVEProjectBundle::header.html.twig') %}
+
+    <div class="ui bottom attached segment pushable od_app_content">
+        {% include('OGIVEProjectBundle::sidebar.html.twig') %}
+        <div class="pusher">
+            {% block content %}
+                
+            {% endblock content %}
+        </div>
+        {% include('OGIVEProjectBundle::footer.html.twig') %}
+    </div>
+
+{% endblock body %}

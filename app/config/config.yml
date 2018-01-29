@@ -11,6 +11,7 @@ parameters:
 framework:
     #esi: ~
     #translator: { fallbacks: ['%locale%'] }
+    translator: ~
     secret: '%secret%'
     router:
         resource: '%kernel.project_dir%/app/config/routing.yml'
@@ -18,7 +19,11 @@ framework:
     form: ~
     csrf_protection: ~
     validation: { enable_annotations: true }
-    #serializer: { enable_annotations: true }
+    serializer:      { enable_annotations: true }
+#    serializer:
+#        enabled: true
+    templating:
+        engines: ['twig']
     default_locale: '%locale%'
     trusted_hosts: ~
     session:
@@ -60,8 +65,62 @@ doctrine:
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: '%mailer_transport%'
-    host: '%mailer_host%'
-    username: '%mailer_user%'
-    password: '%mailer_password%'
-    spool: { type: memory }
+    transport: "%mailer_transport%"
+    host:      "%mailer_host%"
+    username:  "%mailer_user%"
+    password:  "%mailer_password%"
+    encryption: "%mailer_encryption%"
+    port: "%mailer_port%"
+    #auth_mode: "%mailer_auth_mode%"
+    spool:     { type: memory }
+
+# FosUser Configuration
+fos_user:
+    db_driver: orm 
+    firewall_name: main
+    user_class: OGIVE\UserBundle\Entity\User
+    service:                               
+        mailer: fos_user.mailer.twig_swift
+    from_email:
+        address: "%mailer_user%"
+        sender_name: "%mailer_user%"
+    registration:
+        form:
+            type: OGIVE\UserBundle\Form\RegistrationType
+        confirmation:
+            enabled: false
+    profile:
+        form:
+            type: OGIVE\UserBundle\Form\ProfileType
+            
+# FOSRestBundle Configuration
+fos_rest:
+    param_fetcher_listener: true
+    body_listener: true
+    format_listener: 
+        rules:
+            #- { path: '^/', priorities: ['json'], fallback_format: 'json'}
+    view:
+        view_response_listener: true
+        formats:
+            xml: true
+            json : true
+            html: true
+        templating_formats:
+            html: true
+        force_redirects:
+            html: true
+        failed_validation: HTTP_BAD_REQUEST
+        default_engine: twig
+    routing_loader:
+        include_format: false
+        
+# FOSJsRoutingBundle Configuration
+fos_js_routing:
+    cache_control:
+        # All are optional, defaults shown
+        public: false   # can be true (public) or false (private)
+        maxage: null    # integer value, e.g. 300
+        smaxage: null   # integer value, e.g. 300
+        expires: null   # anything that can be fed to "new \DateTime($expires)", e.g. "5 minutes"
+        vary: []        # string or array, e.g. "Cookie" or [ Cookie, Accept ]

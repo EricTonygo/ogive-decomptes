@@ -1,0 +1,3 @@
+ogive_project_homepage:
+    path:     /
+    defaults: { _controller: OGIVEProjectBundle:Default:index }
