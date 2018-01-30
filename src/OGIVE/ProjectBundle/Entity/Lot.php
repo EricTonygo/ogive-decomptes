@@ -16,9 +16,30 @@ class Lot extends GeneralClass {
     /**
      * @var string
      *
-     * @ORM\Column(name="nom", type="text", nullable=true)
+     * @ORM\Column(name="nom", type="string", nullable=true, length=255)
      */
     private $nom;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="numero", type="string", nullable=true, length=255)
+     */
+    private $numero;
+    
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="start_date", type="datetime", nullable=true)
+     */
+    private $startDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="end_date", type="datetime", nullable=true)
+     */
+    private $endDate;
     
     /**
      * @var string
@@ -75,6 +96,28 @@ class Lot extends GeneralClass {
     }
     
     /**
+     * Set numero
+     *
+     * @param string $numero
+     *
+     * @return Lot
+     */
+    public function setNumero($numero) {
+        $this->numero = $numero;
+
+        return $this;
+    }
+
+    /**
+     * Get numero
+     *
+     * @return string
+     */
+    public function getNumero() {
+        return $this->numero;
+    }
+    
+    /**
      * Set description
      *
      * @param string $description
@@ -94,6 +137,52 @@ class Lot extends GeneralClass {
      */
     public function getDescription() {
         return $this->description;
+    }
+    
+    /**
+     * Set startDate
+     *
+     * @param \DateTime $startDate
+     *
+     * @return Lot
+     */
+    public function setStartDate($startDate) {
+        $this->startDate = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $startDate))));
+
+        return $this;
+    }
+
+    /**
+     * Get startDate
+     *
+     * @return \DateTime
+     */
+    public function getStartDate() {
+        return $this->startDate ? $this->startDate->format('d-m-Y'): $this->startDate;
+        
+    }
+    
+    /**
+     * Set endDate
+     *
+     * @param \DateTime $endDate
+     *
+     * @return Lot
+     */
+    public function setEndDate($endDate) {
+        $this->endDate = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $endDate))));
+
+        return $this;
+    }
+
+    /**
+     * Get startDate
+     *
+     * @return \DateTime
+     */
+    public function getEndDate() {
+        return $this->endDate ? $this->endDate->format('d-m-Y'): $this->endDate;
+        
     }
     
     /**

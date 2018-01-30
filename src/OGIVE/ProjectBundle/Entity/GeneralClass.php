@@ -77,7 +77,7 @@ abstract class GeneralClass {
     protected $searchData;
 
     public function __construct() {
-        $this->state = 0;
+        $this->state = 1;
     }
 
     /**

@@ -25,7 +25,7 @@
                                 </div>
                             </div>
                             <div class="content description">
-                                {{ form_start(form, {'method': 'POST', 'action': path('project_add_post'), 'attr': {'class': 'ui mini form', 'id': 'od_add_project_form', "autocomplete":"off"} }) }}
+                                {{ form_start(form, {'method': 'PUT', 'action': path('project_update', {'id': project.id}), 'attr': {'class': 'ui mini form', 'id': 'od_add_project_form', "autocomplete":"off"} }) }}
                                 <h4 class="ui dividing header">Project Information</h4>
 
                                 <div class="field">
@@ -72,7 +72,7 @@
                                         {{ form_widget(form.departement,{'attr':{'placeholder':"departement", 'data-validate': 'departement'}})}}
                                     </div>
                                 </div>
-                                <h4 class="ui dividing header">MISSION DE CONTRÔLE</h4>
+                                <h4 class="ui dividing header">Maitre d'oeuvre</h4>
 
                                 <div class="ui field">
                                     <table class="ui very basic table">
@@ -174,30 +174,30 @@
     {{ parent()}}
     <script type="text/javascript" src="{{ asset('bundles/ogivealert/js/project.js')}}"></script>
     <script>
-        function addProjectManagerForm($collectionProjectManager, $newLinkTrProjectManager) {
+        function addOwnerForm($collectionOwner, $newLinkTrOwner) {
             // Get the data-prototype explained earlier
-            var prototype = $collectionProjectManager.data('prototype');
+            var prototype = $collectionOwner.data('prototype');
 
             // get the new index
-            var index = $collectionProjectManager.data('index');
+            var index = $collectionOwner.data('index');
 
             // Replace '__name__' in the prototype's HTML to
             // instead be a number based on how many items we have
             var $newForm = prototype.replace(/__name__/g, index);
 
             // increase the index with one for the next item
-            $collectionProjectManager.data('index', index + 1);
+            $collectionOwner.data('index', index + 1);
 
             // Display the form in the page in an li, before the "Add a projectManager" link li
             var $newFormTr = $('<tr></tr>').append($newForm);
-            $newLinkTrProjectManager.before($newFormTr);
+            $newLinkTrOwner.before($newFormTr);
             $('.ui.projectManager_ent_subscription.search.dropdown').dropdown({
                 on: 'click'
             });
-            addProjectManagerFormDeleteLink($newFormTr);
+            addOwnerFormDeleteLink($newFormTr);
         }
 
-        function addProjectManagerFormDeleteLink($projectManagerFormTr) {
+        function addOwnerFormDeleteLink($projectManagerFormTr) {
             var $removeFormA = $('<td class="right aligned"><button class="ui mini red compact icon button" data-tooltip="Supprimer" data-position="bottom center" data-inverted="" data-variation="mini"><i class="trash icon"></i></button></td>');
             $projectManagerFormTr.append($removeFormA);
             $removeFormA.on('click', function (e) {
@@ -292,41 +292,41 @@
         var $newLinkTrHolder = $('<tr></tr>').append($addHolderLink);
 
         
-        var $collectionProjectManager;
+        var $collectionOwner;
 
         // setup an "add a projectManager" link
-        var $addProjectManagerLink = $('<button class="ui mini primary button" ><i class="add user icon"></i> Ajouter le maitre d\'oeuvre</button>');
-        var $newLinkTrProjectManager = $('<tr></tr>').append($addProjectManagerLink);
+        var $addOwnerLink = $('<button class="ui mini primary button" ><i class="add user icon"></i> Ajouter le maitre d\'oeuvre</button>');
+        var $newLinkTrOwner = $('<tr></tr>').append($addOwnerLink);
 
         jQuery(document).ready(function () {
             /******** suppression des projectManagers *********/
             // Get the ul that holds the collection of projectManagers
-            $collectionProjectManager = $('tbody.projectManagers');
+            $collectionOwner = $('tbody.projectManagers');
 
             // add a delete link to all of the existing projectManager form li elements
-            $collectionProjectManager.find('tr').each(function () {
-                addProjectManagerFormDeleteLink($(this));
+            $collectionOwner.find('tr').each(function () {
+                addOwnerFormDeleteLink($(this));
             });
 
 
             /******** Ajout des projectManagers *********/
 
             // Get the ul that holds the collection of projectManagers
-            $collectionProjectManager = $('tbody.projectManagers');
+            $collectionOwner = $('tbody.projectManagers');
 
             // add the "add a projectManager" anchor and li to the projectManagers ul
-            $collectionProjectManager.append($newLinkTrProjectManager);
+            $collectionOwner.append($newLinkTrOwner);
 
             // count the current form inputs we have (e.g. 2), use that as the new
             // index when inserting a new item (e.g. 2)
-            $collectionProjectManager.data('index', $collectionProjectManager.find(':input').length);
+            $collectionOwner.data('index', $collectionOwner.find(':input').length);
 
-            $addProjectManagerLink.on('click', function (e) {
+            $addOwnerLink.on('click', function (e) {
                 // prevent the link from creating a "#" on the URL
                 e.preventDefault();
 
                 // add a new projectManager form (see next code block)
-                addProjectManagerForm($collectionProjectManager, $newLinkTrProjectManager);
+                addOwnerForm($collectionOwner, $newLinkTrOwner);
             });
             
             /******** suppression des holders *********/

@@ -26,7 +26,7 @@ class ProjectController extends Controller {
      * @param Request $request
      */
     public function getProjectsAction(Request $request) {
-        if (!$this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
         $em = $this->getDoctrine()->getManager();
@@ -115,24 +115,93 @@ class ProjectController extends Controller {
 
     /**
      * @Rest\View()
-     * @Rest\Get("/projects/{id}" , name="project_get_one", options={ "method_prefix" = false, "expose" = true })
+     * @Rest\Get("/projects/{id}/update" , name="project_update_get", options={ "method_prefix" = false, "expose" = true })
      */
-    public function getProjectByIdAction(Project $project) {
-        if (!$this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+    public function getUpdateProjectByIdAction(Project $project) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
         if (empty($project)) {
             return new JsonResponse(['message' => "Appel d'offre introuvable"], Response::HTTP_NOT_FOUND);
         }
         $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectType', $project, array('method' => 'PUT'));
-        $project_details = $this->renderView('OGIVEProjectBundle:project:show.html.twig', array(
+        return $this->render('OGIVEProjectBundle:project:update.html.twig', array(
             'project' => $project,
             'form' => $form->createView()
         ));
-        $view = View::create(['project_details' => $project_details]);
-        $view->setFormat('json');
-        return $view;
-//        return new JsonResponse(["code" => 200, 'project_details' => $project_details], Response::HTTP_OK);
+        
+    }
+    
+    /**
+     * @Rest\View()
+     * @Rest\Get("/projects/{id}/general-informations" , name="project_gen_infos_get", options={ "method_prefix" = false, "expose" = true })
+     */
+    public function getProjectGenInfosByIdAction(Project $project) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(0, 8, null, $user->getId());
+        $projectManager = $project->getProjectManagers()[0];
+        $holder = $project->getHolders()[0];
+        return $this->render('OGIVEProjectBundle:project:general_informations_project.html.twig', array(
+            'project' => $project,
+            'projects' => $projects,
+            'projectManager' => $projectManager,
+            'holder' => $holder
+        ));
+        
+    }
+    
+    /**
+     * @Rest\View()
+     * @Rest\Get("/projects/{id}/lots" , name="project_lots_get", options={ "method_prefix" = false, "expose" = true })
+     */
+    public function getProjectLotsByIdAction(Request $request, Project $project) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+        $page = 1;
+        $maxResults = 8;
+        $route_param_page = array();
+        $route_param_search_query = array();
+        $search_query = null;
+        $start_date = null;
+        $end_date = null;
+        $placeholder = "Rechercher un lot...";
+        if ($request->get('page')) {
+            $page = intval(htmlspecialchars(trim($request->get('page'))));
+            $route_param_page['page'] = $page;
+        }
+        if ($request->get('search_query')) {
+            $search_query = htmlspecialchars(trim($request->get('search_query')));
+            $route_param_search_query['search_query'] = $search_query;
+        }
+        if ($request->get('start-date')) {
+            $start_date = htmlspecialchars(trim($request->get('start-date')));
+            $route_param_search_query['start-date'] = $start_date;
+        }
+        if ($request->get('end-date')) {
+            $end_date = htmlspecialchars(trim($request->get('end-date')));
+            $route_param_search_query['end-date'] = $end_date;
+        }
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $start_from = ($page - 1) * $maxResults >= 0 ? ($page - 1) * $maxResults : 0;
+        $total_lots = count($em->getRepository('OGIVEProjectBundle:Project')->getAll(null, null, $search_query, $project->getId()));
+        $total_pages = ceil($total_lots / $maxResults);        
+        $lots = $em->getRepository('OGIVEProjectBundle:Lot')->getAll($start_from, $maxResults, $search_query, $project->getId());
+        $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(0, 8, null, $user->getId());
+        return $this->render('OGIVEProjectBundle:project:project-lots.html.twig', array(
+            'project' => $project,
+            'projects' => $projects,
+            'lots' => $lots,
+            'total_pages' => $total_pages,
+            'total_lots' => $total_lots,
+            'placeholder' => $placeholder
+        ));
+        
     }
 
     /**
@@ -140,52 +209,41 @@ class ProjectController extends Controller {
      * @Rest\Post("/projects", name="project_add_post", options={ "method_prefix" = false, "expose" = true })
      */
     public function postProjectsAction(Request $request) {
-        if (!$this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
         $project = new Project();
         $repositoryProject = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Project');
-        $repositoryOwner = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Owner');
-
-        if ($request->get('testunicity') == 'yes' && $request->get('reference')) {
-            $reference = $request->get('reference');
-            if ($repositoryProject->findOneBy(array('reference' => $reference, 'status' => 1))) {
-                return new JsonResponse(["success" => false, 'message' => "Un appel d'offre avec cette référence existe dejà !"], Response::HTTP_BAD_REQUEST);
-            } else {
-                return new JsonResponse(['message' => "Add Call offer is possible !"], Response::HTTP_OK);
-            }
-        }
 
         $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectType', $project);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
-                $sendActivate = $request->get('send_activate');
-                if ($sendActivate && $sendActivate === 'on') {
-                    $project->setState(1);
-                }
-            }
-            $project->setType($request->get('project_type'));
-            $project->setAbstract($this->getAbstractOfProject($project));
             $user = $this->getUser();
-            $project->setUser($user);
+            $project->setCreatedUser($user);
+            //***************gestion des projectManagers du projet ************************** */
+            $projectManagers = $project->getProjectManagers();
+            foreach ($projectManagers as $projectManager) {
+                $projectManager->setProject($project);
+            }
+            
+            //***************gestion des titulaire du projet ************************** */
+            $holders = $project->getHolders();
+            foreach ($holders as $holder) {
+                $holder->setProject($project);
+            }
+            
+            //***************gestion des lots du projet ************************** */
+            $lots = $project->getLots();
+            foreach ($lots as $lot) {
+                $lot->setProject($project);
+            }
             $project = $repositoryProject->saveProject($project);
-            $curl_response = $this->get('curl_service')->sendProjectToWebsite($project);
-            $curl_response_array = json_decode($curl_response, true);
-            $project->setUrlDetails($curl_response_array['data']['url']);
-            $project->setAbstract($this->getAbstractOfProject($project, $project->getUrlDetails()));
-            $repositoryProject->updateProject($project);
-            $repositoryOwner->saveOwnerForProcedure($project);
-            $view = View::createRedirect($this->generateUrl('project_index'));
-            $view->setFormat('html');
-            return $view;
+            return $this->redirect($this->generateUrl('ogive_project_homepage'));
         } else {
-            $view = View::create($form);
-            $view->setFormat('json');
-            return $view;
-//            return new JsonResponse($form, Response::HTTP_BAD_REQUEST);
+            return $this->render('OGIVEProjectBundle:project:add.html.twig', array(
+                        'form' => $form->createView()
+            ));
         }
     }
 
@@ -194,7 +252,7 @@ class ProjectController extends Controller {
      * @Rest\Delete("/projects/{id}", name="project_delete", options={ "method_prefix" = false, "expose" = true })
      */
     public function removeProjectAction(Project $project) {
-        if (!$this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
         $repositoryProject = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Project');
@@ -215,7 +273,7 @@ class ProjectController extends Controller {
      * @param Request $request
      */
     public function putProjectAction(Request $request, Project $project) {
-        if (!$this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
         return $this->updateProjectAction($request, $project);
@@ -224,80 +282,101 @@ class ProjectController extends Controller {
     public function updateProjectAction(Request $request, Project $project) {
 
         $repositoryProject = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Project');
-        $repositoryOwner = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Owner');
+        $repositoryProjectManager = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:ProjectManager');
+        $repositoryHolder = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Holder');
+        $repositoryLot = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Lot');
 
-        if (empty($project)) {
-            return new JsonResponse(['message' => "Appel d'offre introuvable"], Response::HTTP_NOT_FOUND);
+        $originalProjectManagers = new \Doctrine\Common\Collections\ArrayCollection();
+        $originalHolders = new \Doctrine\Common\Collections\ArrayCollection();
+        $originalLots = new \Doctrine\Common\Collections\ArrayCollection();
+        
+        foreach ($project->getProjectManagers() as $projectManager) {
+            $originalProjectManagers->add($projectManager);
         }
-
-        if ($request->get('testunicity') == 'yes' && $request->get('reference')) {
-            $reference = $request->get('reference');
-            $projectUnique = $repositoryProject->findOneBy(array('reference' => $reference, 'status' => 1));
-            if ($projectUnique && $projectUnique->getId() != $project->getId()) {
-                return new JsonResponse(["success" => false, 'message' => "Un appel d'offre avec cette référence existe dejà"], Response::HTTP_BAD_REQUEST);
-            } else {
-                return new JsonResponse(['message' => "Update Call offer is possible !"], Response::HTTP_OK);
-            }
+        foreach ($project->getHolders() as $holder) {
+            $originalHolders->add($holder);
         }
-
-        if ($request->get('action') == 'enable') {
-            $project->setState(1);
-//            $curl_response = $this->get('curl_service')->sendProjectToWebsite($project);
-//            $curl_response_array = json_decode($curl_response, true);
-//            $project->setAbstract($this->getAbstractOfProject($project,  $curl_response_array['data']['url']));
-            $project = $repositoryProject->updateProject($project);
-            return new JsonResponse(['message' => "Appel d'offre activé avec succcès !"], Response::HTTP_OK);
+        foreach ($project->getLots() as $lot) {
+            $originalLots->add($lot);
         }
-
-        if ($request->get('action') == 'disable') {
-            $project->setState(0);
-//            $curl_response = $this->get('curl_service')->sendProjectToWebsite($project);
-//            $curl_response_array = json_decode($curl_response, true);
-//            $project->setAbstract($this->getAbstractOfProject($project,  $curl_response_array['data']['url']));
-            $project = $repositoryProject->updateProject($project);
-            return new JsonResponse(['message' => "Appel d'offre désactivé avec succcès !"], Response::HTTP_OK
-            );
-        }
+    
         $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectType', $project, array('method' => 'PUT'));
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $project->setType($request->get('project_type'));
-
-            if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
-                $sendActivate = $request->get('send_activate');
-                if ($sendActivate && $sendActivate === 'on') {
-                    $project->setState(1);
-                } else {
-                    $project->setState(0);
+            
+            //***************gestion des projectManagers du project ************************** */
+            // remove the relationship between the project and the projectManagers
+            foreach ($originalProjectManagers as $projectManager) {
+                if (false === $project->getProjectManagers()->contains($projectManager)) {
+                    // remove the project from the projectManagers
+                    $project->getProjectManagers()->removeElement($projectManager);
+                    // if it was a many-to-one relationship, remove the relationship like this
+                    $projectManager->setProject(null);
+                    $projectManager->setStatus(0);
+                    $repositoryProjectManager->updateProjectManager($projectManager);
+                    // if you wanted to delete the Subscriber entirely, you can also do that
+                    // $em->remove($domain);
                 }
             }
-            $project->setAbstract($this->getAbstractOfProject($project));
+            $projectManagers = $project->getProjectManagers();
+            foreach ($projectManagers as $projectManager) {
+                if($projectManager->getProject() == null){
+                    $projectManager->setProject($project);
+                }
+            }
+            
+            //***************gestion des holders du project ************************** */
+            // remove the relationship between the project and the holders
+            foreach ($originalHolders as $holder) {
+                if (false === $project->getHolders()->contains($holder)) {
+                    // remove the project from the projectManagers
+                    $project->getHolders()->removeElement($holder);
+                    // if it was a many-to-one relationship, remove the relationship like this
+                    $holder->setProject(null);
+                    $holder->setStatus(0);
+                    $repositoryHolder->updateHolder($holder);
+                    // if you wanted to delete the Subscriber entirely, you can also do that
+                    // $em->remove($domain);
+                }
+            }
+            $holders = $project->getHolders();
+            foreach ($holders as $holder) {
+                if($holder->getProject() == null){
+                    $holder->setProject($project);
+                }
+            }
+            
+            //***************gestion des lots du project ************************** */
+            // remove the relationship between the project and the lots
+            foreach ($originalLots as $lot) {
+                if (false === $project->getLots()->contains($lot)) {
+                    // remove the project from the projectManagers
+                    $project->getLots()->removeElement($lot);
+                    // if it was a many-to-one relationship, remove the relationship like this
+                    $lot->setProject(null);
+                    $lot->setStatus(0);
+                    $repositoryLot->updateLot($lot);
+                    // if you wanted to delete the Subscriber entirely, you can also do that
+                    // $em->remove($domain);
+                }
+            }
+            $lots = $project->getLots();
+            foreach ($lots as $lot) {
+                if($lot->getProject() == null){
+                    $lot->setProject($project);
+                }
+            }
+            
             $user = $this->getUser();
             $project->setUpdatedUser($user);
             $project = $repositoryProject->updateProject($project);
-            $curl_response = $this->get('curl_service')->sendProjectToWebsite($project);
-            $curl_response_array = json_decode($curl_response, true);
-            $project->setUrlDetails($curl_response_array['data']['url']);
-            $project->setAbstract($this->getAbstractOfProject($project, $project->getUrlDetails()));
-            $repositoryProject->updateProject($project);
-            $repositoryOwner->saveOwnerForProcedure($project);
-            $view = View::createRedirect($this->generateUrl('project_index'));
-            $view->setFormat('html');
-            return $view;
-        } elseif ($form->isSubmitted() && !$form->isValid()) {
-            $view = View::create($form);
-            $view->setFormat('json');
-            return $view;
-            //return new JsonResponse($form, Response::HTTP_BAD_REQUEST);
-        } else {
-            $edit_project_form = $this->renderView('OGIVEProjectBundle:project:edit.html.twig', array('form' => $form->createView(), 'project' => $project));
-            $view = View::create(['edit_project_form' => $edit_project_form]);
-            $view->setFormat('json');
-            return $view;
-            //return new JsonResponse(["code" => 200, 'edit_project_form' => $edit_project_form], Response::HTTP_OK);
+            
+            return $this->redirect($this->generateUrl('ogive_project_homepage'));
+        }  else {
+            return $this->render('OGIVEProjectBundle:project:edit.html.twig', array('form' => $form->createView(), 'project' => $project));
+            
         }
     }
 

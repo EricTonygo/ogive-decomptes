@@ -21,6 +21,20 @@ class Task extends GeneralClass {
     private $nom;
     
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="start_date", type="datetime", nullable=true)
+     */
+    private $startDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="end_date", type="datetime", nullable=true)
+     */
+    private $endDate;
+    
+    /**
      * @var string
      *
      * @ORM\Column(name="unite", type="string", length=255)
@@ -166,6 +180,52 @@ class Task extends GeneralClass {
      */
     public function getNom() {
         return $this->nom;
+    }
+    
+    /**
+     * Set startDate
+     *
+     * @param \DateTime $startDate
+     *
+     * @return Task
+     */
+    public function setStartDate($startDate) {
+        $this->startDate = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $startDate))));
+
+        return $this;
+    }
+
+    /**
+     * Get startDate
+     *
+     * @return \DateTime
+     */
+    public function getStartDate() {
+        return $this->startDate ? $this->startDate->format('d-m-Y'): $this->startDate;
+        
+    }
+    
+    /**
+     * Set endDate
+     *
+     * @param \DateTime $endDate
+     *
+     * @return Task
+     */
+    public function setEndDate($endDate) {
+        $this->endDate = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $endDate))));
+
+        return $this;
+    }
+
+    /**
+     * Get startDate
+     *
+     * @return \DateTime
+     */
+    public function getEndDate() {
+        return $this->endDate ? $this->endDate->format('d-m-Y'): $this->endDate;
+        
     }
     
     /**

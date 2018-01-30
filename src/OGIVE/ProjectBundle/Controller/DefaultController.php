@@ -10,7 +10,7 @@ class DefaultController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(1, 8, null, $user);
+        $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(0, 8, null, $user->getId());
         return $this->render('OGIVEProjectBundle::index.html.twig', array(
             'projects' => $projects
         ));

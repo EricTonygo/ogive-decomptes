@@ -1,0 +1,29 @@
+{% extends "OGIVEProjectBundle::layout.html.twig" %}
+{% trans_default_domain 'OGIVEProjectBundle' %}
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+    <div class="ui basic fixed segment content">
+    <div class='ui container'>
+        <div class="ui two column stackable grid padded">
+            <div class="eleven wide column">
+                <div class="ui top attached tabular menu od_project_menu">
+                    <a href="index.html" class="active item">
+                        Overviews
+                    </a>
+                    <a href="lots/index.html" class="item">
+                        xxxxx
+                    </a>
+
+                </div>
+                <div class="ui bottom attached segment od_project_menu_content">
+
+                </div>
+            </div>
+            <div class="five wide column">
+                {% include('OGIVEProjectBundle::right_aside_page.html.twig') %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

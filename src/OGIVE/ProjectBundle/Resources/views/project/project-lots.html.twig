@@ -1,0 +1,89 @@
+{% extends "OGIVEProjectBundle::layout.html.twig" %}
+{% trans_default_domain 'OGIVEProjectBundle' %}
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+    <div class="ui basic fixed segment content">
+        <div class='ui container'>
+            <div class="ui two column stackable grid padded">
+                <div class="eleven wide column">
+                    <div class="ui top attached tabular menu od_project_menu">
+                        <a class="item">
+                            Informations sur le projet
+                        </a>
+                        <a class="active item">
+                            Lots
+                        </a>
+                        <a class="item">
+                            Tâches
+                        </a>
+                        <a class="item">
+                            Décomptes
+                        </a>
+                    </div>
+                    <div class="ui bottom attached segment od_project_menu_content">
+                        <div class="ui fluid card od_card_top_table_action">
+                            <div class="content">
+                                <a class="ui right floated olive small button" href="add-lot.html"><i class="plus icon"></i> Ajouter un lot</a>
+                            </div>
+                        </div>
+                        <table class="ui celled olive small table">
+                            <thead>
+                                <tr>
+                                    <th>N°</th>
+                                    <th>Nom du lot</th>
+                                    <th>Start date</th>
+                                    <th>End date</th>                                   
+                                    <th>Actions</th>
+                                </tr></thead>
+                            <tbody>
+                                {%if lots %}
+                                    {%for lot in lots %}
+                                        <tr>
+                                            <td>
+                                                {{lot.numero}}
+                                            </td>
+                                            <td>
+                                                {{lot.nom}}                                               
+                                            </td>
+                                            <td>{{lot.startDate | date('d-m-Y')}}</td>
+                                            <td>{{lot.endDate | date('d-m-Y')}}</td>
+                                            <td>
+                                                <a class="item" href="update.html"><i class="edit icon" title="Edit"></i>Edit</a> |
+                                                <a class="item" ><i class="trash icon" title="Delete"></i>Delete</a>
+                                            </td>
+                                        </tr>
+                                    {%endfor %}
+                                {%else %}
+                                    <tr>
+                                        <div >No lot created at this moment</div>
+                                    </tr>
+                                {%endif %}
+                            
+                            </tbody>
+                            <tfoot>
+                                <tr><th colspan="7">
+                                        <div class="ui right floated mini pagination menu">
+                                            <a class="icon item">
+                                                <i class="left chevron icon"></i>
+                                            </a>
+                                            <a class="item">1</a>
+                                            <a class="item">2</a>
+                                            <a class="item">3</a>
+                                            <a class="item">4</a>
+                                            <a class="icon item">
+                                                <i class="right chevron icon"></i>
+                                            </a>
+                                        </div>
+                                    </th>
+                                </tr></tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class="five wide column">
+                    {% include('OGIVEProjectBundle::right_aside_page.html.twig') %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

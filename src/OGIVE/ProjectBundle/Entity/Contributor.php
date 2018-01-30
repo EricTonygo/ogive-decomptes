@@ -191,6 +191,28 @@ class Contributor  extends GeneralClass{
     }
     
     /**
+     * Set email
+     *
+     * @param string $email
+     *
+     * @return Contributor
+     */
+    public function setEmail($email) {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email
+     *
+     * @return string
+     */
+    public function getEmail() {
+        return $this->email;
+    }
+    
+    /**
      * Set fax
      *
      * @param string $fax
@@ -323,6 +345,28 @@ class Contributor  extends GeneralClass{
      */
     public function getIntitule() {
         return $this->intitule;
+    }
+    
+    /**
+     * Set project
+     *
+     * @param \OGIVE\ProjectBundle\Entity\Project $project
+     *
+     * @return Contributor
+     */
+    public function setProject(\OGIVE\ProjectBundle\Entity\Project $project=null) {
+        $this->project = $project;
+
+        return $this;
+    }
+
+    /**
+     * Get project
+     *
+     * @return \OGIVE\ProjectBundle\Entity\Project
+     */
+    public function getProject() {
+        return $this->project;
     }
 
     public function setSearchData() {

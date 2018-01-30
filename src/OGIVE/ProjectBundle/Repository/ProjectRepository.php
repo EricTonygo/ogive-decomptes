@@ -59,7 +59,7 @@ class ProjectRepository extends EntityRepository
         }
         return $project;
     }
-    public function getAll($offset = null, $limit = null, $search_query = null, $user = null) {
+    public function getAll($offset = null, $limit = null, $search_query = null, $iduser = null) {
         $qb = $this->createQueryBuilder('e');
         $qb->where('e.status = 1');
         if ($search_query) {
@@ -71,10 +71,10 @@ class ProjectRepository extends EntityRepository
             $qb->setParameter('search_query', '%' . strtolower($search_query) . '%');
         }
         
-        if ($user && $user != "0") {
+        if ($iduser && $iduser != "0") {
             $qb->join("e.createdUser", 'u');
             $qb->andWhere('u.id = :user');
-            $qb->setParameter("user", intval($user->getId()));
+            $qb->setParameter("user", intval($iduser));
         }
         $qb->orderBy('e.createDate', 'DESC');
         
