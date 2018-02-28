@@ -7,7 +7,7 @@ $(function () {
                         rules: [
                             {
                                 type: 'empty',
-                                prompt: 'Veuillez saisir votre matricule ou votre email valide'
+                                prompt: 'Veuillez votre email ou pseudo'
                             }
                         ]
                     },

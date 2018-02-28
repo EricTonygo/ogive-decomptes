@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\CurrencyType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class ProjectType extends AbstractType {
     /**
@@ -15,7 +16,7 @@ class ProjectType extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
                 ->add('numeroMarche', null, array('required' => false))
-                ->add('subject', null, array('required' => false))
+                ->add('subject', TextType::class, array('required' => false))
                 ->add('projectCost', null, array('required' => false))
                 ->add('projectCostCurrency', CurrencyType::class , array('placeholder' => 'Selectionner la dévise','required' => false))
                 ->add('numeroLot', null, array('required' => false))
@@ -23,8 +24,8 @@ class ProjectType extends AbstractType {
                 ->add('region', null, array('required' => false))
                 ->add('departement', null, array('required' => false))
                 ->add('region', null, array('required' => false))                
-                ->add('lots', CollectionType::class, array(
-                    'entry_type' => LotType::class,
+                ->add('tasks', CollectionType::class, array(
+                    'entry_type' => TaskType::class,
                     'allow_add' => true,
                     'by_reference' => false,
                     'allow_delete' => true

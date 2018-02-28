@@ -1,0 +1,101 @@
+{% extends "OGIVEProjectBundle::layout.html.twig" %}
+{% trans_default_domain 'OGIVEProjectBundle' %}
+{% block title %}Création d'un nouveau décompte{% endblock %}
+{% block stylesheets %}
+    {{ parent()}}
+    <script rel="stylesheet" href="{{ asset('bundles/ogiveproject/spreadsheet/codebase/spreadsheet.php?load=js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('bundles/ogiveproject/spreadsheet/codebase/dhtmlx_core.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/ogiveproject/spreadsheet/codebase/dhtmlxspreadsheet.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/ogiveproject/spreadsheet/codebase/dhtmlxgrid_wp.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="ui basic fixed segment content">
+        <div class='ui container' style="width: 100%">
+            <div class="ui one column stackable grid padded">
+                <div class="wide column">
+                    <div class="ui top attached tabular menu od_project_menu">
+                        {% include('OGIVEProjectBundle:project:single_project_header.html.twig') %}
+                    </div>
+                    <div class="ui bottom attached segment od_project_menu_content">
+                        <div class="ui fluid card od_add_project_card">
+                            <div class="content">
+                                <div class="header">
+                                    Création d'un nouveau décompte
+                                </div>
+                            </div>
+                            <div class="content description">
+                                {{ form_start(form, {'method': 'POST', 'action': path('decompte_add_get', {'id': project.id}), 'attr': {'class': 'ui mini form', 'id': 'od_add_decompte_form', "autocomplete":"off"} }) }}
+                                
+                                <div class="two fields">
+                                    {{ form_widget(form.monthNumber,{'attr':{'placeholder':"Numero du decompte", 'data-validate': 'monthNumber'}})}}
+                                    <div class="ui field">
+                                        <label>{{ form_label(form.monthName,"Mois") }}</label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.monthName,{'attr':{'placeholder':"Nom(s) de(s) mois ", 'data-validate': 'monthName'}})}}
+                                        </div>
+                                    </div>
+                                    <div class="ui field">
+                                        <label>Début des travaux</label>
+                                        <div class="field">
+                                            <div class="ui calendar" >
+                                                <div class="ui input left icon">
+                                                    <i class="calendar icon"></i>
+                                                    {{ form_widget(form.startDate,{'attr':{'placeholder':"Date de debut", 'data-validate': 'start_date'}})}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui field">
+                                        <label>Fin des travaux</label>
+                                        <div class="field">
+                                            <div class="ui calendar" >
+                                                <div class="ui input left icon">
+                                                    <i class="calendar icon"></i>
+                                                    {{ form_widget(form.endDate,{'attr':{'placeholder':"Date de fin", 'data-validate': 'end_date'}})}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{form_widget(form._token)}}
+                                <div class="field">
+                                    <button  class="ui mini olive button" type="submit">Créer</button>
+                                    <a  class="ui mini red button"  href="{{path('project_decomptes_get', {'id': project.id})}}">Annuler</a>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent()}}
+    <script type="text/javascript" src="{{ asset('bundles/ogivealert/js/project.js')}}"></script>
+    <script>
+        window.onload = function () {
+            var dhx_sh1 = new dhtmlxSpreadSheet({
+                load: "{{ asset('bundles/ogiveproject/spreadsheet/codebase/php/data.php')}}",
+                save: "{{ asset('bundles/ogiveproject/spreadsheet/codebase/php/data.php')}}",
+                parent: "gridobj",
+                icons_path: "{{ asset('bundles/ogiveproject/spreadsheet/codebase/imgs/icons/')}}",
+                autowidth: false,
+                autoheight: false
+            });
+            dhx_sh1.load("1");
+        {#var dhx_sh2 = new dhtmlxSpreadSheet({
+            load: "../codebase/php/data.php",
+            save: "../codebase/php/data.php",
+            parent: "gridobj2",
+            icons_path: "../codebase/imgs/icons/",
+            autowidth: false,
+            autoheight: false
+        });
+        dhx_sh2.load("2");#}
+            };
+    </script>
+
+{% endblock %}

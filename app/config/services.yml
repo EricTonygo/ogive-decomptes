@@ -28,6 +28,14 @@ services:
         resource: '../../src/AppBundle/Controller'
         public: true
         tags: ['controller.service_arguments']
+        
+        
+    # controllers are imported separately to make sure they're public
+    # and have a tag that allows actions to type-hint services
+    OGIVE\ProjectBundle\Controller\:
+        resource: '../../src/OGIVE/ProjectBundle/Controller'
+        public: true
+        tags: ['controller.service_arguments']
 
     # add more services, or override services that need manual wiring
     # AppBundle\Service\ExampleService:
@@ -38,3 +46,11 @@ services:
         class: OGIVE\UserBundle\Form\RegistrationType
         tags:
             - { name: form.type, alias: app_user_registration }
+            
+    common_service:
+        class: OGIVE\ProjectBundle\Services\CommonService
+        arguments: ["@doctrine.orm.entity_manager"]
+        
+    app.controller.decompte:
+        class: OGIVE\ProjectBundle\Controller\DecompteController
+        arguments: ["@common_service"]

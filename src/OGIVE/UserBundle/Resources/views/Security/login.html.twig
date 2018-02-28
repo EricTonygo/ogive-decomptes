@@ -20,14 +20,14 @@
                             {% if error %}
                                 <div class="ui negative message">
                                     <i class="close icon"></i>
-                                    <span class="">{{ error|trans({}, 'FOSUserBundle') }} </span>
+                                    <span class="">{{ error.messageKey|trans(error.messageData, 'FOSUserBundle') }}</span>
                                 </div>
                             {% endif %}
                             <form id="login_form" class="ui form" action="{{ path("fos_user_security_check") }}" method="post">
                                 <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
                                 <div class="field">
                                     <label>Username or email address</label>
-                                    <input type="text" name="_username" placeholder="Username or email">
+                                    <input type="text" name="_username" placeholder="Username or email" value="{{ last_username }}">
                                 </div>
                                 <div class="field">
                                     <label>Password <a class='right floated'>Forgot password?</a></label>

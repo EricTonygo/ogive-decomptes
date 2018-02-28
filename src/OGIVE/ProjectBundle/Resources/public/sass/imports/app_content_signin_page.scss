@@ -1,0 +1,45 @@
+@import "mixins.scss";
+body{
+    background-color: #f9f9f9;
+}
+.ui.bottom.attached.segment.pushable.od_app_content.signin_pushable{
+    height: 93.7%;
+    background-color: transparent;
+    .segment.content.signin_page{
+        .container{
+            margin-top: 100px;
+            .ui.card.page_title{
+                box-shadow: none;
+                background: transparent;
+                h2{
+                    font-weight: lighter;
+                    font-size: 24px;
+                    text-align: center;
+                }
+            }
+            .ui.card{
+                width:23em;
+                .content{
+                    .header{
+                        font-size: 72px;
+                        font-weight: 300;
+                    }
+                    .ui.form{
+                        label{
+                            @include form_label;
+                        }
+                    }
+                    .description{
+                        font-size: 26px;
+                        font-weight: 300;
+                    }
+                }
+            }
+            .ui.card.signup_message{
+                width: 23em;
+                box-shadow: none;
+                background: transparent;
+            }
+        }
+    }
+}

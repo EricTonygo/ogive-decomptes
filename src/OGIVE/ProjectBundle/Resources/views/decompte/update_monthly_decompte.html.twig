@@ -1,0 +1,153 @@
+{% import _self as forms %}
+{% extends "OGIVEProjectBundle::layout.html.twig" %}
+{% trans_default_domain 'OGIVEProjectBundle' %}
+{% block title %}Mise à jour du décompte N°{{decompte.monthNumber}} de {{decompte.monthName}}{% endblock %}
+
+
+{% block content %}
+    <div class="ui basic fixed segment content">
+        <div class='ui container' style="width: 100%">
+            <div class="ui one column stackable grid padded">
+                <div class="wide column">
+                    <div class="ui top attached tabular menu od_project_menu">
+                        {% include('OGIVEProjectBundle:project:single_project_header.html.twig') %}
+                    </div>
+                    <div class="ui bottom attached segment od_project_menu_content">
+                        <div class="ui fluid card od_add_project_card">
+                            <div class="content">
+                                <div class="left floated header">
+                                    Mise à jour du décompte N°{{decompte.monthNumber}} de {{decompte.monthName}}
+                                </div>
+
+                            </div>
+                            <div class="content description">
+                                {{ form_start(form, {'method': 'PUT', 'action': path('decompte_update_post', {'idProject': project.id, 'id': decompte.id}), 'attr': {'class': 'ui mini form', 'id': 'od_add_decompte_form', "autocomplete":"off"} }) }}
+                                <div class="three fields">
+                                    {{ form_widget(form.monthNumber,{'attr':{'placeholder':"Numero du decompte", 'data-validate': 'monthNumber'}})}}
+                                    <div class="ui field">
+                                        <label>{{ form_label(form.monthName,"Mois") }}</label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.monthName,{'attr':{'placeholder':"Nom(s) de(s) mois ", 'data-validate': 'monthName'}})}}
+                                        </div>
+                                    </div>
+                                    <div class="ui field">
+                                        <label>Start date<em>*</em></label>
+                                        <div class="field">
+                                            <div class="ui calendar" >
+                                                <div class="ui input left icon">
+                                                    <i class="calendar icon"></i>
+                                                    {{ form_widget(form.startDate,{'attr':{'placeholder':"Date de debut", 'data-validate': 'start_date'}})}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui field">
+                                        <label>End date<em>*</em></label>
+                                        <div class="field">
+                                            <div class="ui calendar" >
+                                                <div class="ui input left icon">
+                                                    <i class="calendar icon"></i>
+                                                    {{ form_widget(form.endDate,{'attr':{'placeholder':"Date de fin", 'data-validate': 'end_date'}})}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <table class="ui celled structured yellow small table">
+                                        <thead>
+                                            <tr>
+                                                <th rowspan="2" class='center aligned'>N°</th>
+                                                <th rowspan="2" class='center aligned'>Désignation des ouvrages</th>
+                                                <th rowspan="2" class='center aligned'>U</th>
+                                                <th rowspan="2" class='center aligned'>P.U</th>                                   
+                                                <th colspan="5" class='center aligned'>Quantité</th>
+                                                <th colspan="5" class='center aligned'>Montant[FCFA]</th>
+                                                <th rowspan="2" class='center aligned'>% réalisé</th>
+                                            </tr>
+                                            <tr>
+                                                <th class='center aligned'>marché</th>
+                                                <th class='center aligned'>projet d'exec.</th>
+                                                <th class='center aligned'>Cumul préc.</th>
+                                                <th class='center aligned'>du mois</th>
+                                                <th class='center aligned'>Cumul mois</th>
+                                                <th class='center aligned'>marché</th>
+                                                <th class='center aligned'>projet d'exec.</th>
+                                                <th class='center aligned'>Cumul préc.</th>
+                                                <th class='center aligned'>du mois</th>
+                                                <th class='center aligned'>Cumul mois</th>
+                                            </tr>
+
+                                        </thead>
+                                        {%if form.decompteTasks %}
+                                            <tbody class="decompteTasks form_field" data-prototype="{{ forms.decompteTask_prototype(form.decompteTasks.vars.prototype)|e }}">
+                                                {% for decompteTask in form.decompteTasks %}
+                                                    {{ forms.decompteTask_prototype(decompteTask) }}
+                                                {%endfor %}
+                                            </tbody>
+
+                                            {% macro decompteTask_prototype(childForm) %}
+                                                {% import _self as forms %}
+                                                <tr>
+                                                    {%if childForm.subDecompteTasks is defined and childForm.subDecompteTasks|length > 0 %}
+                                                        <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'decompteTask_number', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        <td colspan="15">{{ form_widget(childForm.nom,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        {%for subDecompteTask in childForm.subDecompteTasks %}
+                                                            {{ forms.decompteTask_prototype(subDecompteTask) }}
+
+                                                        {%endfor %}
+
+                                                    {% elseif childForm.unite.vars.value and childForm.prixUnitaire.vars.value and childForm.qtePrevueMarche.vars.value and  childForm.qtePrevueProjetExec.vars.value %}
+                                                        <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'decompteTask_number', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        <td>{{ form_widget(childForm.nom,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        <td>{{ form_widget(childForm.unite,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        <td>{{ form_widget(childForm.prixUnitaire,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        <td>{{ form_widget(childForm.qtePrevueMarche,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        <td>{{ form_widget(childForm.qtePrevueProjetExec,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        <td>{{ form_widget(childForm.qteCumulMoisPrec,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        <td>{{ form_widget(childForm.qteMois,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini input focused'}}) }}</td>
+                                                        <td>{{ form_widget(childForm.qteCumulMois,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        <td>{{ form_widget(childForm.mtPrevueMarche,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        <td>{{ form_widget(childForm.mtPrevueProjetExec,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        <td>{{ form_widget(childForm.mtCumulMoisPrec,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        <td>{{ form_widget(childForm.mtMois,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        <td>{{ form_widget(childForm.mtCumulMois,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        <td>{{ form_widget(childForm.pourcentRealisation,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
+                                                    {%else %}
+                                                        <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'decompteTask_number', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        <td colspan="15">{{ form_widget(childForm.nom,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        {%for subDecompteTask in childForm.subDecompteTasks %}
+                                                            {{ forms.decompteTask_prototype(subDecompteTask) }}
+
+                                                        {%endfor %}
+                                                    {% endif %}
+                                                </tr>
+                                            {% endmacro %}
+                                        {%else %}
+                                            <tfoot><tr><th colspan="5">
+                                                        <div class='center aligned'>No task created at this moment</div>
+                                                    </th></tr></tfoot>
+                                                {%endif %}
+                                    </table>
+                                </div>
+                                {{form_widget(form._token)}}
+                                <div class="field right aligned">
+                                    <button  class="ui mini olive button" type="submit">Sauvegarder</button>
+                                    <a class="ui mini red button cancel_edit_decompte" >Annuler</a>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent()}}
+    <script type="text/javascript" src="{{ asset('bundles/ogiveproject/js/project.js')}}"></script>
+
+{% endblock %}

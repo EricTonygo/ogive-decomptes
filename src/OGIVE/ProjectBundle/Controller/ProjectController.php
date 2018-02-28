@@ -3,6 +3,7 @@
 namespace OGIVE\ProjectBundle\Controller;
 
 use OGIVE\ProjectBundle\Entity\Project;
+use OGIVE\ProjectBundle\Entity\Owner;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -128,8 +129,7 @@ class ProjectController extends Controller {
         return $this->render('OGIVEProjectBundle:project:update.html.twig', array(
             'project' => $project,
             'form' => $form->createView()
-        ));
-        
+        ));       
     }
     
     /**
@@ -145,9 +145,10 @@ class ProjectController extends Controller {
         $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(0, 8, null, $user->getId());
         $projectManager = $project->getProjectManagers()[0];
         $holder = $project->getHolders()[0];
-        return $this->render('OGIVEProjectBundle:project:general_informations_project.html.twig', array(
+        return $this->render('OGIVEProjectBundle:project:general-informations-project.html.twig', array(
             'project' => $project,
             'projects' => $projects,
+            'tab' => 1,
             'projectManager' => $projectManager,
             'holder' => $holder
         ));
@@ -156,9 +157,9 @@ class ProjectController extends Controller {
     
     /**
      * @Rest\View()
-     * @Rest\Get("/projects/{id}/lots" , name="project_lots_get", options={ "method_prefix" = false, "expose" = true })
+     * @Rest\Get("/projects/{id}/tasks" , name="project_tasks_get", options={ "method_prefix" = false, "expose" = true })
      */
-    public function getProjectLotsByIdAction(Request $request, Project $project) {
+    public function getProjectTasksByIdAction(Request $request, Project $project) {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
@@ -169,7 +170,7 @@ class ProjectController extends Controller {
         $search_query = null;
         $start_date = null;
         $end_date = null;
-        $placeholder = "Rechercher un lot...";
+        $placeholder = "Rechercher une tâche...";
         if ($request->get('page')) {
             $page = intval(htmlspecialchars(trim($request->get('page'))));
             $route_param_page['page'] = $page;
@@ -187,32 +188,82 @@ class ProjectController extends Controller {
             $route_param_search_query['end-date'] = $end_date;
         }
         $em = $this->getDoctrine()->getManager();
+        $repositoryTask = $em->getRepository('OGIVEProjectBundle:Task');
         $user = $this->getUser();
         $start_from = ($page - 1) * $maxResults >= 0 ? ($page - 1) * $maxResults : 0;
-        $total_lots = count($em->getRepository('OGIVEProjectBundle:Project')->getAll(null, null, $search_query, $project->getId()));
-        $total_pages = ceil($total_lots / $maxResults);        
-        $lots = $em->getRepository('OGIVEProjectBundle:Lot')->getAll($start_from, $maxResults, $search_query, $project->getId());
+        $total_tasks = count($repositoryTask->getAll(null, null, $search_query, null, $project->getId()));
+        $total_pages = ceil($total_tasks / $maxResults);        
+        $tasks = $repositoryTask->findBy(array('parentTask' => null));
         $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(0, 8, null, $user->getId());
-        return $this->render('OGIVEProjectBundle:project:project-lots.html.twig', array(
+        return $this->render('OGIVEProjectBundle:project:project-tasks.html.twig', array(
             'project' => $project,
             'projects' => $projects,
-            'lots' => $lots,
+            'tasks' => $project->getTasks(),
+            'page' => $page,
+            'tab' => 3,
             'total_pages' => $total_pages,
-            'total_lots' => $total_lots,
+            'total_tasks' => $total_tasks,
             'placeholder' => $placeholder
+        ));
+        
+    }
+    
+    /**
+     * @Rest\View()
+     * @Rest\Get("/projects/{id}/contributors" , name="project_contributors_get", options={ "method_prefix" = false, "expose" = true })
+     */
+    public function getProjectContributorsByIdAction(Request $request, Project $project) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $tasks = $em->getRepository('OGIVEProjectBundle:Task')->getAll(null, null, null, $project->getId());
+        $projectManagers = $em->getRepository('OGIVEProjectBundle:ProjectManager')->getAll(null, null, null, $project->getId());
+        $holders = $em->getRepository('OGIVEProjectBundle:Holder')->getAll(null, null, null, $project->getId());
+        $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(0, 8, null, $user->getId());
+        return $this->render('OGIVEProjectBundle:project:project-contributors.html.twig', array(
+            'project' => $project,
+            'projects' => $projects,
+            'tasks' => $tasks,
+            'tab' => 4,
+            'projectManagers' => $projectManagers,
+            'holders' => $holders
+        ));
+        
+    }
+    
+    /**
+     * @Rest\View()
+     * @Rest\Get("/projects/{id}/decomptes" , name="project_decomptes_get", options={ "method_prefix" = false, "expose" = true })
+     */
+    public function getProjectDecomptesByIdAction(Request $request, Project $project) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $decomptes = $em->getRepository('OGIVEProjectBundle:Decompte')->getAll(null, null, null, $project->getId());
+        $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(0, 8, null, $user->getId());
+        return $this->render('OGIVEProjectBundle:project:project-decomptes.html.twig', array(
+            'project' => $project,
+            'projects' => $projects,
+            'tab' => 5,
+            'decomptes' => $decomptes
         ));
         
     }
 
     /**
      * @Rest\View(statusCode=Response::HTTP_CREATED)
-     * @Rest\Post("/projects", name="project_add_post", options={ "method_prefix" = false, "expose" = true })
+     * @Rest\Post("/projects/new", name="project_add_post", options={ "method_prefix" = false, "expose" = true })
      */
     public function postProjectsAction(Request $request) {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
         $project = new Project();
+        $owner = new Owner();
         $repositoryProject = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Project');
 
         $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectType', $project);
@@ -221,6 +272,10 @@ class ProjectController extends Controller {
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
             $project->setCreatedUser($user);
+            $owner->setNom($user->getLastName());
+            $owner->setEmail($user->getEmail());
+            $project->addOwner($owner);
+            $owner->setProject($project);
             //***************gestion des projectManagers du projet ************************** */
             $projectManagers = $project->getProjectManagers();
             foreach ($projectManagers as $projectManager) {
@@ -233,10 +288,11 @@ class ProjectController extends Controller {
                 $holder->setProject($project);
             }
             
-            //***************gestion des lots du projet ************************** */
-            $lots = $project->getLots();
-            foreach ($lots as $lot) {
-                $lot->setProject($project);
+            //***************gestion des tasks du projet ************************** */
+            $tasks = $project->getTasks();
+            foreach ($tasks as $task) {
+                $task->setProject($project);
+                $task->setProjectTask($project);
             }
             $project = $repositoryProject->saveProject($project);
             return $this->redirect($this->generateUrl('ogive_project_homepage'));
@@ -249,7 +305,7 @@ class ProjectController extends Controller {
 
     /**
      * @Rest\View(statusCode=Response::HTTP_OK)
-     * @Rest\Delete("/projects/{id}", name="project_delete", options={ "method_prefix" = false, "expose" = true })
+     * @Rest\Get("/projects/{id}/remove", name="project_delete", options={ "method_prefix" = false, "expose" = true })
      */
     public function removeProjectAction(Project $project) {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
@@ -258,18 +314,15 @@ class ProjectController extends Controller {
         $repositoryProject = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Project');
         if ($project) {
             $repositoryProject->deleteProject($project);
-            $view = View::create(["message" => "Appel d'offre supprimé avec succès !"]);
-            $view->setFormat('json');
-            return $view;
-//            return new JsonResponse(["message" => "Appel d'offre supprimé avec succès !"], Response::HTTP_OK);
+            return $this->redirect($this->generateUrl('ogive_project_homepage'));
         } else {
-            return new JsonResponse(["message" => "Appel d'offre introuvable"], Response::HTTP_NOT_FOUND);
+            return $this->redirect($this->generateUrl('ogive_project_homepage'));
         }
     }
 
     /**
      * @Rest\View()
-     * @Rest\Put("/projects/{id}", name="project_update", options={ "method_prefix" = false, "expose" = true })
+     * @Rest\Put("/projects/{id}/update", name="project_update", options={ "method_prefix" = false, "expose" = true })
      * @param Request $request
      */
     public function putProjectAction(Request $request, Project $project) {
@@ -280,15 +333,15 @@ class ProjectController extends Controller {
     }
 
     public function updateProjectAction(Request $request, Project $project) {
-
+        $owner = new Owner();
         $repositoryProject = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Project');
         $repositoryProjectManager = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:ProjectManager');
         $repositoryHolder = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Holder');
-        $repositoryLot = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Lot');
+        $repositoryTask = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Task');
 
         $originalProjectManagers = new \Doctrine\Common\Collections\ArrayCollection();
         $originalHolders = new \Doctrine\Common\Collections\ArrayCollection();
-        $originalLots = new \Doctrine\Common\Collections\ArrayCollection();
+        $originalTasks = new \Doctrine\Common\Collections\ArrayCollection();
         
         foreach ($project->getProjectManagers() as $projectManager) {
             $originalProjectManagers->add($projectManager);
@@ -296,8 +349,8 @@ class ProjectController extends Controller {
         foreach ($project->getHolders() as $holder) {
             $originalHolders->add($holder);
         }
-        foreach ($project->getLots() as $lot) {
-            $originalLots->add($lot);
+        foreach ($project->getTasks() as $task) {
+            $originalTasks->add($task);
         }
     
         $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectType', $project, array('method' => 'PUT'));
@@ -348,24 +401,24 @@ class ProjectController extends Controller {
                 }
             }
             
-            //***************gestion des lots du project ************************** */
-            // remove the relationship between the project and the lots
-            foreach ($originalLots as $lot) {
-                if (false === $project->getLots()->contains($lot)) {
+            //***************gestion des tasks du project ************************** */
+            // remove the relationship between the project and the tasks
+            foreach ($originalTasks as $task) {
+                if (false === $project->getTasks()->contains($task)) {
                     // remove the project from the projectManagers
-                    $project->getLots()->removeElement($lot);
+                    $project->getTasks()->removeElement($task);
                     // if it was a many-to-one relationship, remove the relationship like this
-                    $lot->setProject(null);
-                    $lot->setStatus(0);
-                    $repositoryLot->updateLot($lot);
+                    $repositoryTask->removeTask($task);
                     // if you wanted to delete the Subscriber entirely, you can also do that
                     // $em->remove($domain);
                 }
             }
-            $lots = $project->getLots();
-            foreach ($lots as $lot) {
-                if($lot->getProject() == null){
-                    $lot->setProject($project);
+            $tasks = $project->getTasks();
+            foreach ($tasks as $task) {
+                $task->setParentTask(null);
+                $task->setProjectTask($project);
+                if($task->getProject() == null){
+                    $task->setProject($project);
                 }
             }
             
@@ -373,9 +426,9 @@ class ProjectController extends Controller {
             $project->setUpdatedUser($user);
             $project = $repositoryProject->updateProject($project);
             
-            return $this->redirect($this->generateUrl('ogive_project_homepage'));
+            return $this->redirect($this->generateUrl('project_gen_infos_get', array('id' => $project->getId())));
         }  else {
-            return $this->render('OGIVEProjectBundle:project:edit.html.twig', array('form' => $form->createView(), 'project' => $project));
+            return $this->render('OGIVEProjectBundle:project:update.html.twig', array('form' => $form->createView(), 'project' => $project));
             
         }
     }

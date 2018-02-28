@@ -10,33 +10,39 @@
                 <div class="wide column">
                     <div id="od_nav_menu" class="ui tiny menu">
                         <div class="left menu">
-                            <a class="item" href="../index.html">Home</a>
+                            <a class="item" href="{{path('ogive_project_homepage')}}">Accueil</a>
                             <div class="item" style="padding-left: 0; padding-right: 0;"><i class="small right chevron icon divider"></i></div>
-                            <a class="item" href="index.html">Projects</a>
+                            <a class="item" href="{{path('ogive_project_homepage')}}">Mes projets</a>
                             <div class="item" style="padding-left: 0; padding-right: 0;"><i class="small right chevron icon divider"></i></div>
-                            <div class="item">Add a new project</div>
+                            <div class="item">Ajout d'un projet</div>
                         </div>
                     </div>
                     <div class="ui container">
                         <div class="ui fluid card od_add_project_card">
                             <div class="content">
                                 <div class="header">
-                                    Add a project
+                                    Ajout d'un projet
                                 </div>
                             </div>
                             <div class="content description">
                                 {{ form_start(form, {'method': 'POST', 'action': path('project_add_post'), 'attr': {'class': 'ui mini form', 'id': 'od_add_project_form', "autocomplete":"off"} }) }}
-                                <h4 class="ui dividing header">Project Information</h4>
+                                <h4 class="ui dividing header">Information du projet</h4>
 
-                                <div class="field">
-                                    {{ form_label(form.numeroMarche,"N° du marché") }}
-                                    {{ form_widget(form.numeroMarche,{'attr':{'placeholder':"Numéro du marché", 'data-validate': 'numero-marche'}})}}
+                                <div class="fields">
+                                    <div class="five wide field">
+                                        {{ form_label(form.numeroMarche,"N° du marché") }}
+                                        <div class="field"> 
+                                            {{ form_widget(form.numeroMarche,{'attr':{'placeholder':"Numéro du marché", 'data-validate': 'numero-marche'}})}}
+                                        </div>
+                                    </div>
+                                    <div class="eleven wide field">
+                                        {{ form_label(form.subject,"Objet") }}
+                                        <div class="field"> 
+                                            {{ form_widget(form.subject,{'attr':{'placeholder':"Objet du marché", 'data-validate': 'objet'}})}}
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div class="field">
-                                    {{ form_label(form.subject,"Objet") }}
-                                    {{ form_widget(form.subject,{'attr':{'placeholder':"Objet du marché", 'data-validate': 'objet'}})}}
-                                </div>
                                 <div class="ui field">
                                     <label>Coût du projet</label>
                                     <div class="ui fields">
@@ -83,7 +89,7 @@
                                                 <th class="right aligned">Action</th>
                                             </tr>
                                         </thead>
-                                       
+
                                         <tbody class="projectManagers" data-prototype="{{ forms.projectManager_prototype(form.projectManagers.vars.prototype)|e }}">
                                             {% for projectManager in form.projectManagers %}
                                                 <tr>
@@ -92,14 +98,14 @@
                                             {% endfor %}
                                         </tbody>
                                         {% macro projectManager_prototype(childForm) %}
-                                            <td>{{ form_widget(childForm.nom,{'attr':{'data-validate': 'projectManager_name'}}) }}</td>
-                                            <td>{{ form_widget(childForm.phone,{'attr':{'data-validate': 'projectManager_phone'}}) }}</td>
-                                            <td>{{ form_widget(childForm.email,{'attr':{'data-validate': 'projectManager_email'}}) }}</td> 
+                                            <td>{{ form_widget(childForm.nom,{'attr':{'data-validate': 'projectManager_name', 'placeholder': 'Nom'}}) }}</td>
+                                            <td>{{ form_widget(childForm.phone,{'attr':{'data-validate': 'projectManager_phone', 'placeholder': 'Téléphone'}}) }}</td>
+                                            <td>{{ form_widget(childForm.email,{'attr':{'data-validate': 'projectManager_email', 'placeholder': 'Email'}}) }}</td> 
                                         {% endmacro %}
-                                        
+
                                     </table>
                                 </div>
-                                
+
 
                                 <h4 class="ui dividing header">Titulaire</h4>
 
@@ -120,48 +126,85 @@
                                             {% endfor %}
                                         </tbody>
                                         {% macro holder_prototype(childForm) %}
-                                            <td>{{ form_widget(childForm.nom,{'attr':{'data-validate': 'holder_name'}}) }}</td>
-                                            <td>{{ form_widget(childForm.phone,{'attr':{'data-validate': 'holder_phone'}}) }}</td>
-                                            <td>{{ form_widget(childForm.email,{'attr':{'data-validate': 'holder_email'}}) }}</td> 
+                                            <td>{{ form_widget(childForm.nom,{'attr':{'data-validate': 'holder_name', 'placeholder': "Nom"}}) }}</td>
+                                            <td>{{ form_widget(childForm.phone,{'attr':{'data-validate': 'holder_phone', 'placeholder': 'Téléphone'}}) }}</td>
+                                            <td>{{ form_widget(childForm.email,{'attr':{'data-validate': 'holder_email', 'placeholder': 'Email'}}) }}</td> 
                                         {% endmacro %}
                                     </table>
                                 </div>
-                                
 
+                                <h4 class="ui dividing header">Tâches</h4>
 
-                                <h4 class="ui dividing header">Lots (Pour les tâches)</h4>
                                 <div class="ui field">
                                     <table class="ui very basic table">
                                         <thead>
                                             <tr><th>Numero</th>
-                                                <th>Nom</th>
-                                                <th>start date</th>
-                                                <th>end date</th>
+                                                <th>Désignation des ouvrages</th>
+                                                <th>Unité</th>
+                                                <th>Prix Unitaire</th>
+                                                <th>Qté Marché</th>
+                                                <th>Qté projet Exec</th>
+                                                    {#<th>start date</th>
+                                                    <th>end date</th>#}
                                                 <th class="right aligned">Action</th>
                                             </tr>
                                         </thead>
-                                        <tbody class="lots" data-prototype="{{ forms.lot_prototype(form.lots.vars.prototype)|e }}">
-                                            {% for lot in form.lots %}
+                                        <tbody class="tasks" data-prototype="{{ forms.task_prototype(form.tasks.vars.prototype)|e }}">
+                                            {% for task in form.tasks %}
                                                 <tr>
-                                                    {{ forms.lot_prototype(lot) }}
+                                                    {{ forms.task_prototype(task) }}
                                                 </tr>
                                             {% endfor %}
                                         </tbody>
-                                        {% macro lot_prototype(childForm) %}
-                                            <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'lot_name'}}) }}</td>
-                                            <td>{{ form_widget(childForm.nom,{'attr':{'data-validate': 'lot_number'}}) }}</td>
-                                            <td>{{ form_widget(childForm.startDate,{'attr':{'data-validate': 'lot_startDate'}}) }}</td> 
-                                            <td>{{ form_widget(childForm.endDate,{'attr':{'data-validate': 'lot_endDate'}}) }}</td> 
+                                        {% macro task_prototype(childForm) %}
+                                            {% import _self as forms %}
+                                            <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'task_name', 'placeholder': 'Numero du prix'}}) }}</td>
+                                            <td style="width: 35%">{{ form_widget(childForm.nom,{'attr':{'data-validate': 'task_number', 'placeholder':"Désignation de l'ouvrage"}}) }}</td>
+                                            <td>{{ form_widget(childForm.unite,{'attr':{'data-validate': 'task_unite', 'placeholder': 'Unité du prix'}}) }}</td>
+                                            <td>{{ form_widget(childForm.prixUnitaire,{'attr':{'data-validate': 'task_prixUnitaire', 'placeholder': 'Prix unitaire du prix'}}) }}</td>
+                                            <td>{{ form_widget(childForm.qtePrevueMarche,{'attr':{'data-validate': 'task_qtePrevueMarche', 'placeholder': 'Qté prevue marché'}}) }}</td>
+                                            <td>{{ form_widget(childForm.qtePrevueProjetExec,{'attr':{'data-validate': 'task_qtePrevueProjetExec', 'placeholder': "Qté projet d'exécution"}}) }}</td>
+                                            {#<td>
+                                                <div class="field">
+                                                    <div class="ui calendar" >
+                                                        <div class="ui input left icon">
+                                                            <i class="calendar icon"></i>
+                                                            {{ form_widget(childForm.startDate,{'attr':{'id': 'start-date', 'data-validate': 'task_startDate'}}) }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td> 
+                                            <td>
+                                                <div class="field">
+                                                    <div class="ui calendar" >
+                                                        <div class="ui input left icon">
+                                                            <i class="calendar icon"></i>
+                                                            {{ form_widget(childForm.endDate,{'attr':{'id': 'end-date', 'data-validate': 'task_endDate'}}) }}
+                                                        </div>
+                                                    </div>
+                                                </div>                                                
+                                            </td>#}
+                                            {#<tr>
+                                            <tbody class="subTasks">
+                                                {% if childForm.subTasks is defined %}
+                                                    {% for subTask in childForm.subTasks %}
+                                                        <tr>
+                                                            {{ forms.task_prototype(subTask) }}
+                                                        </tr>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </tbody>
+                                            </tr>     #}                                      
                                         {% endmacro %}
                                     </table>
                                 </div>
-                                
+
                                 {{form_widget(form._token)}}
-                                <div class="field">
-                                    <button  class="ui mini yellow button" type="submit">Save</button>
-                                    <a  class="ui mini red button"  href="index.html">Cancel</a>
+                                <div class="field right aligned">
+                                    <button  class="ui mini yellow button" type="submit">Sauvegarder</button>
+                                    <a  class="ui mini red button"  href="{{path('ogive_project_homepage')}}">Annuler</a>
                                 </div>
-                            </form>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -172,7 +215,7 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent()}}
-    <script type="text/javascript" src="{{ asset('bundles/ogivealert/js/project.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ogiveproject/js/project.js')}}"></script>
     <script>
         function addProjectManagerForm($collectionProjectManager, $newLinkTrProjectManager) {
             // Get the data-prototype explained earlier
@@ -191,9 +234,6 @@
             // Display the form in the page in an li, before the "Add a projectManager" link li
             var $newFormTr = $('<tr></tr>').append($newForm);
             $newLinkTrProjectManager.before($newFormTr);
-            $('.ui.projectManager_ent_subscription.search.dropdown').dropdown({
-                on: 'click'
-            });
             addProjectManagerFormDeleteLink($newFormTr);
         }
 
@@ -208,7 +248,7 @@
                 $projectManagerFormTr.remove();
             });
         }
-        
+
         function addHolderForm($collectionHolder, $newLinkTrHolder) {
             // Get the data-prototype explained earlier
             var prototype = $collectionHolder.data('prototype');
@@ -226,9 +266,6 @@
             // Display the form in the page in an li, before the "Add a holder" link li
             var $newFormTr = $('<tr></tr>').append($newForm);
             $newLinkTrHolder.before($newFormTr);
-            $('.ui.holder_ent_subscription.search.dropdown').dropdown({
-                on: 'click'
-            });
             addHolderFormDeleteLink($newFormTr);
         }
 
@@ -243,7 +280,7 @@
                 $holderFormTr.remove();
             });
         }
-        
+
         function addLotForm($collectionLot, $newLinkTrLot) {
             // Get the data-prototype explained earlier
             var prototype = $collectionLot.data('prototype');
@@ -261,8 +298,19 @@
             // Display the form in the page in an li, before the "Add a holder" link li
             var $newFormTr = $('<tr></tr>').append($newForm);
             $newLinkTrLot.before($newFormTr);
-            $('.ui.holder_ent_subscription.search.dropdown').dropdown({
-                on: 'click'
+            $('input[data-validate="lot_startDate"]').datetimepicker({
+                timepicker: false,
+                //minDate: '0',
+                format: 'd-m-Y',
+                lang: 'fr',
+                scrollInput: false
+            });
+            $('input[data-validate="lot_endDate"]').datetimepicker({
+                timepicker: false,
+                //minDate: '0',
+                format: 'd-m-Y',
+                lang: 'fr',
+                scrollInput: false
             });
             addLotFormDeleteLink($newFormTr);
         }
@@ -282,7 +330,7 @@
         var $collectionLot;
 
         // setup an "add a holder" link
-        var $addLotLink = $('<button class="ui mini primary button" ><i class="add user icon"></i> Ajouter un lot</button>');
+        var $addLotLink = $('<button class="ui mini primary button"><i class="plus icon"></i> Ajouter un lot</button>');
         var $newLinkTrLot = $('<tr></tr>').append($addLotLink);
 
         var $collectionHolder;
@@ -291,11 +339,11 @@
         var $addHolderLink = $('<button class="ui mini primary button" ><i class="add user icon"></i> Ajouter le titulaire</button>');
         var $newLinkTrHolder = $('<tr></tr>').append($addHolderLink);
 
-        
+
         var $collectionProjectManager;
 
         // setup an "add a projectManager" link
-        var $addProjectManagerLink = $('<button class="ui mini primary button" ><i class="add user icon"></i> Ajouter le maitre d\'oeuvre</button>');
+        var $addProjectManagerLink = $('<button class="ui mini primary button" ><i class="add icon"></i> Ajouter le maitre d\'oeuvre</button>');
         var $newLinkTrProjectManager = $('<tr></tr>').append($addProjectManagerLink);
 
         jQuery(document).ready(function () {
@@ -328,7 +376,7 @@
                 // add a new projectManager form (see next code block)
                 addProjectManagerForm($collectionProjectManager, $newLinkTrProjectManager);
             });
-            
+
             /******** suppression des holders *********/
             // Get the ul that holds the collection of holders
             $collectionHolder = $('tbody.holders');
@@ -358,8 +406,8 @@
                 // add a new holder form (see next code block)
                 addHolderForm($collectionHolder, $newLinkTrHolder);
             });
-            
-            
+
+
             /******** suppression des lots *********/
             // Get the ul that holds the collection of lots
             $collectionLot = $('tbody.lots');
@@ -389,6 +437,91 @@
                 // add a new lot form (see next code block)
                 addLotForm($collectionLot, $newLinkTrLot);
             });
+        });
+
+
+        function addTaskForm($collectionTask, $newLinkTrTask) {
+            // Get the data-prototype explained earlier
+            var prototype = $collectionTask.data('prototype');
+
+            // get the new index
+            var index = $collectionTask.data('index');
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var $newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            $collectionTask.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a projectManager" link li
+            var $newFormTr = $('<tr></tr>').append($newForm);
+            $newLinkTrTask.before($newFormTr);
+            $('input[data-validate="task_startDate"]').datetimepicker({
+                timepicker: false,
+                //minDate: '0',
+                format: 'd-m-Y',
+                lang: 'fr',
+                scrollInput: false
+            });
+            $('input[data-validate="task_endDate"]').datetimepicker({
+                timepicker: false,
+                //minDate: '0',
+                format: 'd-m-Y',
+                lang: 'fr',
+                scrollInput: false
+            });
+            addTaskFormDeleteLink($newFormTr);
+        }
+
+        function addTaskFormDeleteLink($projectManagerFormTr) {
+            var $removeFormA = $('<td class="right aligned"><button class="ui mini red compact icon button" data-tooltip="Supprimer" data-position="bottom center" data-inverted="" data-variation="mini"><i class="trash icon"></i></button></td>');
+            $projectManagerFormTr.append($removeFormA);
+            $removeFormA.on('click', function (e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // remove the li for the projectManager form
+                $projectManagerFormTr.remove();
+            });
+        }
+        var $collectionTask;
+
+        // setup an "add a projectManager" link
+        var $addTaskLink = $('<button class="ui mini primary button"><i class="plus icon"></i> Ajouter une tâche</button>');
+        var $newLinkTrTask = $('<tr></tr>').append($addTaskLink);
+
+        jQuery(document).ready(function () {
+            /******** suppression des projectManagers *********/
+            // Get the ul that holds the collection of projectManagers
+            $collectionTask = $('tbody.tasks');
+
+            // add a delete link to all of the existing projectManager form li elements
+            $collectionTask.find('tr').each(function () {
+                addTaskFormDeleteLink($(this));
+            });
+
+
+            /******** Ajout des projectManagers *********/
+
+            // Get the ul that holds the collection of projectManagers
+            $collectionTask = $('tbody.tasks');
+
+            // add the "add a projectManager" anchor and li to the projectManagers ul
+            $collectionTask.append($newLinkTrTask);
+
+            // count the current form inputs we have (e.g. 2), use that as the new
+            // index when inserting a new item (e.g. 2)
+            $collectionTask.data('index', $collectionTask.find(':input').length);
+
+            $addTaskLink.on('click', function (e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // add a new projectManager form (see next code block)
+                addTaskForm($collectionTask, $newLinkTrTask);
+            });
+
         });
     </script>
 {% endblock %}

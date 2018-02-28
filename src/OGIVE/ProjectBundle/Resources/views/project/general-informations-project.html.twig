@@ -1,0 +1,88 @@
+{% extends "OGIVEProjectBundle::layout.html.twig" %}
+{% trans_default_domain 'OGIVEProjectBundle' %}
+{% block title %}Informations générales du projet: {{project.numeroMarche}}{% endblock %}
+
+{% block content %}
+    <div class="ui basic fixed segment content">
+        <div class='ui container'>
+            <div class="ui two column stackable grid padded">
+                <div class="eleven wide column">
+                    <div class="ui top attached tabular menu od_project_menu">
+                        {% include('OGIVEProjectBundle:project:single_project_header.html.twig') %}
+                    </div>
+                    <div class="ui bottom attached segment od_project_menu_content">
+                        <div class="ui fluid card od_project_details_card">                                       
+                            <div class="content description">
+                                <div class="ui stackable grid">
+                                    <div class="column">
+                                        <!--<h4 class="ui dividing header">Personal Information</h4>-->
+                                        <table class="ui small table od_project_details_table">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <label>N° DU MARCHE</label>
+                                                    </td>
+                                                    <td>{{project.numeroMarche}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>OBJET</label>
+                                                    </td>
+                                                    <td>{{project.subject}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>LOT</label>
+                                                    </td>
+                                                    <td>{{project.numeroLot}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>LIEU D'EXECUTION</label>
+                                                    </td>
+                                                    <td>{{project.lieuExecution}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>REGION</label>
+                                                    </td>
+                                                    <td>{{project.region}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>DEPARTEMENT</label>
+                                                    </td>
+                                                    <td>{{project.departement}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>MISSION DE CONTRÔLE</label>
+                                                    </td>
+                                                    <td>{%if projectManager %} {{projectManager.nom}} {% endif %}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>TITULAIRE</label>
+                                                    </td>
+                                                    <td>{%if holder %} {{holder.nom}} {% endif %}</td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>                                   
+                            </div>
+                            <div class="content">
+                                <a class="ui olive mini button" href="{{path('project_update_get', {'id': project.id})}}"><i class="edit icon"></i> Edit</a>
+                                <a class="ui red mini button"><i class="trash icon"></i> Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="five wide column">
+                    {% include('OGIVEProjectBundle::right_aside_page.html.twig') %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

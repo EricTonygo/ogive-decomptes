@@ -19,3 +19,11 @@ fos_js_routing:
 ogive_project_project:    
     resource: "@OGIVEProjectBundle/Controller/ProjectController.php"
     type:     rest
+        
+ogive_project_decompte:    
+    resource: "@OGIVEProjectBundle/Controller/DecompteController.php"
+    type:     rest
+    
+ogive_project_task:    
+    resource: "@OGIVEProjectBundle/Controller/TaskController.php"
+    type:     rest

@@ -18,32 +18,53 @@ $(document).ready(function () {
 //        if($(this).sidebar("isvisible"))
 //        $('.ui.sidebar').sidebar("show");
 //    });
-    $('input[name="birth-date"]').datetimepicker({
+    $('input[data-validate="start_date"]').datetimepicker({
         timepicker: false,
         //minDate: '0',
-        format: 'd-m-Y H:i',
+        format: 'd-m-Y',
         lang: 'fr',
         scrollInput: false
     });
-    $('input[name="hiring-date"]').datetimepicker({
+    $('input[data-validate="end_date"]').datetimepicker({
         timepicker: false,
         //minDate: '0',
-        format: 'd-m-Y H:i',
+        format: 'd-m-Y',
         lang: 'fr',
         scrollInput: false
     });
+    $('input[data-validate="lot_startDate"]').datetimepicker({
+        timepicker: false,
+        //minDate: '0',
+        format: 'd-m-Y',
+        lang: 'fr',
+        scrollInput: false
+    });
+    $('input[data-validate="lot_endDate"]').datetimepicker({
+        timepicker: false,
+        //minDate: '0',
+        format: 'd-m-Y',
+        lang: 'fr',
+        scrollInput: false
+    });
+
     $('input[name="start-date"]').datetimepicker({
-        //timepicker: true,
+        timepicker: false,
         //minDate: '0',
-        format: 'd-m-Y H:i',
+        format: 'd-m-Y',
         lang: 'fr',
         scrollInput: false
     });
     $('input[name="end-date"]').datetimepicker({
-        //timepicker: true,
+        timepicker: false,
         //minDate: '0',
-        format: 'd-m-Y H:i',
+        format: 'd-m-Y',
         lang: 'fr',
         scrollInput: false
     });
+
+    $('.od_decompte_content .menu .item')
+            .tab({
+                context: '.od_decompte_content'
+            })
+            ;
 });

@@ -1,0 +1,12 @@
+<a href="{{path('project_gen_infos_get', {'id': project.id})}}" class="{% if tab == 1 %}active{% endif %} item">
+    Informations générales
+</a>
+<a href="{{path('project_tasks_get', {'id': project.id})}}" class="{% if tab == 3 %}active{% endif %} item">
+    Tâches
+</a>
+<a href="{{path('project_contributors_get', {'id': project.id})}}" class="{% if tab == 4 %}active{% endif %} item">
+    Intervenants
+</a>
+<a href="{{path('project_decomptes_get', {'id': project.id})}}" class="{% if tab == 5 %}active{% endif %} item">
+    Décomptes
+</a>

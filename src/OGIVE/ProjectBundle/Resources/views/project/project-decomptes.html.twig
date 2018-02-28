@@ -1,0 +1,66 @@
+{% extends "OGIVEProjectBundle::layout.html.twig" %}
+{% trans_default_domain 'OGIVEProjectBundle' %}
+{% block title %}Les décomptes du projet : {{project.numeroMarche}}{% endblock %}
+
+{% block content %}
+    <div class="ui basic fixed segment content">
+        <div class='ui container'>
+            <div class="ui two column stackable grid padded">
+                <div class="eleven wide column">
+                    <div class="ui top attached tabular menu od_project_menu">
+                        {% include('OGIVEProjectBundle:project:single_project_header.html.twig') %}
+                    </div>
+                    <div class="ui bottom attached segment od_project_menu_content">
+                        <div class="ui fluid card od_card_top_table_action">
+                            <div class="content">
+                                <a class="ui right floated yellow mini button" href="{{path('decompte_add_get', {'id': project.id})}}"><i class="plus icon"></i> Créer un décompte</a>
+                            </div>
+                        </div>
+                        <table class="ui celled yellow small table">
+                            <thead>
+                                <tr>
+                                    <th>Numéro</th>
+                                    <th>Mois</th>
+                                    <th>Start date</th>
+                                    <th>End date</th>
+                                    <th>Etat</th>
+                                    <th>Actions</th>
+                                </tr></thead>
+                                {%if decomptes %}
+                                <tbody>
+                                    {% set i= 1 %}
+                                    {%for decompte in decomptes %}
+                                        <tr>
+                                            <td>
+                                                <a class="" href="{{path('decompte_show_get', {'idProject': decompte.project.id, 'id': decompte.id})}}">{{decompte.monthNumber}}</a>
+                                            </td>
+                                            <td>
+                                                {{decompte.monthName}}                                               
+                                            </td>
+                                            <td>{{decompte.startDate}}</td>
+                                            <td>{{decompte.endDate}}</td>
+                                            <td>{{decompte.decompteState}}</td>
+                                            <td>
+                                                <a class="ui mini compact icon button" href="{{path('decompte_update_get', {'idProject': decompte.project.id, 'id': decompte.id})}}"><i class="edit icon" title="Edit"></i></a> |
+                                                <a class="ui mini compact icon red button" href="{{path('decompte_delete', {'idProject': decompte.project.id, 'id': decompte.id})}}"><i class="trash icon" title="Delete"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% set i = i+1 %}
+                                    {%endfor %}
+
+                                </tbody>
+                            {%else %}
+                                <tfoot><tr><th colspan="6">
+                                            <div class='center aligned'>No decompte created at the moment</div>
+                                        </th></tr></tfoot>
+                                    {%endif %}
+                        </table>
+                    </div>
+                </div>
+                <div class="five wide column">
+                    {% include('OGIVEProjectBundle::right_aside_page.html.twig') %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

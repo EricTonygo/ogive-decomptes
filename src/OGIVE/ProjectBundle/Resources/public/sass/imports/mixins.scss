@@ -1,0 +1,19 @@
+@mixin publication_logo_position($height){
+    height: $height!important;
+    /*background-size: 100% 100%;*/
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+@mixin flex_center_space_around{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+@mixin form_label{
+    font-weight: 700;
+    font-size: 14px;
+    color: #2c3e50;
+}

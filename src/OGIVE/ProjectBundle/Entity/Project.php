@@ -69,13 +69,6 @@ class Project extends GeneralClass {
      * @ORM\Column(name="departement", type="string", length=255, nullable=true)
      */
      private $departement;
-     
-     /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\OneToMany(targetEntity="\OGIVE\ProjectBundle\Entity\Lot", mappedBy="project", cascade={"remove", "persist"})
-     */
-    private $lots;
     
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -111,14 +104,25 @@ class Project extends GeneralClass {
      * @ORM\OneToMany(targetEntity="\OGIVE\ProjectBundle\Entity\ServiceProvider", mappedBy="project", cascade={"remove", "persist"})
      */
     private $serviceProviders;
+    
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="\OGIVE\ProjectBundle\Entity\Decompte", mappedBy="project", cascade={"remove", "persist"})
+     */
+    private $decomptes;
 
     /**
      * Constructor
      */
     public function __construct() {
         parent::__construct();
-        $this->lots = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->projectManagers = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->owners = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->serviceProviders = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->holders = new \Doctrine\Common\Collections\ArrayCollection();
         $this->tasks = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->decomptes = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
     /**
@@ -295,49 +299,6 @@ class Project extends GeneralClass {
      */
     public function getDepartement() {
         return $this->departement;
-    }
-    
-    /**
-     * Add lot
-     *
-     * @param \OGIVE\ProjectBundle\Entity\Lot $lot 
-     * @return Project
-     */
-    public function addLot(\OGIVE\ProjectBundle\Entity\Lot $lot) {
-        $this->lots[] = $lot;
-        return $this;
-    }
-
-    /**
-     * Get lots
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getLots() {
-        return $this->lots;
-    }
-
-    /**
-     * Set lots
-     *
-     * @param \Doctrine\Common\Collections\Collection $lots
-     * @return Project
-     */
-    public function setLots(\Doctrine\Common\Collections\Collection $lots = null) {
-        $this->lots = $lots;
-
-        return $this;
-    }
-
-    /**
-     * Remove lot
-     *
-     * @param \OGIVE\ProjectBundle\Entity\Lot $lot
-     * @return Project
-     */
-    public function removeLot(\OGIVE\ProjectBundle\Entity\Lot $lot) {
-        $this->lots->removeElement($lot);
-        return $this;
     }
     
     /**
@@ -552,6 +513,49 @@ class Project extends GeneralClass {
      */
     public function removeServiceProvider(\OGIVE\ProjectBundle\Entity\ServiceProvider $serviceProvider) {
         $this->serviceProviders->removeElement($serviceProvider);
+        return $this;
+    }
+    
+    /**
+     * Add decompte
+     *
+     * @param \OGIVE\ProjectBundle\Entity\Decompte $decompte 
+     * @return Project
+     */
+    public function addDecompte(\OGIVE\ProjectBundle\Entity\Decompte $decompte) {
+        $this->decomptes[] = $decompte;
+        return $this;
+    }
+
+    /**
+     * Get decomptes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDecomptes() {
+        return $this->decomptes;
+    }
+
+    /**
+     * Set decompte
+     *
+     * @param \Doctrine\Common\Collections\Collection $decomptes
+     * @return Project
+     */
+    public function setDecomptes(\Doctrine\Common\Collections\Collection $decomptes = null) {
+        $this->decomptes = $decomptes;
+
+        return $this;
+    }
+
+    /**
+     * Remove decompte
+     *
+     * @param \OGIVE\ProjectBundle\Entity\Decompte $decompte
+     * @return Project
+     */
+    public function removeDecompte(\OGIVE\ProjectBundle\Entity\Decompte $decompte) {
+        $this->decomptes->removeElement($decompte);
         return $this;
     }
 

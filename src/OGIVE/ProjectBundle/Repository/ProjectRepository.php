@@ -14,13 +14,42 @@ class ProjectRepository extends EntityRepository
 {
     public function deleteProject(\OGIVE\ProjectBundle\Entity\Project $project) {
         $em= $this->_em;
-        $project->setStatus(0);
+        $repositoryTask = $em->getRepository("OGIVEProjectBundle:Task");
+        $repositoryHolder = $em->getRepository("OGIVEProjectBundle:Holder");
+        $repositoryOwner = $em->getRepository("OGIVEProjectBundle:Owner");
+        $repositoryProjectManager = $em->getRepository("OGIVEProjectBundle:ProjectManager");
+        $repositoryServiceProvider = $em->getRepository("OGIVEProjectBundle:ServiceProvider");
+        $repositoryDecompte = $em->getRepository("OGIVEProjectBundle:Decompte");
         $em->getConnection()->beginTransaction();
         try{
-            $em->persist($project);
+            $decomptes = $project->getDecomptes();
+            foreach ($decomptes as $decompte) {
+                $repositoryDecompte->removeDecompte($decompte);
+            }
+            $tasks = $project->getTasks();
+            foreach ($tasks as $task) {
+                $repositoryTask->deleteTask($task);
+            }            
+            $holders = $project->getHolders();
+            foreach ($holders as $holder) {
+                $repositoryHolder->deleteHolder($holder);
+            }
+            $owners = $project->getOwners();
+            foreach ($owners as $owner) {
+                $repositoryOwner->deleteOwner($owner);
+            }
+            $projectManagers = $project->getProjectManagers();
+            foreach ($projectManagers as $projectManager) {
+                $repositoryProjectManager->deleteProjectManager($projectManager);
+            }
+            $servicePrroviders = $project->getServiceProviders();
+            foreach ($servicePrroviders as $servicePrrovider) {
+                $repositoryServiceProvider->deleteServiceProvider($servicePrrovider);
+            }
+            $em->remove($project);
             $em->flush();
             $em->getConnection()->commit();
-            return $project;
+            return true;
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
             $em->close();

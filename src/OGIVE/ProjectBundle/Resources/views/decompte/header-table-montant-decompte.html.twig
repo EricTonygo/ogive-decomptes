@@ -1,0 +1,45 @@
+<table class="ui celled structured small fluid table">
+    <tbody>
+        <tr style="text-align: center; font-weight: bold;">
+            <td>{{project.subject}}</td>
+        </tr>
+        <tr style="text-align: center; font-weight: bold;">
+            <td>DECOMPTE  PROVISOIRE N°{{decompte.monthNumber}} DES TRAVAUX REALISES AU {{decompte.endDate|date('d/m/Y')}}</td>
+        </tr>
+    </tbody>
+</table>
+<table class="ui celled structured small fluid table">
+    <tbody>
+        <tr>
+            <td style="width: 26em">MOIS DE: {{decompte.monthName}}</td>
+            <td></td>
+            <td style="width: 32em;">TITULAIRE: {%if project.holders %}{{project.holders[0].nom}}{%endif %}</td>
+        </tr>
+        <tr>
+            <td ></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td ></td>
+            <td rowspan="5" style="text-align: center; font-weight: bold;">{{decompte_title}}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
