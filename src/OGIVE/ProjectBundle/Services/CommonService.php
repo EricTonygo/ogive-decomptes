@@ -17,9 +17,7 @@ class CommonService {
         $this->em = $em;
     }
 
-    public function sendSubscriptionConfirmation(\OGIVE\ProjectBundle\Entity\Subscriber $subscriber) {
-        
-    }
+   
 
     //get string date as dd/mm/yy
     public function getStringDateForSms($date) {

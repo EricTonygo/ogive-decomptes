@@ -27,3 +27,19 @@ ogive_project_decompte:
 ogive_project_task:    
     resource: "@OGIVEProjectBundle/Controller/TaskController.php"
     type:     rest
+    
+ogive_project_project_manager:    
+    resource: "@OGIVEProjectBundle/Controller/ProjectManagerController.php"
+    type:     rest
+    
+ogive_project_holder:    
+    resource: "@OGIVEProjectBundle/Controller/HolderController.php"
+    type:     rest
+    
+ogive_project_service_provider:    
+    resource: "@OGIVEProjectBundle/Controller/ServiceProviderController.php"
+    type:     rest
+    
+ogive_project_other_contributor:    
+    resource: "@OGIVEProjectBundle/Controller/OtherContributorController.php"
+    type:     rest

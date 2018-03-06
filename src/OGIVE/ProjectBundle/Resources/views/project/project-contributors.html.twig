@@ -1,6 +1,6 @@
 {% extends "OGIVEProjectBundle::layout.html.twig" %}
 {% trans_default_domain 'OGIVEProjectBundle' %}
-{% block title %}Les acteurs du projet {% endblock %}
+{% block title %}Les intervenants au projet {% endblock %}
 
 {% block content %}
     <div class="ui basic fixed segment content">
@@ -8,11 +8,16 @@
             <div class="ui two column stackable grid padded">
                 <div class="eleven wide column">
                     <div class="ui top attached tabular menu od_project_menu">
-                        {% include('OGIVEProjectBundle:project:single_project_header.html.twig') %}
+                        {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
                     </div>
                     <div class="ui bottom attached segment od_project_menu_content">
 
                         <h4 class="ui dividing header">Mission de contrôle</h4>
+                        <div class="ui fluid card od_card_top_table_action">
+                            <div class="content">
+                                <a class="ui right floated yellow mini button" href="{{path('project_manager_add_get', {'id': project.id})}}"><i class="plus icon"></i> Ajouter un maître d'oeuvre</a>
+                            </div>
+                        </div>
                         <table class="ui celled yellow small table">
                             <thead>
                                 <tr>
@@ -25,7 +30,7 @@
                                 <tbody>
 
                                     {%for projectManager in projectManagers %}
-                                        <tr>
+                                        <tr id="project_manager{{projectManager.id}}">
                                             <td>
                                                 {{projectManager.nom}}
                                             </td>
@@ -34,8 +39,8 @@
                                             </td>
                                             <td>{{projectManager.email}}</td>
                                             <td>
-                                                <a class="ui mini compact icon button" href="update.html"><i class="edit icon" title="Edit"></i></a> |
-                                                <a class="ui mini compact icon red button" ><i class="trash icon" title="Delete"></i></a>
+                                                <a class="ui mini compact icon button" data-tooltip="Modifier" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('project_manager_update_get', {'idProject': project.id, 'id': projectManager.id})}}"><i class="edit icon"></i></a> |
+                                                <a id="delete_project_manager_btn{{projectManager.id}}" class="ui mini compact icon red button" data-tooltip="Supprimer" data-position="bottom center" data-inverted="" data-variation="mini" onclick="delete_project_manager({{projectManager.project.id}}, {{projectManager.id}});"><i class="trash icon"></i></a>
                                             </td>
                                         </tr>
                                     {%endfor %}
@@ -48,6 +53,11 @@
                                     {%endif %}
                         </table>
                         <h4 class="ui dividing header">Titulaire</h4>
+                        <div class="ui fluid card od_card_top_table_action">
+                            <div class="content">
+                                <a class="ui right floated yellow mini button" href="{{path('holder_add_get', {'id': project.id})}}"><i class="plus icon"></i> Ajouter un titulaire</a>
+                            </div>
+                        </div>
                         <table class="ui celled yellow small table">
                             <thead>
                                 <tr>
@@ -60,7 +70,7 @@
                                 <tbody>
 
                                     {%for holder in holders %}
-                                        <tr>
+                                        <tr id="holder{{holder.id}}">
                                             <td>
                                                 {{holder.nom}}
                                             </td>
@@ -69,8 +79,8 @@
                                             </td>
                                             <td>{{holder.email}}</td>
                                             <td>
-                                                <a class="ui mini compact icon button" href="#"><i class="edit icon" title="Edit"></i></a> |
-                                                <a class="ui mini compact icon red button" ><i class="trash icon" title="Delete"></i></a>
+                                                <a class="ui mini compact icon button" data-tooltip="Modifier" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('holder_update_get', {'idProject': project.id, 'id': holder.id})}}"><i class="edit icon" ></i></a> |
+                                                <a id="delete_holder{{holder.id}}" class="ui mini compact icon red button" data-tooltip="Supprimer" data-position="bottom center" data-inverted="" data-variation="mini" onclick="delete_holder({{holder.project.id}}, {{holder.id}});"><i class="trash icon" ></i></a>
                                             </td>
                                         </tr>
                                     {%endfor %}
@@ -82,12 +92,182 @@
                                         </th></tr></tfoot>
                                     {%endif %}
                         </table>
+
+                        <h4 class="ui dividing header">Prestataires</h4>
+                        <div class="ui fluid card od_card_top_table_action">
+                            <div class="content">
+                                <a class="ui right floated yellow mini button" href="{{path('service_provider_add_get', {'id': project.id})}}"><i class="plus icon"></i> Ajouter un prestataire</a>
+                            </div>
+                        </div>
+                        <table class="ui celled yellow small table">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Téléphone</th>
+                                    <th>Email</th>                                   
+                                    <th>Actions</th>
+                                </tr></thead>
+                                {%if serviceProviders %}
+                                <tbody>
+
+                                    {%for serviceProvider in serviceProviders %}
+                                        <tr id="service_provider{{serviceProvider.id}}">
+                                            <td>
+                                                {{serviceProvider.nom}}
+                                            </td>
+                                            <td>
+                                                {{serviceProvider.phone}}                                               
+                                            </td>
+                                            <td>{{serviceProvider.email}}</td>
+                                            <td>
+                                                <a class="ui mini compact icon button" data-tooltip="Modifier" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('service_provider_update_get', {'idProject': project.id, 'id': serviceProvider.id})}}"><i class="edit icon"></i></a> |
+                                                <a id="delete_service_provider_btn{{serviceProvider.id}}" class="ui mini compact icon red button" data-tooltip="Supprimer" data-position="bottom center" data-inverted="" data-variation="mini" onclick="delete_service_provider({{serviceProvider.project.id}}, {{serviceProvider.id}});"><i class="trash icon"></i></a>
+                                            </td>
+                                        </tr>
+                                    {%endfor %}
+
+                                </tbody>
+                            {%else %}
+                                <tfoot><tr><th colspan="5">
+                                            <div class='center aligned'>No service provider created at this moment</div>
+                                        </th></tr></tfoot>
+                                    {%endif %}
+                        </table>
+
+                        <h4 class="ui dividing header">D'autres intervenants</h4>
+                        <div class="ui fluid card od_card_top_table_action">
+                            <div class="content">
+                                <a class="ui right floated yellow mini button" href="{{path('other_contributor_add_get', {'id': project.id})}}"><i class="plus icon"></i> Ajouter un intervenant</a>
+                            </div>
+                        </div>
+                        <table class="ui celled yellow small table">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Type d'intervenant</th>
+                                    <th>Téléphone</th>
+                                    <th>Email</th>                                   
+                                    <th>Actions</th>
+                                </tr></thead>
+                                {%if otherContributors %}
+                                <tbody>
+
+                                    {%for otherContributor in otherContributors %}
+                                        <tr id="other_contributor{{otherContributor.id}}">
+                                            <td>
+                                                {{otherContributor.nom}}
+                                            </td>
+                                            <td>
+                                                {{otherContributor.contributorType}}
+                                            </td>
+                                            <td>
+                                                {{otherContributor.phone}}                                               
+                                            </td>
+                                            <td>{{otherContributor.email}}</td>
+                                            <td>
+                                                <a class="ui mini compact icon button" data-tooltip="Modifier" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('other_contributor_update_get', {'idProject': project.id, 'id': otherContributor.id})}}"><i class="edit icon"></i></a> |
+                                                <a id="delete_other_contributor_btn{{otherContributor.id}}" class="ui mini compact icon red button" data-tooltip="Supprimer" data-position="bottom center" data-inverted="" data-variation="mini" onclick="delete_other_contributor({{otherContributor.project.id}}, {{otherContributor.id}});"><i class="trash icon"></i></a>
+                                            </td>
+                                        </tr>
+                                    {%endfor %}
+
+                                </tbody>
+                            {%else %}
+                                <tfoot><tr><th colspan="5">
+                                            <div class='center aligned'>No other project contributor created at this moment</div>
+                                        </th></tr></tfoot>
+                                    {%endif %}
+                        </table>
                     </div>
                 </div>
                 <div class="five wide column">
-                    {% include('OGIVEProjectBundle::right_aside_page.html.twig') %}
+                    {% include('OGIVEProjectBundle::right-aside-page.html.twig') %}
                 </div>
             </div>
         </div>
     </div>
+    
 {% endblock %}
+{% block confirmation_modal %}
+        <div id="confirm_delete_project_manager" class="ui small modal">
+            <i class="close icon"></i>
+            <div class="header">
+                Confirmation de la suppression
+            </div>
+            <div class="content">
+                <p>Vous êtes sur le point de supprimer ce maître d'oeuvre.</p>
+                <p>Voulez-vous vraiment réaliser cette action ?</p>
+            </div>
+            <div class="actions">
+                <div class="ui red deny button">
+                    Non
+                </div>
+                <div id="execute_delete_project_manager"  class="ui green right labeled icon button">
+                    Oui
+                    <i class="checkmark icon"></i>
+                </div>
+            </div>
+        </div>
+        <div id="confirm_delete_holder" class="ui small modal">
+            <i class="close icon"></i>
+            <div class="header">
+                Confirmation de la suppression
+            </div>
+            <div class="content">
+                <p>Vous êtes sur le point de supprimer ce titulaire.</p>
+                <p>Voulez-vous vraiment réaliser cette action ?</p>
+            </div>
+            <div class="actions">
+                <div class="ui red deny button">
+                    Non
+                </div>
+                <div id="execute_delete_holder"  class="ui green right labeled icon button">
+                    Oui
+                    <i class="checkmark icon"></i>
+                </div>
+            </div>
+        </div>
+        <div id="confirm_delete_service_provider" class="ui small modal">
+            <i class="close icon"></i>
+            <div class="header">
+                Confirmation de la suppression
+            </div>
+            <div class="content">
+                <p>Vous êtes sur le point de supprimer ce prestataire.</p>
+                <p>Voulez-vous vraiment réaliser cette action ?</p>
+            </div>
+            <div class="actions">
+                <div class="ui red deny button">
+                    Non
+                </div>
+                <div id="execute_delete_service_provider"  class="ui green right labeled icon button">
+                    Oui
+                    <i class="checkmark icon"></i>
+                </div>
+            </div>
+        </div>
+        <div id="confirm_delete_other_contributor" class="ui small modal">
+            <i class="close icon"></i>
+            <div class="header">
+                Confirmation de la suppression
+            </div>
+            <div class="content">
+                <p>Vous êtes sur le point de supprimer cet intervenant.</p>
+                <p>Voulez-vous vraiment réaliser cette action ?</p>
+            </div>
+            <div class="actions">
+                <div class="ui red deny button">
+                    Non
+                </div>
+                <div id="execute_delete_other_contributor"  class="ui green right labeled icon button">
+                    Oui
+                    <i class="checkmark icon"></i>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+{% block javascripts %}
+    {{ parent()}}
+    <script type="text/javascript" src="{{ asset('bundles/ogiveproject/js/contributors.js')}}"></script>
+{% endblock javascripts %}

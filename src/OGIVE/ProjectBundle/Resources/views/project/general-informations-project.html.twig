@@ -8,7 +8,7 @@
             <div class="ui two column stackable grid padded">
                 <div class="eleven wide column">
                     <div class="ui top attached tabular menu od_project_menu">
-                        {% include('OGIVEProjectBundle:project:single_project_header.html.twig') %}
+                        {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
                     </div>
                     <div class="ui bottom attached segment od_project_menu_content">
                         <div class="ui fluid card od_project_details_card">                                       
@@ -73,14 +73,14 @@
                                 </div>                                   
                             </div>
                             <div class="content">
-                                <a class="ui olive mini button" href="{{path('project_update_get', {'id': project.id})}}"><i class="edit icon"></i> Edit</a>
+                                <a class="ui yellow mini button" href="{{path('project_update_get', {'id': project.id})}}"><i class="edit icon"></i> Edit</a>
                                 <a class="ui red mini button"><i class="trash icon"></i> Delete</a>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="five wide column">
-                    {% include('OGIVEProjectBundle::right_aside_page.html.twig') %}
+                    {% include('OGIVEProjectBundle::right-aside-page.html.twig') %}
                 </div>
             </div>
         </div>

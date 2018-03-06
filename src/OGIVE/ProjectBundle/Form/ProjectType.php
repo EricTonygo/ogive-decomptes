@@ -23,31 +23,48 @@ class ProjectType extends AbstractType {
                 ->add('lieuExecution', null, array('required' => false))
                 ->add('region', null, array('required' => false))
                 ->add('departement', null, array('required' => false))
-                ->add('region', null, array('required' => false))                
-                ->add('tasks', CollectionType::class, array(
-                    'entry_type' => TaskType::class,
-                    'allow_add' => true,
-                    'by_reference' => false,
-                    'allow_delete' => true
-                ))
-                ->add('owners', CollectionType::class, array(
-                    'entry_type' => OwnerType::class,
-                    'allow_add' => true,
-                    'by_reference' => false,
-                    'allow_delete' => true
-                ))
-                ->add('projectManagers', CollectionType::class, array(
-                    'entry_type' => ProjectManagerType::class,
-                    'allow_add' => true,
-                    'by_reference' => false,
-                    'allow_delete' => true
-                ))
-                ->add('holders', CollectionType::class, array(
-                    'entry_type' => HolderType::class,
-                    'allow_add' => true,
-                    'by_reference' => false,
-                    'allow_delete' => true
-                ))
+                ->add('region', null, array('required' => false))
+                ->add('suscriptionDate', TextType::class, array('required' => false))
+                ->add('signatureDate', TextType::class, array('required' => false))
+                ->add('notificationDate', TextType::class, array('required' => false))
+                ->add('avanceDemarrage', null, array('required' => false))
+                ->add('mtAvenant', null, array('required' => false))
+//                ->add('tasks', CollectionType::class, array(
+//                    'entry_type' => TaskType::class,
+//                    'allow_add' => true,
+//                    'by_reference' => false,
+//                    'allow_delete' => true
+//                ))
+//                ->add('owners', CollectionType::class, array(
+//                    'entry_type' => OwnerType::class,
+//                    'allow_add' => true,
+//                    'by_reference' => false,
+//                    'allow_delete' => true
+//                ))
+//                ->add('projectManagers', CollectionType::class, array(
+//                    'entry_type' => ProjectManagerType::class,
+//                    'allow_add' => true,
+//                    'by_reference' => false,
+//                    'allow_delete' => true
+//                ))
+//                ->add('holders', CollectionType::class, array(
+//                    'entry_type' => HolderType::class,
+//                    'allow_add' => true,
+//                    'by_reference' => false,
+//                    'allow_delete' => true
+//                ))
+//                ->add('serviceProviders', CollectionType::class, array(
+//                    'entry_type' => ServiceProviderType::class,
+//                    'allow_add' => true,
+//                    'by_reference' => false,
+//                    'allow_delete' => true
+//                ))
+//                ->add('otherContributors', CollectionType::class, array(
+//                    'entry_type' => OtherContributorType::class,
+//                    'allow_add' => true,
+//                    'by_reference' => false,
+//                    'allow_delete' => true
+//                ))
         ;
     }
 

@@ -27,7 +27,7 @@ class ServiceProvider extends Contributor {
      */
     public function prePersist() {
         parent::prePersist();
-        $this->setContributorType(4);
+        $this->setContributorType("service-provider");
     }
     
 }

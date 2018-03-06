@@ -4,8 +4,8 @@
 
 {% block content %}
     {%if app.user %}
-        {% include('OGIVEProjectBundle::content_index_logged_in.html.twig') %}
+        {% include('OGIVEProjectBundle::content-index-logged-in.html.twig') %}
     {%else%}
-        {% include('OGIVEProjectBundle::content_index_logged_out.html.twig') %}
+        {% include('OGIVEProjectBundle::content-index-logged-out.html.twig') %}
     {%endif%}
 {% endblock %}

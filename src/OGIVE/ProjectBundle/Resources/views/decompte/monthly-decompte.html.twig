@@ -51,7 +51,7 @@
                     {{decompteTask.mtCumulMois}}
                 </td>
                 <td>
-                    {%if decompteTask.pourcentRealisation %}{{decompteTask.pourcentRealisation}}% {%endif %}                                              
+                    {%if decompteTask.pourcentRealisation >= 0 %}{{decompteTask.pourcentRealisation}}% {%endif %}                                              
                 </td>
             </tr>
         {%else %}
@@ -131,22 +131,22 @@
             <td>
             </td>
             <td>
-                {% if decompteTask.mtPrevueProjetExec %}{{decompteTask.mtPrevueMarche}}{% endif %}
+                {% if decompteTask.mtPrevueProjetExec >= 0 %}{{decompteTask.mtPrevueMarche}}{% endif %}
             </td>
             <td>
-                {% if decompteTask.mtPrevueProjetExec %}{{decompteTask.mtPrevueProjetExec}}{% endif %}                                               
+                {% if decompteTask.mtPrevueProjetExec >= 0 %}{{decompteTask.mtPrevueProjetExec}}{% endif %}                                               
             </td>
             <td>
-                {% if decompteTask.mtCumulMoisPrec %}{{decompteTask.mtCumulMoisPrec}}{% endif %}  
+                {% if decompteTask.mtCumulMoisPrec >= 0 %}{{decompteTask.mtCumulMoisPrec}}{% endif %}  
             </td>
             <td>
-                {% if decompteTask.mtMois %}{{decompteTask.mtMois}}{% endif %}                                           
+                {% if decompteTask.mtMois >= 0 %}{{decompteTask.mtMois}}{% endif %}                                           
             </td>
             <td>
-                {% if decompteTask.mtCumulMois %}{{decompteTask.mtCumulMois}}{% endif %}
+                {% if decompteTask.mtCumulMois >= 0 %}{{decompteTask.mtCumulMois}}{% endif %}
             </td>
             <td>
-                {% if decompteTask.pourcentRealisation %}{{decompteTask.pourcentRealisation}}% {% endif %}                                              
+                {% if decompteTask.pourcentRealisation >= 0 %}{{decompteTask.pourcentRealisation}}% {% endif %}                                              
             </td>
         </tr>
     {% endmacro %}                                                
@@ -353,26 +353,45 @@
             <div class="ui one column stackable grid padded">
                 <div class="wide column">
                     <div class="ui top attached tabular menu od_project_menu">
-                        {% include('OGIVEProjectBundle:project:single_project_header.html.twig') %}
+                        {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
                     </div>
                     <div class="ui bottom attached segment od_project_menu_content">
-
+                        {%if allDecomptes > 1 %}
+                            <div class="ui right floated pagination menu mini form" style="margin-bottom: 1em;">
+                                    {%if previousDecompte %}
+                                        <a href="{{path('decompte_show_get', {'idProject': previousDecompte.project.id, 'id': previousDecompte.id})}}" class="yellow icon item">
+                                            <i class="left chevron icon"></i>
+                                        </a>
+                                    {% endif %}
+                                    <select class="ui item pagination dropdown select_another_decompte">
+                                        {% for singleDecompte in allDecomptes %}
+                                            <option value="{{path('decompte_show_get', {'idProject': singleDecompte.project.id, 'id': singleDecompte.id})}}" {% if decompte.monthNumber == singleDecompte.monthNumber %}selected="selected"{% endif %}>{{singleDecompte.monthNumber}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    {%if nextDecompte %}
+                                        <a href="{{path('decompte_show_get', {'idProject': nextDecompte.project.id, 'id': nextDecompte.id})}}" class="icon item">
+                                            <i class="right chevron icon"></i>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                        {% endif %}
                         <div class="ui fluid card od_add_project_card view_field">
                             <div class="content">
                                 <div class="left floated header">
                                     Décompte N°{{decompte.monthNumber}} de {{decompte.monthName}}
                                 </div>
-                                
+
                                 <div class="right floated meta">
-                                    <a id="notify_decompte" class="item"> <i class="send icon"></i> Notify</a>
+                                    <a id="notify_decompte" class="item"> <i class="send icon"></i> Soumettre</a>
                                     <a class="item"> | </a>
-                                    <a id="edit_decompte" class="item"> <i class="edit icon"></i> Edit</a>
+                                    <a id="edit_decompte" class="item"> <i class="edit icon"></i> Modifier</a>
                                     <a class="item"> | </a>
-                                    <a id="delete_decompte" class="item"> <i class="trash icon"></i> Delete</a>
+                                    <a id="delete_decompte" class="item"> <i class="trash icon"></i> Supprimer</a>
                                 </div>
-                                
+
                             </div>
                             <div class="content description od_decompte_content">
+
                                 <div class="ui pointing secondary stackable mini menu">
                                     <a class="item active" data-tab="first">ATTACHEMENT</a>
                                     <a class="item" data-tab="second">MANDEMENT</a>
@@ -442,8 +461,7 @@
                                         <tbody>
                                             <tr>
                                                 <td colspan="7" class='center aligned' style="font-weight: bold;">Montant net de l' acompte à mandater  (Paiement - AIR) :</td>            
-                                                <td class='center aligned'></td>
-                                                <td colspan="2"class='right aligned'>{{decompte.mtACM}}</td>
+                                                <td colspan="3"class='right aligned'>{{decompte.mtACM}}</td>
                                                 <td colspan="2"class='left aligned'>{{decompte.project.projectCostCurrency}}</td>
                                             </tr>
                                             <tr>
@@ -462,12 +480,12 @@
                                             <tr>
                                                 <td colspan="7" class='center aligned' style="font-weight: bold;">Montant TVA : </td>            
                                                 <td class='center aligned'></td>
-                                                <td colspan="2"class='right aligned'>{{decompte.mtTaxesTVA}}</td>
+                                                <td colspan="2"class='right aligned'>{{decompte.mtTaxesTVAACD}}</td>
                                                 <td colspan="2"class='left aligned'>{{decompte.project.projectCostCurrency}}</td>
                                             </tr>
                                             <tr>
-                                                <td colspan="4" class='center aligned'>Arrêté le présent décompte  de la TVA à la somme de :  :</td>            
-                                                <td class='right aligned'>{{decompte.mtTaxesTVA}}</td>
+                                                <td colspan="4" class='center aligned'>Arrêté le présent décompte  de la TVA à la somme de :</td>            
+                                                <td class='right aligned'>{{decompte.mtTaxesTVAACD}}</td>
                                                 <td colspan="7" class='left aligned'>{{decompte.project.projectCostCurrency}}</td>
                                             </tr>
                                         </tbody>
@@ -481,12 +499,12 @@
                                             <tr>
                                                 <td colspan="7" class='center aligned' style="font-weight: bold;">Montant AIR : </td>            
                                                 <td class='center aligned'></td>
-                                                <td colspan="2"class='right aligned'>{{decompte.mtTaxesAIR}}</td>
+                                                <td colspan="2"class='right aligned'>{{decompte.mtTaxesAIRACD}}</td>
                                                 <td colspan="2"class='left aligned'>{{decompte.project.projectCostCurrency}}</td>
                                             </tr>
                                             <tr>
                                                 <td colspan="4" class='center aligned'>Arrêté le présent décompte  de AIR à la somme de :</td>            
-                                                <td class='right aligned'>{{decompte.mtTaxesAIR}}</td>
+                                                <td class='right aligned'>{{decompte.mtTaxesAIRACD}}</td>
                                                 <td colspan="7" class='left aligned'>{{decompte.project.projectCostCurrency}}</td>
                                             </tr>
                                         </tbody>
@@ -514,7 +532,7 @@
                             </div>
                         </div>
 
-                        <div class="ui fluid card od_add_project_card form_field">
+                        <div class="ui fluid card od_add_project_card form_field" style="display: none;">
                             <div class="content">
                                 <div class="left floated header">
                                     Mise à jour du décompte N°{{decompte.monthNumber}} de {{decompte.monthName}}
@@ -525,7 +543,7 @@
                             </div>
                             <div class="content description">
                                 {{ form_start(form, {'method': 'PUT', 'action': path('decompte_update_post', {'idProject': project.id, 'id': decompte.id}), 'attr': {'class': 'ui mini form', 'id': 'od_add_decompte_form', "autocomplete":"off"} }) }}
-                                <div class="three fields">
+                                <div class="four fields">
                                     {{ form_widget(form.monthNumber,{'attr':{'placeholder':"Numero du decompte", 'data-validate': 'monthNumber'}})}}
                                     <div class="ui field">
                                         <label>{{ form_label(form.monthName,"Mois") }}</label>
@@ -534,18 +552,24 @@
                                         </div>
                                     </div>
                                     <div class="ui field">
-                                        <label>Start date<em>*</em></label>
+                                        <label>{{ form_label(form.mtPenalite,"Montant pénalités") }}</label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.mtPenalite,{'attr':{'placeholder':"Montant des pénalités", 'data-validate': 'mt_penalité'}})}}
+                                        </div>
+                                    </div>
+                                    <div class="ui field">
+                                        <label>Date de début</label>
                                         <div class="field">
                                             <div class="ui calendar" >
                                                 <div class="ui input left icon">
                                                     <i class="calendar icon"></i>
-                                                    {{ form_widget(form.startDate,{'attr':{'placeholder':"Date de debut", 'data-validate': 'start_date'}})}}
+                                                    {{ form_widget(form.startDate,{'attr':{'placeholder':"Date de début", 'data-validate': 'start_date'}})}}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="ui field">
-                                        <label>End date<em>*</em></label>
+                                        <label>Date de fin</label>
                                         <div class="field">
                                             <div class="ui calendar" >
                                                 <div class="ui input left icon">
@@ -556,7 +580,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="field">
                                     <table class="ui celled structured yellow small table">
                                         <thead>
@@ -565,7 +588,7 @@
                                                 <th rowspan="2" class='center aligned'>Désignation des ouvrages</th>
                                                 <th rowspan="2" class='center aligned'>U</th>
                                                 <th rowspan="2" class='center aligned'>P.U</th>                                   
-                                                <th colspan="5" class='center aligned'>Quantité</th>
+                                                <th colspan="5" class='center aligned qtemois'>Quantité</th>
                                                 <th colspan="5" class='center aligned'>Montant[FCFA]</th>
                                                 <th rowspan="2" class='center aligned'>% réalisé</th>
                                             </tr>
@@ -573,7 +596,7 @@
                                                 <th class='center aligned'>marché</th>
                                                 <th class='center aligned'>projet d'exec.</th>
                                                 <th class='center aligned'>Cumul préc.</th>
-                                                <th class='center aligned'>du mois</th>
+                                                <th class='center aligned qtemois'>du mois</th>
                                                 <th class='center aligned'>Cumul mois</th>
                                                 <th class='center aligned'>marché</th>
                                                 <th class='center aligned'>projet d'exec.</th>
@@ -609,7 +632,7 @@
                                                         <td>{{ form_widget(childForm.qtePrevueMarche,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
                                                         <td>{{ form_widget(childForm.qtePrevueProjetExec,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
                                                         <td>{{ form_widget(childForm.qteCumulMoisPrec,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
-                                                        <td>{{ form_widget(childForm.qteMois,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini input focused'}}) }}</td>
+                                                        <td>{{ form_widget(childForm.qteMois,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini input qtemois'}}) }}</td>
                                                         <td>{{ form_widget(childForm.qteCumulMois,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
                                                         <td>{{ form_widget(childForm.mtPrevueMarche,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
                                                         <td>{{ form_widget(childForm.mtPrevueProjetExec,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
@@ -635,8 +658,11 @@
                                     </table>
                                 </div>
                                 {{form_widget(form._token)}}
+                                <div class="field">
+                                    {% include('OGIVEProjectBundle::form-message-success-error.html.twig') %}
+                                </div>
                                 <div class="field right aligned">
-                                    <button  class="ui mini olive button" type="submit">Sauvegarder</button>
+                                    <button  class="ui mini yellow button" type="submit">Sauvegarder</button>
                                     <a class="ui mini red button cancel_edit_decompte" >Annuler</a>
                                 </div>
                                 </form>
@@ -651,6 +677,6 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent()}}
-    <script type="text/javascript" src="{{ asset('bundles/ogiveproject/js/project.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ogiveproject/js/decompte.js')}}"></script>
 
 {% endblock %}

@@ -11,23 +11,23 @@
 
 {% block content %}
     <div class="ui basic fixed segment content">
-        <div class='ui container' style="width: 100%">
+        <div class='ui container'>
             <div class="ui one column stackable grid padded">
                 <div class="wide column">
                     <div class="ui top attached tabular menu od_project_menu">
-                        {% include('OGIVEProjectBundle:project:single_project_header.html.twig') %}
+                        {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
                     </div>
                     <div class="ui bottom attached segment od_project_menu_content">
                         <div class="ui fluid card od_add_project_card">
                             <div class="content">
                                 <div class="header">
-                                    Création d'un nouveau décompte
+                                    Création du décompte N°{{form.monthNumber.vars.value}}
                                 </div>
                             </div>
                             <div class="content description">
                                 {{ form_start(form, {'method': 'POST', 'action': path('decompte_add_get', {'id': project.id}), 'attr': {'class': 'ui mini form', 'id': 'od_add_decompte_form', "autocomplete":"off"} }) }}
                                 
-                                <div class="two fields">
+                                <div class="four fields">
                                     {{ form_widget(form.monthNumber,{'attr':{'placeholder':"Numero du decompte", 'data-validate': 'monthNumber'}})}}
                                     <div class="ui field">
                                         <label>{{ form_label(form.monthName,"Mois") }}</label>
@@ -36,7 +36,13 @@
                                         </div>
                                     </div>
                                     <div class="ui field">
-                                        <label>Début des travaux</label>
+                                        <label>{{ form_label(form.mtPenalite,"Montant pénalités") }}</label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.mtPenalite,{'attr':{'placeholder':"Montant des pénalités", 'data-validate': 'mt_penalité'}})}}
+                                        </div>
+                                    </div>
+                                    <div class="ui field">
+                                        <label>Date de debut</label>
                                         <div class="field">
                                             <div class="ui calendar" >
                                                 <div class="ui input left icon">
@@ -47,7 +53,7 @@
                                         </div>
                                     </div>
                                     <div class="ui field">
-                                        <label>Fin des travaux</label>
+                                        <label>Date de fin</label>
                                         <div class="field">
                                             <div class="ui calendar" >
                                                 <div class="ui input left icon">
@@ -60,8 +66,11 @@
                                 </div>
                                 {{form_widget(form._token)}}
                                 <div class="field">
-                                    <button  class="ui mini olive button" type="submit">Créer</button>
-                                    <a  class="ui mini red button"  href="{{path('project_decomptes_get', {'id': project.id})}}">Annuler</a>
+                                    {% include('OGIVEProjectBundle::form-message-success-error.html.twig') %}
+                                </div>
+                                <div class="field right aligned">
+                                    <button id="od_add_decompte_submit_btn"  class="ui mini yellow button" type="submit">Créer</button>
+                                    <a id="od_add_decompte_cancel_btn" class="ui mini red button"  href="{{path('project_decomptes_get', {'id': project.id})}}">Annuler</a>
                                 </div>
                                 </form>
                             </div>
@@ -74,28 +83,6 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent()}}
-    <script type="text/javascript" src="{{ asset('bundles/ogivealert/js/project.js')}}"></script>
-    <script>
-        window.onload = function () {
-            var dhx_sh1 = new dhtmlxSpreadSheet({
-                load: "{{ asset('bundles/ogiveproject/spreadsheet/codebase/php/data.php')}}",
-                save: "{{ asset('bundles/ogiveproject/spreadsheet/codebase/php/data.php')}}",
-                parent: "gridobj",
-                icons_path: "{{ asset('bundles/ogiveproject/spreadsheet/codebase/imgs/icons/')}}",
-                autowidth: false,
-                autoheight: false
-            });
-            dhx_sh1.load("1");
-        {#var dhx_sh2 = new dhtmlxSpreadSheet({
-            load: "../codebase/php/data.php",
-            save: "../codebase/php/data.php",
-            parent: "gridobj2",
-            icons_path: "../codebase/imgs/icons/",
-            autowidth: false,
-            autoheight: false
-        });
-        dhx_sh2.load("2");#}
-            };
-    </script>
+    <script type="text/javascript" src="{{ asset('bundles/ogiveproject/js/decompte.js')}}"></script>
 
 {% endblock %}

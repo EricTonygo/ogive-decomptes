@@ -1,0 +1,120 @@
+{% extends "OGIVEProjectBundle::layout.html.twig" %}
+{% trans_default_domain 'OGIVEProjectBundle' %}
+{% block title %}Ajout d'un intervenant {% endblock %}
+
+{% block content %}
+    <div class="ui basic fixed segment content">
+        <div class='ui container'>
+            <div class="ui one column stackable grid padded">
+                <div class="wide column">
+                    <div class="ui top attached tabular menu od_project_menu">
+                        {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
+                    </div>
+                    <div class="ui bottom attached segment od_project_menu_content">
+                        <div class="ui fluid card od_add_project_card">
+                            <div class="content">
+                                <div class="header">
+                                    Ajout d'un intervenant
+                                </div>
+                            </div>
+                            <div class="content description">
+                                {{ form_start(form, {'method': 'POST', 'action': path('other_contributor_add_post', {'id': project.id}), 'attr': {'class': 'ui mini form', 'id': 'od_add_other_contributor_form', "autocomplete":"off"} }) }}
+                                <h4 class="ui dividing header">Information d'un intervenant</h4>
+                                <div class="two fields">
+                                    <div class="field">
+                                        <label>{{ form_label(form.contributorType,"Type d'intervenant") }}</label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.contributorType,{'attr':{'placeholder':"Type d'intervenant", 'data-validate': 'contributorType'}})}}
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <label>{{ form_label(form.nom,"Nom") }}</label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.nom,{'attr':{'placeholder':"Nom", 'data-validate': 'nom'}})}}
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="three fields">
+                                    <div class="field">
+                                        <label>{{ form_label(form.email,"Email") }}</label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.email,{'attr':{'placeholder':"Email", 'data-validate': 'email'}})}}
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <label>{{ form_label(form.phone,"Téléphone") }}</label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.phone,{'attr':{'placeholder':"Téléphone", 'data-validate': 'phone'}})}}
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <label>{{ form_label(form.codePostal,"Boite postal") }}</label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.codePostal,{'attr':{'placeholder':"Code postal", 'data-validate': 'code_postal'}})}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="three fields">
+                                    <div class="field">
+                                        <label>{{ form_label(form.faxNumber,"Fax") }}</label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.faxNumber,{'attr':{'placeholder':"Fax", 'data-validate': 'faxNumber'}})}}
+                                        </div>
+                                    </div>
+                                    <div class="ui field">
+                                        <label>{{ form_label(form.rc,"R.C") }}</label>
+                                        <div class="field">
+                                            <div class="field"> 
+                                                {{ form_widget(form.rc,{'attr':{'placeholder':"R.C", 'data-validate': 'rc'}})}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui field">
+                                        <label>{{ form_label(form.numeroContribuable,"Numéro du contribuable") }}</label>
+                                        <div class="field">
+                                            <div class="field"> 
+                                                {{ form_widget(form.numeroContribuable,{'attr':{'placeholder':"Numéro du contribuable", 'data-validate': 'numero_contribuale'}})}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="three fields">
+                                    <div class="field">
+                                        <label>{{ form_label(form.numeroCompteBancaire,"N° compte bancaire") }}</label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.numeroCompteBancaire,{'attr':{'placeholder':"Numero du compte bancaire", 'data-validate': 'numero_compte_bancaire'}})}}
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <label>{{ form_label(form.nomBanque,"Nom banque") }}</label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.nomBanque,{'attr':{'placeholder':"Nom de la banque", 'data-validate': 'nom_banque'}})}}
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <label>{{ form_label(form.intitule,"Intitulé") }}</label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.intitule,{'attr':{'placeholder':"Intitulé", 'data-validate': 'intitule'}})}}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{form_widget(form._token)}}
+                                <div class="field">
+                                    {% include('OGIVEProjectBundle::form-message-success-error.html.twig') %}
+                                </div>
+                                <div class="field right aligned">
+                                    <button id="od_add_other_contributor_submit_btn" class="ui mini yellow button" type="submit">Sauvegarder</button>
+                                    <a id="od_add_other_contributor_cancel_btn" class="ui mini red button"  href="{{path('project_contributors_get', {'id': project.id})}}">Annuler</a>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

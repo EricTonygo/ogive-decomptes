@@ -1,43 +1,35 @@
 <table class="ui celled structured yellow small fluid table">
     <tbody>
         <tr>
-            <td colspan="1" class=''>Montant marché HTVA :</td>
-            <td colspan="1" class='center aligned'>{{decompte.mtPrevueMarcheTTC}}</td>
-            <td colspan="2" rowspan="2" class='center aligned'>Eléments positifs</td>
-            <td colspan="3" rowspan="2" class='center aligned'>Eléments négatifs</td>
-            <td rowspan="3" class='center aligned'></td>
-            <td rowspan="3" class='center aligned'>Total des paiements</td>
-            <td rowspan="3" class='center aligned'></td>
-            <td colspan="2"  rowspan="2" class='center aligned'>Taxes [{{decompte.project.projectCostCurrency}}]</td>
+            <td colspan="1" class='' style="font-weight: bold">Montant marché HTVA :</td>
+            <td colspan="1" class='center aligned'>{{decompte.mtPrevueMarche}}</td>
+            <td colspan="2" rowspan="2" class='center aligned' style="font-weight: bold">Eléments positifs</td>
+            <td colspan="3" rowspan="2" class='center aligned' style="font-weight: bold">Eléments négatifs</td>
+            <td rowspan="8" class='center aligned'></td>
+            <td rowspan="3" class='center aligned' style="font-weight: bold">Total des paiements</td>
+            <td rowspan="8" class='center aligned'></td>
+            <td colspan="2"  rowspan="2" class='center aligned' style="font-weight: bold">Taxes [{{decompte.project.projectCostCurrency}}]</td>
         </tr>
         <tr>
-            <td colspan="1" class=''>Avenant:</td>
-            <td colspan="1" class='center aligned'>{{decompte.mtAvenant}}</td>
+            <td colspan="1" class='' style="font-weight: bold">Avenant:</td>
+            <td colspan="1" class='center aligned'>{{decompte.project.mtAvenant}}</td>
 
         </tr>
         <tr>
-            <td colspan="1" class=''>Montant total HTVA:</td>
-            <td colspan="1" class='center aligned'>{{decompte.mtPrevueMarcheTTC}}</td>
-            <td class='center aligned'>Avance de démarrage</td>
-            <td class='center aligned'>Prestations  AIR Incluses</td>
-            <td class='center aligned'>Retenue de garantie</td>
-            <td class='center aligned'>Remboursement d'avance</td>
-            <td class='center aligned'>Pénalité</td>
-            <td class='center aligned'>A.I.R</td>
-            <td class='center aligned'>T.V.A</td>
+            <td colspan="1" style="font-weight: bold">Montant total HTVA:</td>
+            <td colspan="1" class='center aligned'>{{decompte.mtTotalMarcheHTVA}}</td>
+            <td class='center aligned' style="font-weight: bold">Avance de démarrage</td>
+            <td class='center aligned' style="font-weight: bold">Prestations  AIR Incluses</td>
+            <td class='center aligned' style="font-weight: bold">Retenue de garantie</td>
+            <td class='center aligned' style="font-weight: bold">Remboursement d'avance</td>
+            <td class='center aligned' style="font-weight: bold">Pénalité</td>
+            <td class='center aligned' style="font-weight: bold">A.I.R</td>
+            <td class='center aligned' style="font-weight: bold">T.V.A</td>
         </tr>
         <tr>
+            <td colspan="7" class='center aligned'></td>
+            <td  class='center aligned'></td>
             <td colspan="2" class='center aligned'></td>
-            <td class='center aligned'></td>
-            <td class='center aligned'></td>
-            <td class='center aligned'></td>
-            <td class='center aligned'></td>
-            <td class='center aligned'></td>
-            <td class='center aligned'></td>
-            <td class='center aligned'></td>
-            <td class='center aligned'></td>
-            <td class='center aligned'></td>
-            <td class='center aligned'></td>
         </tr>
         <tr>
             <td colspan="2" class=''>Présent décompte (cumul)</td>
@@ -46,9 +38,9 @@
             <td class='center aligned'>{{decompte.mtRetenueGarantie}}</td>
             <td class='center aligned'>{{decompte.mtRemboursementAvance}}</td>
             <td class='center aligned'>{{decompte.mtPenalite}}</td>
-            <td class='center aligned'></td>
+{#            <td class='center aligned'></td>#}
             <td class='center aligned'>{{decompte.mtTotalPaiements}}</td>
-            <td class='center aligned'></td>
+{#            <td class='center aligned'></td>#}
             <td class='center aligned'>{{decompte.mtCumulMoisIR}}</td>
             <td class='center aligned'>{{decompte.mtCumulMoisTVA}}</td>
         </tr>
@@ -59,9 +51,9 @@
             <td class='center aligned'>{{decompte.mtRetenueGarantiePrec}}</td>
             <td class='center aligned'>{{decompte.mtRemboursementAvancePrec}}</td>
             <td class='center aligned'>{{decompte.mtPenalitePrec}}</td>
-            <td class='center aligned'></td>
+{#            <td class='center aligned'></td>#}
             <td class='center aligned'>{{decompte.mtTotalPaiementsPrec}}</td>
-            <td class='center aligned'></td>
+{#            <td class='center aligned'></td>#}
             <td class='center aligned'>{{decompte.mtCumulMoisPrecIR}}</td>
             <td class='center aligned'>{{decompte.mtCumulMoisPrecTVA}}</td>
         </tr>
@@ -72,24 +64,16 @@
             <td class='center aligned'>{{decompte.mtRetenueGarantieACD}}</td>
             <td class='center aligned'>{{decompte.mtRemboursementAvanceACD}}</td>
             <td class='center aligned'>{{decompte.mtPenaliteACD}}</td>
-            <td class='center aligned'></td>
+{#            <td class='center aligned'></td>#}
             <td class='center aligned'>{{decompte.mtTotalPaiementsACD}}</td>
-            <td class='center aligned'></td>
+{#            <td class='center aligned'></td>#}
             <td class='center aligned'>{{decompte.mtTaxesAIRACD}}</td>
             <td class='center aligned'>{{decompte.mtTaxesTVAACD}}</td>
         </tr>
         <tr>
+            <td colspan="7" class='center aligned'></td>
+            <td  class='center aligned'></td>
             <td colspan="2" class='center aligned'></td>
-            <td class='center aligned'></td>
-            <td class='center aligned'></td>
-            <td class='center aligned'></td>
-            <td class='center aligned'></td>
-            <td class='center aligned'></td>
-            <td class='center aligned'></td>
-            <td class='center aligned'></td>
-            <td class='center aligned'></td>
-            <td class='center aligned'></td>
-            <td class='center aligned'></td>
         </tr>
         
     </tbody>

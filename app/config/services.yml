@@ -47,10 +47,12 @@ services:
         tags:
             - { name: form.type, alias: app_user_registration }
             
-    common_service:
+    app.common_service:
         class: OGIVE\ProjectBundle\Services\CommonService
+        public: true
         arguments: ["@doctrine.orm.entity_manager"]
-        
-    app.controller.decompte:
-        class: OGIVE\ProjectBundle\Controller\DecompteController
-        arguments: ["@common_service"]
+    
+    app.decompte_manager:
+        class: OGIVE\ProjectBundle\Services\DecompteManager
+        public: true
+        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage"]

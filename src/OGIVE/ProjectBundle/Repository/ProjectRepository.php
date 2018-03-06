@@ -19,6 +19,7 @@ class ProjectRepository extends EntityRepository
         $repositoryOwner = $em->getRepository("OGIVEProjectBundle:Owner");
         $repositoryProjectManager = $em->getRepository("OGIVEProjectBundle:ProjectManager");
         $repositoryServiceProvider = $em->getRepository("OGIVEProjectBundle:ServiceProvider");
+        $repositoryOtherContributor = $em->getRepository("OGIVEProjectBundle:OtherContributor");
         $repositoryDecompte = $em->getRepository("OGIVEProjectBundle:Decompte");
         $em->getConnection()->beginTransaction();
         try{
@@ -45,6 +46,10 @@ class ProjectRepository extends EntityRepository
             $servicePrroviders = $project->getServiceProviders();
             foreach ($servicePrroviders as $servicePrrovider) {
                 $repositoryServiceProvider->deleteServiceProvider($servicePrrovider);
+            }
+            $otherContributors = $project->getOtherContributors();
+            foreach ($otherContributors as $otherContributor) {
+                $repositoryOtherContributor->deleteOtherContributor($otherContributor);
             }
             $em->remove($project);
             $em->flush();

@@ -1,4 +1,4 @@
-<table class="ui celled structured small fluid table">
+<table class="ui celled structured small fluid table table_header_decompte">
     <tbody>
         <tr style="text-align: center; font-weight: bold;">
             <td>{{project.subject}}</td>
@@ -8,38 +8,39 @@
         </tr>
     </tbody>
 </table>
-<table class="ui celled structured small fluid table">
+        {%set holder = project.holders[0] %}
+<table class="ui celled structured small fluid table table_header_decompte">
     <tbody>
         <tr>
-            <td style="width: 26em">MOIS DE: {{decompte.monthName}}</td>
+            <td style="width: 26em; font-weight: bold;">MOIS DE: {{decompte.monthName}}</td>
             <td></td>
-            <td style="width: 32em;">TITULAIRE: {%if project.holders %}{{project.holders[0].nom}}{%endif %}</td>
+            <td style="width: 32em; font-weight: bold;">TITULAIRE: {%if project.holders %}{{holder.nom}}{%endif %}</td>
         </tr>
         <tr>
-            <td ></td>
-            <td></td>
-            <td></td>
+            <td >Marché {{decompte.project.numeroMarche}}</td>
+            <td class="center aligned" style="font-weight: bold;">IMPUTATION: FONDS SPECIAUX, PLAN D'URGENCE EXERCICE xxxxx</td>
+            <td>B.P.{{holder.codePostal}}  Tel/fax: {{holder.phone}} </td>
         </tr>
         <tr>
-            <td ></td>
+            <td >Souscrit, {{decompte.project.suscriptionDate|date('d/m/Y')}}</td>
             <td rowspan="5" style="text-align: center; font-weight: bold;">{{decompte_title}}</td>
-            <td></td>
+            <td>RC N° {{holder.rc}}</td>
+        </tr>
+        <tr>
+            <td>Signé le, {{decompte.project.signatureDate|date('d/m/Y')}}</td>
+            <td>N° Contribuable: {{holder.numeroContribuable}}</td>
+        </tr>
+        <tr>
+            <td>Notifié le, {{decompte.project.notificationDate|date('d/m/Y')}}</td>
+            <td>N° Compte bancaire: {{holder.numeroCompteBancaire}}</td>
         </tr>
         <tr>
             <td></td>
-            <td></td>
+            <td>{{holder.nomBanque}}</td>
         </tr>
         <tr>
             <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
+            <td>INTITULE: {{holder.intitule}}</td>
         </tr>
     </tbody>
 </table>

@@ -10,7 +10,7 @@
             <div class="ui one column stackable grid padded">
                 <div class="wide column">
                     <div class="ui top attached tabular menu od_project_menu">
-                        {% include('OGIVEProjectBundle:project:single_project_header.html.twig') %}
+                        {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
                     </div>
                     <div class="ui bottom attached segment od_project_menu_content">
                         <div class="ui fluid card od_add_project_card">
@@ -18,11 +18,13 @@
                                 <div class="left floated header">
                                     Mise à jour du décompte N°{{decompte.monthNumber}} de {{decompte.monthName}}
                                 </div>
-
+                                <div class="right floated meta">
+                                    <a href="{{path('decompte_show_get', {'idProject': decompte.project.id, 'id': decompte.id})}}"> Cancel</a>
+                                </div>
                             </div>
                             <div class="content description">
-                                {{ form_start(form, {'method': 'PUT', 'action': path('decompte_update_post', {'idProject': project.id, 'id': decompte.id}), 'attr': {'class': 'ui mini form', 'id': 'od_add_decompte_form', "autocomplete":"off"} }) }}
-                                <div class="three fields">
+                                {{ form_start(form, {'method': 'PUT', 'action': path('decompte_update_post', {'idProject': project.id, 'id': decompte.id}), 'attr': {'class': 'ui mini form', 'id': 'od_update_decompte_form', "autocomplete":"off"} }) }}
+                                <div class="four fields">
                                     {{ form_widget(form.monthNumber,{'attr':{'placeholder':"Numero du decompte", 'data-validate': 'monthNumber'}})}}
                                     <div class="ui field">
                                         <label>{{ form_label(form.monthName,"Mois") }}</label>
@@ -31,7 +33,13 @@
                                         </div>
                                     </div>
                                     <div class="ui field">
-                                        <label>Start date<em>*</em></label>
+                                        <label>{{ form_label(form.mtPenalite,"Montant pénalités") }}</label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.mtPenalite,{'attr':{'placeholder':"Montant des pénalités", 'data-validate': 'mt_penalité'}})}}
+                                        </div>
+                                    </div>
+                                    <div class="ui field">
+                                        <label>Date de debut</label>
                                         <div class="field">
                                             <div class="ui calendar" >
                                                 <div class="ui input left icon">
@@ -42,7 +50,7 @@
                                         </div>
                                     </div>
                                     <div class="ui field">
-                                        <label>End date<em>*</em></label>
+                                        <label>Date de fin</label>
                                         <div class="field">
                                             <div class="ui calendar" >
                                                 <div class="ui input left icon">
@@ -53,7 +61,7 @@
                                         </div>
                                     </div>
                                 </div>
-
+                               
                                 <div class="field">
                                     <table class="ui celled structured yellow small table">
                                         <thead>
@@ -62,26 +70,26 @@
                                                 <th rowspan="2" class='center aligned'>Désignation des ouvrages</th>
                                                 <th rowspan="2" class='center aligned'>U</th>
                                                 <th rowspan="2" class='center aligned'>P.U</th>                                   
-                                                <th colspan="5" class='center aligned'>Quantité</th>
+                                                <th colspan="5" class='center aligned qtemois'>Quantité</th>
                                                 <th colspan="5" class='center aligned'>Montant[FCFA]</th>
                                                 <th rowspan="2" class='center aligned'>% réalisé</th>
                                             </tr>
                                             <tr>
-                                                <th class='center aligned'>marché</th>
-                                                <th class='center aligned'>projet d'exec.</th>
+                                                <th class='center aligned'>Marché</th>
+                                                <th class='center aligned'>Projet d'exec.</th>
                                                 <th class='center aligned'>Cumul préc.</th>
-                                                <th class='center aligned'>du mois</th>
+                                                <th class='center aligned qtemois'>Du mois</th>
                                                 <th class='center aligned'>Cumul mois</th>
-                                                <th class='center aligned'>marché</th>
-                                                <th class='center aligned'>projet d'exec.</th>
+                                                <th class='center aligned'>Marché</th>
+                                                <th class='center aligned'>Projet d'exec.</th>
                                                 <th class='center aligned'>Cumul préc.</th>
-                                                <th class='center aligned'>du mois</th>
+                                                <th class='center aligned'>Du mois</th>
                                                 <th class='center aligned'>Cumul mois</th>
                                             </tr>
 
                                         </thead>
                                         {%if form.decompteTasks %}
-                                            <tbody class="decompteTasks form_field" data-prototype="{{ forms.decompteTask_prototype(form.decompteTasks.vars.prototype)|e }}">
+                                            <tbody class="decompteTasks" data-prototype="{{ forms.decompteTask_prototype(form.decompteTasks.vars.prototype)|e }}">
                                                 {% for decompteTask in form.decompteTasks %}
                                                     {{ forms.decompteTask_prototype(decompteTask) }}
                                                 {%endfor %}
@@ -106,7 +114,7 @@
                                                         <td>{{ form_widget(childForm.qtePrevueMarche,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
                                                         <td>{{ form_widget(childForm.qtePrevueProjetExec,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
                                                         <td>{{ form_widget(childForm.qteCumulMoisPrec,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
-                                                        <td>{{ form_widget(childForm.qteMois,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini input focused'}}) }}</td>
+                                                        <td>{{ form_widget(childForm.qteMois,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini input qtemois'}}) }}</td>
                                                         <td>{{ form_widget(childForm.qteCumulMois,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
                                                         <td>{{ form_widget(childForm.mtPrevueMarche,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
                                                         <td>{{ form_widget(childForm.mtPrevueProjetExec,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
@@ -132,9 +140,12 @@
                                     </table>
                                 </div>
                                 {{form_widget(form._token)}}
+                                <div class="field">
+                                    {% include('OGIVEProjectBundle::form-message-success-error.html.twig') %}
+                                </div>
                                 <div class="field right aligned">
-                                    <button  class="ui mini olive button" type="submit">Sauvegarder</button>
-                                    <a class="ui mini red button cancel_edit_decompte" >Annuler</a>
+                                    <button id="od_update_decompte_submit_btn" class="ui mini yellow button" type="submit">Sauvegarder</button>
+                                    <a id="od_update_decompte_cancel_btn" class="ui mini red button" href="{{path('decompte_show_get', {'idProject': decompte.project.id, 'id': decompte.id})}}">Annuler</a>
                                 </div>
                                 </form>
                             </div>
@@ -148,6 +159,6 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent()}}
-    <script type="text/javascript" src="{{ asset('bundles/ogiveproject/js/project.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ogiveproject/js/decompte.js')}}"></script>
 
 {% endblock %}

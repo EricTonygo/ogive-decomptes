@@ -52,84 +52,84 @@ class DecompteTask extends GeneralClass {
     /**
      * @var float
      *
-     * @ORM\Column(name="prix_unitaire", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="prix_unitaire", type="float", precision=20, scale=0, nullable=true)
      */
     private $prixUnitaire;
     
     /**
      * @var integer
      *
-     * @ORM\Column(name="qte_prevue_marche", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="qte_prevue_marche", type="float", precision=20, scale=0, nullable=true)
      */
     protected $qtePrevueMarche;
     
     /**
      * @var integer
      *
-     * @ORM\Column(name="qte_prevue_projet_exec", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="qte_prevue_projet_exec", type="float", precision=20, scale=0, nullable=true)
      */
     protected $qtePrevueProjetExec;
     
     /**
      * @var integer
      *
-     * @ORM\Column(name="qte_cumul_mois_prec", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="qte_cumul_mois_prec", type="float", precision=20, scale=0, nullable=true)
      */
     protected $qteCumulMoisPrec;
     
     /**
      * @var integer
      *
-     * @ORM\Column(name="qte_mois", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="qte_mois", type="float", precision=20, scale=0, nullable=true)
      */
     protected $qteMois;
     
     /**
      * @var integer
      *
-     * @ORM\Column(name="qte_cumul_mois", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="qte_cumul_mois", type="float", precision=20, scale=0, nullable=true)
      */
     protected $qteCumulMois;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_prevue_marche", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_prevue_marche", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtPrevueMarche;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_prevue_projet_exec", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_prevue_projet_exec", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtPrevueProjetExec;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_cumul_mois_prec", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_cumul_mois_prec", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtCumulMoisPrec;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_mois", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_mois", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtMois;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_cumul_mois", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_cumul_mois", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtCumulMois;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="pourcent_realisation", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="pourcent_realisation", type="float", precision=20, scale=0, nullable=true)
      */
     private $pourcentRealisation;    
     

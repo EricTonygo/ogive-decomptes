@@ -27,7 +27,7 @@ class Owner extends Contributor {
      */
     public function prePersist() {
         parent::prePersist();
-        $this->setContributorType(1);
+        $this->setContributorType("owner");
     }
     
 }

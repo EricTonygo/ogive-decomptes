@@ -4,7 +4,7 @@
 
 {% block body %}
     {% include('OGIVEProjectBundle::header.html.twig') %}
-
+    {% include('OGIVEProjectBundle::top-message-success-error.html.twig') %}
     <div class="ui bottom attached segment pushable od_app_content">
         {% include('OGIVEProjectBundle::sidebar.html.twig') %}
         <div class="pusher">
@@ -13,6 +13,7 @@
             {% endblock content %}
         </div>
         {% include('OGIVEProjectBundle::footer.html.twig') %}
+        {% block confirmation_modal %}{% endblock %}
     </div>
-
+      
 {% endblock body %}

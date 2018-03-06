@@ -30,7 +30,7 @@ class Project extends GeneralClass {
     /**
      * @var float
      *
-     * @ORM\Column(name="project_cost", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="project_cost", type="float", precision=20, scale=0, nullable=true)
      */
     private $projectCost;
     
@@ -55,7 +55,6 @@ class Project extends GeneralClass {
      */
     private $lieuExecution;
     
-    
     /**
      * @var string
      *
@@ -70,6 +69,48 @@ class Project extends GeneralClass {
      */
      private $departement;
     
+     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="suscription_date", type="datetime", nullable=true)
+     */
+    private $suscriptionDate;
+    
+     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="signature_date", type="datetime", nullable=true)
+     */
+    private $signatureDate;
+    
+     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="notification_date", type="datetime", nullable=true)
+     */
+    private $notificationDate;
+    
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="mt_avenant", type="float", precision=20, scale=0, nullable=true)
+     */
+    private $mtAvenant;
+    
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="avance_demarrage", type="float", precision=20, scale=0, nullable=true)
+     */
+    private $avanceDemarrage;
+    
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="payment_state_avance_demarrage", type="float", precision=20, scale=0, nullable=true)
+     */
+    private $paymentStateAvanceDemarrage;
+     
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
@@ -108,6 +149,13 @@ class Project extends GeneralClass {
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
+     * @ORM\OneToMany(targetEntity="\OGIVE\ProjectBundle\Entity\OtherContributor", mappedBy="project", cascade={"remove", "persist"})
+     */
+    private $otherContributors;
+    
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
      * @ORM\OneToMany(targetEntity="\OGIVE\ProjectBundle\Entity\Decompte", mappedBy="project", cascade={"remove", "persist"})
      */
     private $decomptes;
@@ -122,6 +170,7 @@ class Project extends GeneralClass {
         $this->serviceProviders = new \Doctrine\Common\Collections\ArrayCollection();
         $this->holders = new \Doctrine\Common\Collections\ArrayCollection();
         $this->tasks = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->otherContributors = new \Doctrine\Common\Collections\ArrayCollection();
         $this->decomptes = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
@@ -299,6 +348,119 @@ class Project extends GeneralClass {
      */
     public function getDepartement() {
         return $this->departement;
+    }
+    
+    /**
+     * Set avanceDemarrage
+     *
+     * @param float $avanceDemarrage
+     *
+     * @return Project
+     */
+    public function setAvanceDemarrage($avanceDemarrage) {
+        $this->avanceDemarrage = $avanceDemarrage;
+
+        return $this;
+    }
+
+    /**
+     * Get avanceDemarrage
+     *
+     * @return float
+     */
+    public function getAvanceDemarrage() {
+        return $this->avanceDemarrage;
+    }
+    
+    /**
+     * Set paymentStateAvanceDemarrage
+     *
+     * @param float $paymentStateAvanceDemarrage
+     *
+     * @return Project
+     */
+    public function setPaymentStateAvanceDemarrage($paymentStateAvanceDemarrage) {
+        $this->paymentStateAvanceDemarrage = $paymentStateAvanceDemarrage;
+
+        return $this;
+    }
+
+    /**
+     * Get paymentStateAvanceDemarrage
+     *
+     * @return float
+     */
+    public function getPaymentStateAvanceDemarrage() {
+        return $this->paymentStateAvanceDemarrage;
+    }
+    
+    /**
+     * Set suscriptionDate
+     *
+     * @param \DateTime $suscriptionDate
+     *
+     * @return Project
+     */
+    public function setSuscriptionDate($suscriptionDate) {
+        $this->suscriptionDate = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $suscriptionDate))));
+
+        return $this;
+    }
+
+    /**
+     * Get suscriptionDate
+     *
+     * @return \DateTime
+     */
+    public function getSuscriptionDate() {
+        return $this->suscriptionDate ? $this->suscriptionDate->format('d-m-Y'): $this->suscriptionDate;
+        
+    }
+    
+    /**
+     * Set signatureDate
+     *
+     * @param \DateTime $signatureDate
+     *
+     * @return Project
+     */
+    public function setSignatureDate($signatureDate) {
+        $this->signatureDate = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $signatureDate))));
+
+        return $this;
+    }
+
+    /**
+     * Get signatureDate
+     *
+     * @return \DateTime
+     */
+    public function getSignatureDate() {
+        return $this->signatureDate ? $this->signatureDate->format('d-m-Y'): $this->signatureDate;
+        
+    }
+    
+    /**
+     * Set notificationDate
+     *
+     * @param \DateTime $notificationDate
+     *
+     * @return Project
+     */
+    public function setNotificationDate($notificationDate) {
+        $this->notificationDate = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $notificationDate))));
+
+        return $this;
+    }
+
+    /**
+     * Get notificationDate
+     *
+     * @return \DateTime
+     */
+    public function getNotificationDate() {
+        return $this->notificationDate ? $this->notificationDate->format('d-m-Y'): $this->notificationDate;
+        
     }
     
     /**
@@ -557,6 +719,71 @@ class Project extends GeneralClass {
     public function removeDecompte(\OGIVE\ProjectBundle\Entity\Decompte $decompte) {
         $this->decomptes->removeElement($decompte);
         return $this;
+    }
+    
+    /**
+     * Add otherContributor
+     *
+     * @param \OGIVE\ProjectBundle\Entity\OtherContributor $otherContributor 
+     * @return Project
+     */
+    public function addOtherContributor(\OGIVE\ProjectBundle\Entity\OtherContributor $otherContributor) {
+        $this->otherContributors[] = $otherContributor;
+        return $this;
+    }
+
+    /**
+     * Get otherContributors
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOtherContributors() {
+        return $this->otherContributors;
+    }
+
+    /**
+     * Set otherContributors
+     *
+     * @param \Doctrine\Common\Collections\Collection $otherContributors
+     * @return Project
+     */
+    public function setOtherContributors(\Doctrine\Common\Collections\Collection $otherContributors = null) {
+        $this->otherContributors = $otherContributors;
+
+        return $this;
+    }
+
+    /**
+     * Remove otherContributor
+     *
+     * @param \OGIVE\ProjectBundle\Entity\OtherContributor $otherContributor
+     * @return Project
+     */
+    public function removeOtherContributor(\OGIVE\ProjectBundle\Entity\OtherContributor $otherContributor) {
+        $this->otherContributors->removeElement($otherContributor);
+        return $this;
+    }
+    
+    /**
+     * Set mtAvenant
+     *
+     * @param float $mtAvenant
+     *
+     * @return Project
+     */
+    public function setMtAvenant($mtAvenant) {
+        $this->mtAvenant = $mtAvenant;
+
+        return $this;
+    }
+
+    /**
+     * Get mtAvenant
+     *
+     * @return float
+     */
+    public function getMtAvenant() {
+        return $this->mtAvenant;
     }
 
     public function setSearchData() {

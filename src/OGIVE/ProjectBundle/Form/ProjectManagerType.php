@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class ProjectManagerType extends AbstractType {
 
@@ -14,16 +15,16 @@ class ProjectManagerType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-                ->add('nom', null, array('required' => false))
-                ->add('email', null, array('required' => false))  
-                ->add('phone', null, array('required' => false))  
-                ->add('codePostal', null, array('required' => false))            
-                ->add('fax', null, array('required' => false))
-                ->add('rc', null, array('required' => false))
-                ->add('numeroContribuable', null, array('required' => false))
-                ->add('numeroCompteBancaire', null, array('required' => false))
-                ->add('nomBanque', null, array('required' => false))
-                ->add('intitule', null, array('required' => false))
+                ->add('nom', TextType::class, array('required' => false))
+                ->add('email', TextType::class, array('required' => false))  
+                ->add('phone', TextType::class, array('required' => false))  
+                ->add('codePostal', TextType::class, array('required' => false))            
+                ->add('faxNumber', TextType::class, array('required' => false))
+                ->add('rc', TextType::class, array('required' => false))
+                ->add('numeroContribuable', TextType::class, array('required' => false))
+                ->add('numeroCompteBancaire', TextType::class, array('required' => false))
+                ->add('nomBanque', TextType::class, array('required' => false))
+                ->add('intitule', TextType::class, array('required' => false))
         ;
     }
 

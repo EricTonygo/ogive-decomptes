@@ -26,7 +26,7 @@ class Holder extends Contributor {
      */
     public function prePersist() {
         parent::prePersist();
-        $this->setContributorType(3);
+        $this->setContributorType("holder");
     }
     
 }

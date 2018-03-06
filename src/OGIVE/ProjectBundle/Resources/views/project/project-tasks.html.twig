@@ -6,7 +6,7 @@
 {% block content %}
     {% macro show_task_infos(task) %}
         {% import _self as forms %}
-        <tr>
+        <tr id="task{{task.id}}">
             <td>
                 {{task.numero}}
             </td>
@@ -26,9 +26,9 @@
                 {{task.qtePrevueProjetExec}}                                               
             </td>
             <td style="text-align: center;">               
-                <a class="ui mini compact icon button" href="{{path('sub_task_add_get', {'idProject': task.projectTask.id, 'id': task.id,})}}"><i class="plus icon" title="Edit"></i></a> |
-                <a class="ui mini compact icon button" href="{{path('task_update_get', {'idProject': task.projectTask.id, 'id': task.id})}}"><i class="edit icon" title="Edit"></i></a> |
-                <a class="ui mini red compact icon button" href="{{path('task_delete', {'idProject': task.projectTask.id, 'id': task.id})}}"><i class="trash icon" title="Delete"></i></a>
+                <a class="ui mini compact icon button" data-tooltip="Ajouter sous tâche" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('sub_task_add_get', {'idProject': task.projectTask.id, 'id': task.id,})}}"><i class="plus icon"></i></a> |
+                <a class="ui mini compact icon button" data-tooltip="Modifier" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('task_update_get', {'idProject': task.projectTask.id, 'id': task.id})}}"><i class="edit icon"></i></a> |
+                <a id="delete_task_btn{{task.id}}" class="ui mini red compact icon button" data-tooltip="Supprimer" data-position="bottom center" data-inverted="" data-variation="mini" onclick="delete_task({{task.projectTask.id}}, {{task.id}});"><i class="trash icon"></i></a>
             </td>
         </tr>
         {%if task.subTasks %}
@@ -38,73 +38,98 @@
         {% endif %}
     {% endmacro %}
     <div class="ui basic fixed segment content">
-        {#        <div class='ui container'>#}
-        <div class="ui one column stackable grid padded">
-            <div class="wide column">
-                <div class="ui top attached tabular menu od_project_menu">
-                    {% include('OGIVEProjectBundle:project:single_project_header.html.twig') %}
-                </div>
-                <div class="ui bottom attached segment od_project_menu_content">
-                    <div class="ui fluid card od_card_top_table_action">
+        <div class='ui container'>
+            <div class="ui one column stackable grid padded">
+                <div class="wide column">
+                    <div class="ui top attached tabular menu od_project_menu">
+                        {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
+                    </div>
+                    <div class="ui bottom attached segment od_project_menu_content">
+                        <div class="ui fluid card od_card_top_table_action">
                             <div class="content">
                                 <a class="ui right floated yellow mini button" href="{{path('task_add_get', {'id': project.id})}}"><i class="plus icon"></i> Ajouter une tâche</a>
                             </div>
                         </div>
-                    <table class="ui celled structured yellow small table">
-                        <thead>
-                            <tr>
-                                <th rowspan="2" class='center aligned'>N°</th>
-                                <th rowspan="2" class='center aligned'>Désignation des ouvrages</th>
-                                <th rowspan="2" class='center aligned'>U</th>
-                                <th rowspan="2" class='center aligned'>P.U</th>                                   
-                                <th colspan="2" class='center aligned'>Quantité</th>
-                                <th rowspan="2" class='center aligned'>Actions</th>
-                            </tr>
-                            <tr>
-                                <th class='center aligned' class='center aligned'>marché</th>
-                                <th class='center aligned' class='center aligned'>projet d'exec.</th>
+                        <table class="ui celled structured yellow small table">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" class='center aligned'>N°</th>
+                                    <th rowspan="2" class='center aligned'>Désignation des ouvrages</th>
+                                    <th rowspan="2" class='center aligned'>U</th>
+                                    <th rowspan="2" class='center aligned'>P.U</th>                                   
+                                    <th colspan="2" class='center aligned'>Quantité</th>
+                                    <th rowspan="2" class='center aligned'>Actions</th>
+                                </tr>
+                                <tr>
+                                    <th class='center aligned' class='center aligned'>marché</th>
+                                    <th class='center aligned' class='center aligned'>projet d'exec.</th>
 
-                            </tr>
-                        </thead>
-                        {%if tasks %}
-                            <tbody>
-                                {%for task in tasks %}
-                                    {{forms.show_task_infos(task)}}
-                                {%endfor %}
-                            </tbody>
-                            {%if total_pages>1 and total_pages >= page %}
-                                <tfoot>
-                                    <tr><th colspan="7">
-                                            <div class="ui right floated mini pagination menu">
-                                                {%if page > 1 %}
-                                                    <a href="{{path(app.request.attributes.get('_route'), route_param_search_query|merge({page: page-1}))}}" class="icon item">
-                                                        <i class="left chevron icon"></i>
-                                                    </a>
-                                                {% endif %}
-                                                {% for i in 1..total_pages %}
-                                                    <a href='{{path(app.request.attributes.get('_route'), route_param_search_query|merge({page: i}))}}' class="{% if i== page %}active{% endif %} item">{{i}}</a>
-                                                {% endfor %}
-                                                {%if page <= total_pages-1 %}
-                                                    <a href="{{path(app.request.attributes.get('_route'), route_param_search_query|merge({page: page+1}))}}" class="icon item">
-                                                        <i class="right chevron icon"></i>
-                                                    </a>
-                                                {% endif %}
-                                            </div>
-                                        </th>
-                                    </tr>
-                                </tfoot>
-                            {% endif %}
-                        {%else %}
-                            <tfoot><tr><th colspan="6">
-                                        <div class='center aligned'>No task created at this moment</div>
-                                    </th></tr></tfoot>
-                                {%endif %}
+                                </tr>
+                            </thead>
+                            {%if tasks %}
+                                <tbody>
+                                    {%for task in tasks %}
+                                        {{forms.show_task_infos(task)}}
+                                    {%endfor %}
+                                </tbody>
+                                {%if total_pages>1 and total_pages >= page %}
+                                    <tfoot>
+                                        <tr><th colspan="7">
+                                                <div class="ui right floated mini pagination menu">
+                                                    {%if page > 1 %}
+                                                        <a href="{{path(app.request.attributes.get('_route'), route_param_search_query|merge({page: page-1}))}}" class="icon item">
+                                                            <i class="left chevron icon"></i>
+                                                        </a>
+                                                    {% endif %}
+                                                    {% for i in 1..total_pages %}
+                                                        <a href='{{path(app.request.attributes.get('_route'), route_param_search_query|merge({page: i}))}}' class="{% if i== page %}active{% endif %} item">{{i}}</a>
+                                                    {% endfor %}
+                                                    {%if page <= total_pages-1 %}
+                                                        <a href="{{path(app.request.attributes.get('_route'), route_param_search_query|merge({page: page+1}))}}" class="icon item">
+                                                            <i class="right chevron icon"></i>
+                                                        </a>
+                                                    {% endif %}
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </tfoot>
+                                {% endif %}
+                            {%else %}
+                                <tfoot><tr><th colspan="6">
+                                            <div class='center aligned'>No task created at this moment</div>
+                                        </th></tr></tfoot>
+                                    {%endif %}
 
-                    </table>
+                        </table>
+                    </div>
                 </div>
-            </div>
 
+            </div>
         </div>
-        {#        </div>#}
     </div>
 {% endblock %}
+{% block confirmation_modal %}
+    <div id="confirm_delete_task" class="ui small modal">
+        <i class="close icon"></i>
+        <div class="header">
+            Confirmation de la suppression
+        </div>
+        <div class="content">
+            <p>Vous êtes sur le point de supprimer cette tâche.</p>
+            <p>Voulez-vous vraiment réaliser cette action ?</p>
+        </div>
+        <div class="actions">
+            <div class="ui red deny button">
+                Non
+            </div>
+            <div id="execute_delete_task"  class="ui green right labeled icon button">
+                Oui
+                <i class="checkmark icon"></i>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent()}}
+    <script type="text/javascript" src="{{ asset('bundles/ogiveproject/js/task.js')}}"></script>
+{% endblock javascripts %}

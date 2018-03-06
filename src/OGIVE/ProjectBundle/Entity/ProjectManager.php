@@ -27,7 +27,7 @@ class ProjectManager extends Contributor {
      */
     public function prePersist() {
         parent::prePersist();
-        $this->setContributorType(2);
+        $this->setContributorType("project-manager");
     }
     
 }

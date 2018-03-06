@@ -22,7 +22,7 @@ class Contributor  extends GeneralClass{
     /**
      * @var integer
      *
-     * @ORM\Column(name="CONTRIBUTOR_TYPE", type="integer", nullable=true)
+     * @ORM\Column(name="CONTRIBUTOR_TYPE", type="string", length=255, nullable=true)
      */
     protected $contributorType;
 
@@ -50,9 +50,9 @@ class Contributor  extends GeneralClass{
     /**
      * @var string
      *
-     * @ORM\Column(name="fax", type="string", length=255, nullable=true)
+     * @ORM\Column(name="faxNumber", type="string", length=255, nullable=true)
      */
-    protected $fax;
+    protected $faxNumber;
     
     /**
      * @var string
@@ -126,9 +126,9 @@ class Contributor  extends GeneralClass{
     }
 
     /**
-     * Set status
+     * Set contributorType
      *
-     * @param integer $contributorType
+     * @param string $contributorType
      *
      * @return Contributor
      */
@@ -140,7 +140,7 @@ class Contributor  extends GeneralClass{
     /**
      * Get contributorType
      *
-     * @return int
+     * @return string
      */
     public function getContributorType() {
         return $this->contributorType;
@@ -213,24 +213,24 @@ class Contributor  extends GeneralClass{
     }
     
     /**
-     * Set fax
+     * Set faxNumber
      *
-     * @param string $fax
+     * @param string $faxNumber
      *
      * @return Contributor
      */
-    public function setFax($fax) {
-        $this->fax = $fax;
+    public function setFaxNumber($faxNumber) {
+        $this->faxNumber = $faxNumber;
 
         return $this;
     }
 
     /**
-     * Get fax
+     * Get faxNumber
      *
      * @return string
      */
-    public function getFax() {
+    public function getFaxNumber() {
         return $this->updatedUser;
     }
 
@@ -370,7 +370,7 @@ class Contributor  extends GeneralClass{
     }
 
     public function setSearchData() {
-        $this->searchData = $this->getCodePostal()." ".$this->getFax()." ".$this->getPhone()." ".$this->getNomBanque()." ".$this->getNumeroCompteBancaire()." ".$this->getNumeroContribuable();
+        $this->searchData = $this->getCodePostal()." ".$this->getFaxNumber()." ".$this->getPhone()." ".$this->getNomBanque()." ".$this->getNumeroCompteBancaire()." ".$this->getNumeroContribuable();
     }
 
 }

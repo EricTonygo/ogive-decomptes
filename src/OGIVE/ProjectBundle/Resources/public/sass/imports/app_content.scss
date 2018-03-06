@@ -1,12 +1,44 @@
+body, a, p, h1, div, h2, h3, h4, h5, h6 {
+    font-family: "Segoe UI Light", "Segoe UI", Tahoma, Arial, "Helvetica Neue", Helvetica, Sans-Serif!important;
+}
+
+.ui.button{
+    border-radius: 0px!important;
+}
+
+.ui.message{
+    border-radius: 0px;
+}
 .ui.bottom.attached.segment.pushable.od_app_content{
     overflow-x: visible;
     border: none;
     height: 82.9%;
+    .ui.modal {
+        border-radius: 0px!important;
+        .header{
+            font-size: 14px;
+        }
+        .content{
+            p{
+                font-size: 12px;
+            }
+        }
+    }
     .od_project_menu_content.bottom.attached.segment{
         border:none;
     }
     .ui.bottom.attached.segment.od_project_menu_content{
-
+        .ui.dividing.header{
+            font-size: 14px;
+        }
+        
+        .ui.table.table_header_decompte{
+            tr{
+                td{
+                    padding: .2em;
+                }
+            }
+        }
         .ui.fluid.card.od_project_details_card{
             border-radius: 0;
             box-shadow: none;
@@ -34,6 +66,7 @@
                                     font-size: 14px;
                                 }
                             }
+
                         }
                         table.od_project_details_table{
                             border:none;
@@ -53,13 +86,7 @@
                         }
                     }
                 }
-            }
-            .content.description.od_decompte_content{
-                .ui.tab.segment{
-                    box-shadow: none;
-                    border: none;
-                }
-            }
+            }            
 
         }
         .ui.small.table{
@@ -94,6 +121,12 @@
                     color: #515151;
                 }
             }
+            .content.description.od_decompte_content{
+                .ui.tab.segment{
+                    box-shadow: none;
+                    border: none;
+                }
+            }
             .content.description{
                 .ui.mini.form{
                     .ui.dividing.header{
@@ -101,11 +134,31 @@
                         font-weight: normal;
                         font-size: 12px;
                         color: #515151;
+                        margin-top: 0px;
                     }
                     .field>label{
                         color: #515151;
                         font-size: 12px;
                         font-weight: 700;
+                    }
+                    table{
+                        tbody{
+                            tr{
+                                td{
+                                    input.qtemois{
+                                        border: 2px solid rgb(251, 189, 8)!important;
+                                    }
+                                }
+                            }
+                        }
+
+                        thead{
+                            tr{
+                                th.qtemois{
+                                    background: #fbbd08!important;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -114,7 +167,7 @@
 
     }
 
-    .ui.container.od_add_project_container{
+    .ui.container{
         .ui.fluid.card.od_add_project_card{
             border-radius: 0;
             .content{
@@ -132,6 +185,7 @@
                         font-weight: normal;
                         font-size: 12px;
                         color: #515151;
+                        margin-top: 0px;
                     }
                     .field>label{
                         color: #515151;
@@ -149,7 +203,7 @@
         box-shadow: none;
         /*border-radius: 0px;*/
         a.item{
-            color: #b5cc18;
+            color: #f4b80a;
         }
         div.item{
             color: #565657;
@@ -198,4 +252,18 @@
             }
         }
     }
+}
+
+.ui.modal>.close {
+    color: #1b1c1d;
+}
+
+.ui.dimmer {
+    background-color: rgba(255, 255, 255, 0.75);
+}
+
+.ui.modal>.close {
+    top: 0.2rem;
+    right: 0.2rem;
+    font-size: 1em;
 }

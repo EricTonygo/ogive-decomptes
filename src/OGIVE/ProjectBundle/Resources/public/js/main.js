@@ -14,6 +14,12 @@ $(document).ready(function () {
             .sidebar('attach events', '.egis_toc.item')
             ;
 
+    $('.message .close')
+            .on('click', function () {
+                $(this).parent(".message").hide();
+            })
+            ;
+
 //    $('.ui.sidebar').click(function(){
 //        if($(this).sidebar("isvisible"))
 //        $('.ui.sidebar').sidebar("show");
@@ -32,14 +38,22 @@ $(document).ready(function () {
         lang: 'fr',
         scrollInput: false
     });
-    $('input[data-validate="lot_startDate"]').datetimepicker({
+    $('input[data-validate="suscription_date"]').datetimepicker({
         timepicker: false,
         //minDate: '0',
         format: 'd-m-Y',
         lang: 'fr',
         scrollInput: false
     });
-    $('input[data-validate="lot_endDate"]').datetimepicker({
+    $('input[data-validate="signature_date"]').datetimepicker({
+        timepicker: false,
+        //minDate: '0',
+        format: 'd-m-Y',
+        lang: 'fr',
+        scrollInput: false
+    });
+
+    $('input[data-validate="notification_date"]').datetimepicker({
         timepicker: false,
         //minDate: '0',
         format: 'd-m-Y',
@@ -67,4 +81,5 @@ $(document).ready(function () {
                 context: '.od_decompte_content'
             })
             ;
+
 });

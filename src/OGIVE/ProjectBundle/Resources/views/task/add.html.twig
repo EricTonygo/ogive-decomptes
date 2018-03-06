@@ -9,23 +9,27 @@
             <div class="ui one column stackable grid padded">
                 <div class="wide column">
                     <div class="ui top attached tabular menu od_project_menu">
-                        {% include('OGIVEProjectBundle:project:single_project_header.html.twig') %}
+                        {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
                     </div>
                     <div class="ui bottom attached segment od_project_menu_content">
                         <div class="ui fluid card od_add_project_card">
                             <div class="content">
                                 <div class="header">
-                                    Création d'une tâche
+                                    {%if parentTask is defined %}
+                                        Création d'une sous-tâche de la tâche {{parentTask.numero}}
+                                    {%elseif project is defined %}
+                                        Création d'une tâche
+                                    {%endif %}
                                 </div>
                             </div>
                             <div class="content description">
                                 {%if parentTask is defined %}
-                                    {{ form_start(form, {'method': 'POST', 'action': path('task_add_post', {'idProject': parentTask.projectTask.id, 'id': parentTask.id}), 'attr': {'class': 'ui mini form', 'id': 'od_add_task_form', "autocomplete":"off"} }) }}
+                                    {{ form_start(form, {'method': 'POST', 'action': path('sub_task_add_post', {'idProject': parentTask.projectTask.id, 'id': parentTask.id}), 'attr': {'class': 'ui mini form', 'id': 'od_add_task_form', "autocomplete":"off"} }) }}
                                 {%elseif project is defined %}
                                     {{ form_start(form, {'method': 'POST', 'action': path('task_add_post', {'id': project.id}), 'attr': {'class': 'ui mini form', 'id': 'od_add_task_form', "autocomplete":"off"} }) }}
                                 {%endif %}
 
-                                <h4 class="ui dividing header">Information d'une tâche</h4>
+                                <h4 class="ui dividing header">Information de la tâche</h4>
                                 <div class="fields">
                                     <div class="three wide field">
                                         <label>{{ form_label(form.numero,"Numéro") }}</label>
@@ -123,8 +127,8 @@
                                             {% endfor %}
                                         </tbody>
                                         {% macro task_prototype(childForm) %}
-                                            <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'task_name', 'placeholder': 'Numero du prix'}}) }}</td>
-                                            <td style="width: 35%">{{ form_widget(childForm.nom,{'attr':{'data-validate': 'task_number', 'placeholder':"Désignation de l'ouvrage"}}) }}</td>
+                                            <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'task_number', 'placeholder': 'Numero du prix'}}) }}</td>
+                                            <td style="width: 35%">{{ form_widget(childForm.nom,{'attr':{'data-validate': 'task_name', 'placeholder':"Désignation de l'ouvrage"}}) }}</td>
                                             <td>{{ form_widget(childForm.unite,{'attr':{'data-validate': 'task_unite', 'placeholder': 'Unité du prix'}}) }}</td>
                                             <td>{{ form_widget(childForm.prixUnitaire,{'attr':{'data-validate': 'task_prixUnitaire', 'placeholder': 'Prix unitaire du prix'}}) }}</td>
                                             <td>{{ form_widget(childForm.qtePrevueMarche,{'attr':{'data-validate': 'task_qtePrevueMarche', 'placeholder': 'Qté prevue marché'}}) }}</td>
@@ -153,30 +157,31 @@
                                     </table>
                                 </div>
                                 {{form_widget(form._token)}}
+                                <div class="field">
+                                    {% include('OGIVEProjectBundle::form-message-success-error.html.twig') %}
+                                </div>
                                 <div class="field right aligned">
-                                    <button  class="ui mini olive button" type="submit">Sauvegarder</button>
+                                    <button id="od_add_task_submit_btn" class="ui mini yellow button" type="submit">Sauvegarder</button>
                                     {%if parentTask is defined %}
-                                        <a class="ui mini red button"  href="{{path('project_tasks_get', {'id': parentTask.projectTask.id})}}">Annuler</a>
+                                        <a id="od_add_task_cancel_btn" class="ui mini red button"  href="{{path('project_tasks_get', {'id': parentTask.projectTask.id})}}">Annuler</a>
                                     {%elseif project is defined %}
-                                        <a class="ui mini red button"  href="{{path('project_tasks_get', {'id': project.id})}}">Annuler</a>
+                                        <a id="od_add_task_cancel_btn" class="ui mini red button"  href="{{path('project_tasks_get', {'id': project.id})}}">Annuler</a>
                                     {%endif %}
 
                                 </div>
                                 </form>
+
                             </div>
                         </div>
                     </div>
                 </div>
-                {# <div class="five wide column">
-                     {% include('OGIVEProjectBundle::right_aside_page.html.twig') %}
-                 </div>#}
             </div>
         </div>
     </div>
 {% endblock %}
 {% block javascripts %}
     {{ parent()}}
-    <script type="text/javascript" src="{{ asset('bundles/ogivealert/js/project.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ogiveproject/js/task.js')}}"></script>
     <script>
         function addTaskForm($collectionTask, $newLinkTrTask) {
             // Get the data-prototype explained earlier

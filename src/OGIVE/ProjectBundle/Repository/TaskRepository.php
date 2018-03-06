@@ -56,7 +56,7 @@ class TaskRepository extends EntityRepository {
     public function updateTask(\OGIVE\ProjectBundle\Entity\Task $task) {
         $em = $this->_em;
         $em->getConnection()->beginTransaction();
-        try {
+        try {           
             $em->persist($task);
             $em->flush();
             $em->getConnection()->commit();

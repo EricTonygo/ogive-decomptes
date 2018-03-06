@@ -220,6 +220,8 @@ class ProjectController extends Controller {
         $user = $this->getUser();
         $tasks = $em->getRepository('OGIVEProjectBundle:Task')->getAll(null, null, null, $project->getId());
         $projectManagers = $em->getRepository('OGIVEProjectBundle:ProjectManager')->getAll(null, null, null, $project->getId());
+        $serviceProviders = $em->getRepository('OGIVEProjectBundle:ServiceProvider')->getAll(null, null, null, $project->getId());
+        $otherContributors = $em->getRepository('OGIVEProjectBundle:OtherContributor')->getAll(null, null, null, $project->getId());
         $holders = $em->getRepository('OGIVEProjectBundle:Holder')->getAll(null, null, null, $project->getId());
         $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(0, 8, null, $user->getId());
         return $this->render('OGIVEProjectBundle:project:project-contributors.html.twig', array(
@@ -228,7 +230,9 @@ class ProjectController extends Controller {
             'tasks' => $tasks,
             'tab' => 4,
             'projectManagers' => $projectManagers,
-            'holders' => $holders
+            'holders' => $holders,
+            'serviceProviders' => $serviceProviders,
+            'otherContributors' => $otherContributors
         ));
         
     }
@@ -243,6 +247,8 @@ class ProjectController extends Controller {
         }
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
+        $common_service = $this->get('app.common_service');
+        $monthName = $common_service->getMonthNameByNumber(1);
         $decomptes = $em->getRepository('OGIVEProjectBundle:Decompte')->getAll(null, null, null, $project->getId());
         $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(0, 8, null, $user->getId());
         return $this->render('OGIVEProjectBundle:project:project-decomptes.html.twig', array(
@@ -288,12 +294,19 @@ class ProjectController extends Controller {
                 $holder->setProject($project);
             }
             
-            //***************gestion des tasks du projet ************************** */
-            $tasks = $project->getTasks();
-            foreach ($tasks as $task) {
-                $task->setProject($project);
-                $task->setProjectTask($project);
+            //***************gestion des prestataire du projet ************************** */
+            $servicesProviders = $project->getServiceProviders();
+            foreach ($servicesProviders as $servicesProvider) {
+                $servicesProvider->setProject($project);
             }
+            
+            //***************gestion des autres intervenant du projet ************************** */
+            $otherContributors = $project->getOtherContributors();
+            foreach ($otherContributors as $otherContributor) {
+                $otherContributor->setProject($project);
+            }
+            
+            
             $project = $repositoryProject->saveProject($project);
             return $this->redirect($this->generateUrl('ogive_project_homepage'));
         } else {
@@ -305,7 +318,7 @@ class ProjectController extends Controller {
 
     /**
      * @Rest\View(statusCode=Response::HTTP_OK)
-     * @Rest\Get("/projects/{id}/remove", name="project_delete", options={ "method_prefix" = false, "expose" = true })
+     * @Rest\Delete("/projects/{id}/remove", name="project_delete", options={ "method_prefix" = false, "expose" = true })
      */
     public function removeProjectAction(Project $project) {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
@@ -314,9 +327,11 @@ class ProjectController extends Controller {
         $repositoryProject = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Project');
         if ($project) {
             $repositoryProject->deleteProject($project);
-            return $this->redirect($this->generateUrl('ogive_project_homepage'));
+            $view = View::create(["message" => "Projet supprimé avec succès !"]);
+            $view->setFormat('json');
+            return $view;
         } else {
-            return $this->redirect($this->generateUrl('ogive_project_homepage'));
+            return new JsonResponse(["message" => "Projet introuvable !"], Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -337,11 +352,13 @@ class ProjectController extends Controller {
         $repositoryProject = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Project');
         $repositoryProjectManager = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:ProjectManager');
         $repositoryHolder = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Holder');
-        $repositoryTask = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Task');
+        $repositoryServiceProvider = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:ServiceProvider');
+        $repositoryOtherContributors = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:OtherContributor');
 
         $originalProjectManagers = new \Doctrine\Common\Collections\ArrayCollection();
         $originalHolders = new \Doctrine\Common\Collections\ArrayCollection();
-        $originalTasks = new \Doctrine\Common\Collections\ArrayCollection();
+        $originalServiceProviders = new \Doctrine\Common\Collections\ArrayCollection();
+        $originalOtherContributors = new \Doctrine\Common\Collections\ArrayCollection();
         
         foreach ($project->getProjectManagers() as $projectManager) {
             $originalProjectManagers->add($projectManager);
@@ -349,8 +366,11 @@ class ProjectController extends Controller {
         foreach ($project->getHolders() as $holder) {
             $originalHolders->add($holder);
         }
-        foreach ($project->getTasks() as $task) {
-            $originalTasks->add($task);
+        foreach ($project->getServiceProviders() as $serviceProvider) {
+            $originalServiceProviders->add($serviceProvider);
+        }
+        foreach ($project->getOtherContributors() as $otherContributor) {
+            $originalOtherContributors->add($otherContributor);
         }
     
         $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectType', $project, array('method' => 'PUT'));
@@ -366,9 +386,9 @@ class ProjectController extends Controller {
                     // remove the project from the projectManagers
                     $project->getProjectManagers()->removeElement($projectManager);
                     // if it was a many-to-one relationship, remove the relationship like this
-                    $projectManager->setProject(null);
-                    $projectManager->setStatus(0);
-                    $repositoryProjectManager->updateProjectManager($projectManager);
+//                    $projectManager->setProject(null);
+//                    $projectManager->setStatus(0);
+                    $repositoryProjectManager->deleteProjectManager($projectManager);
                     // if you wanted to delete the Subscriber entirely, you can also do that
                     // $em->remove($domain);
                 }
@@ -387,9 +407,9 @@ class ProjectController extends Controller {
                     // remove the project from the projectManagers
                     $project->getHolders()->removeElement($holder);
                     // if it was a many-to-one relationship, remove the relationship like this
-                    $holder->setProject(null);
-                    $holder->setStatus(0);
-                    $repositoryHolder->updateHolder($holder);
+//                    $holder->setProject(null);
+//                    $holder->setStatus(0);
+                    $repositoryHolder->deleteHolder($holder);
                     // if you wanted to delete the Subscriber entirely, you can also do that
                     // $em->remove($domain);
                 }
@@ -401,27 +421,44 @@ class ProjectController extends Controller {
                 }
             }
             
-            //***************gestion des tasks du project ************************** */
+            //***************gestion des prestataires du project ************************** */
             // remove the relationship between the project and the tasks
-            foreach ($originalTasks as $task) {
-                if (false === $project->getTasks()->contains($task)) {
+            foreach ($originalServiceProviders as $serviceProvider) {
+                if (false === $project->getServiceProviders()->contains($serviceProvider)) {
                     // remove the project from the projectManagers
-                    $project->getTasks()->removeElement($task);
+                    $project->getServiceProviders()->removeElement($serviceProvider);
                     // if it was a many-to-one relationship, remove the relationship like this
-                    $repositoryTask->removeTask($task);
+                    $repositoryServiceProvider->deleteServiceProvider($serviceProvider);
                     // if you wanted to delete the Subscriber entirely, you can also do that
                     // $em->remove($domain);
                 }
             }
-            $tasks = $project->getTasks();
-            foreach ($tasks as $task) {
-                $task->setParentTask(null);
-                $task->setProjectTask($project);
-                if($task->getProject() == null){
-                    $task->setProject($project);
+            $serviceProviders = $project->getServiceProviders();
+            foreach ($serviceProviders as $serviceProvider) {
+                if($serviceProvider->getProject() == null){
+                    $serviceProvider->setProject($project);
                 }
             }
             
+            //***************gestion des prestataires du project ************************** */
+            // remove the relationship between the project and the tasks
+            foreach ($originalOtherContributors as $otherContributor) {
+                if (false === $project->getOtherContributors()->contains($otherContributor)) {
+                    // remove the project from the projectManagers
+                    $project->getOtherContributors()->removeElement($otherContributor);
+                    // if it was a many-to-one relationship, remove the relationship like this
+                    $repositoryOtherContributors->deleteOtherContributor($otherContributor);
+                    // if you wanted to delete the Subscriber entirely, you can also do that
+                    // $em->remove($domain);
+                }
+            }
+            $otherContributors = $project->getOtherContributors();
+            foreach ($otherContributors as $otherContributor) {
+                if($otherContributor->getProject() == null){
+                    $otherContributor->setProject($project);
+                }
+            }
+
             $user = $this->getUser();
             $project->setUpdatedUser($user);
             $project = $repositoryProject->updateProject($project);

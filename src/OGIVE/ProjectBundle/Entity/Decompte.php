@@ -45,231 +45,231 @@ class Decompte extends GeneralClass {
     /**
      * @var integer
      *
-     * @ORM\Column(name="qte_prevue_marche", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="qte_prevue_marche", type="float", precision=20, scale=0, nullable=true)
      */
     protected $qtePrevueMarche;
     
     /**
      * @var integer
      *
-     * @ORM\Column(name="qte_prevue_projet_exec", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="qte_prevue_projet_exec", type="float", precision=20, scale=0, nullable=true)
      */
     protected $qtePrevueProjetExec;
     
     /**
      * @var integer
      *
-     * @ORM\Column(name="qte_cumul_mois_prec", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="qte_cumul_mois_prec", type="float", precision=20, scale=0, nullable=true)
      */
     protected $qteCumulMoisPrec;
     
     /**
      * @var integer
      *
-     * @ORM\Column(name="qte_mois", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="qte_mois", type="float", precision=20, scale=0, nullable=true)
      */
     protected $qteMois;
     
     /**
      * @var integer
      *
-     * @ORM\Column(name="qte_cumul_mois", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="qte_cumul_mois", type="float", precision=20, scale=0, nullable=true)
      */
     protected $qteCumulMois;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_prevue_marche", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_prevue_marche", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtPrevueMarche;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_prevue_projet_exec", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_prevue_projet_exec", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtPrevueProjetExec;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_cumul_mois_prec", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_cumul_mois_prec", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtCumulMoisPrec;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_mois", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_mois", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtMois;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_cumul_mois", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_cumul_mois", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtCumulMois;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_prevue_marche_tva", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_prevue_marche_tva", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtPrevueMarcheTVA;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_prevue_projet_exec_tva", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_prevue_projet_exec_tva", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtPrevueProjetExecTVA;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_cumul_mois_prec_tva", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_cumul_mois_prec_tva", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtCumulMoisPrecTVA;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_mois_tva", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_mois_tva", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtMoisTVA;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_cumul_mois_tva", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_cumul_mois_tva", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtCumulMoisTVA;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_prevue_marche_ir", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_prevue_marche_ir", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtPrevueMarcheIR;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_prevue_projet_exec_ir", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_prevue_projet_exec_ir", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtPrevueProjetExecIR;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_cumul_mois_prec_ir", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_cumul_mois_prec_ir", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtCumulMoisPrecIR;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_mois_ir", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_mois_ir", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtMoisIR;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_cumul_mois_ir", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_cumul_mois_ir", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtCumulMoisIR;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_prevue_marche_net_a_percevoir", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_prevue_marche_net_a_percevoir", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtPrevueMarcheNetAPercevoir;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_prevue_projet_exec_net_a_percevoir", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_prevue_projet_exec_net_a_percevoir", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtPrevueProjetExecNetAPercevoir;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_cumul_mois_prec_net_a_percevoir", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_cumul_mois_prec_net_a_percevoir", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtCumulMoisPrecNetAPercevoir;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_mois_net_a_percevoir", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_mois_net_a_percevoir", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtMoisNetAPercevoir;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_cumul_mois_net_a_percevoir", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_cumul_mois_net_a_percevoir", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtCumulMoisNetAPercevoir;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_prevue_marche_ttc", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_prevue_marche_ttc", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtPrevueMarcheTTC;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_prevue_projet_exec_ttc", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_prevue_projet_exec_ttc", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtPrevueProjetExecTTC;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_cumul_mois_prec_ttc", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_cumul_mois_prec_ttc", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtCumulMoisPrecTTC;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_mois_ttc", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_mois_ttc", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtMoisTTC;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_cumul_mois_ttc", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_cumul_mois_ttc", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtCumulMoisTTC;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_avenant", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_avenant", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtAvenant;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_avance_demarrage", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_avance_demarrage", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtAvanceDemarrage;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_retenue_garantie", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_retenue_garantie", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtRetenueGarantie;
     
@@ -277,49 +277,49 @@ class Decompte extends GeneralClass {
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_remboursement_avance", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_remboursement_avance", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtRemboursementAvance;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_penalite", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_penalite", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtPenalite;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_total_paiements", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_total_paiements", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtTotalPaiements;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_taxes_air", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_taxes_air", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtTaxesAIR;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_taxes_tva", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_taxes_tva", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtTaxesTVA;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_avance_demarrage_prec", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_avance_demarrage_prec", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtAvanceDemarragePrec;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_retenue_garantie_prec", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_retenue_garantie_prec", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtRetenueGarantiePrec;
     
@@ -327,56 +327,56 @@ class Decompte extends GeneralClass {
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_remboursement_avance_prec", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_remboursement_avance_prec", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtRemboursementAvancePrec;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_penalite_prec", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_penalite_prec", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtPenalitePrec;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_total_paiements_prec", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_total_paiements_prec", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtTotalPaiementsPrec;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_taxes_air_prec", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_taxes_air_prec", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtTaxesAIRPrec;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_taxes_tva_prec", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_taxes_tva_prec", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtTaxesTVAPrec;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_avance_demarrageACD", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_avance_demarrageACD", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtAvanceDemarrageACD;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_prestations_with_air_acd", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_prestations_with_air_acd", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtPrestationsWithAirACD;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_retenue_garantie_acd", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_retenue_garantie_acd", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtRetenueGarantieACD;
     
@@ -384,49 +384,56 @@ class Decompte extends GeneralClass {
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_remboursement_avance_acd", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_remboursement_avance_acd", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtRemboursementAvanceACD;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_penalite_acd", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_penalite_acd", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtPenaliteACD;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_total_paiements_acd", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_total_paiements_acd", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtTotalPaiementsACD;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_taxes_air_acd", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_taxes_air_acd", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtTaxesAIRACD;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_taxes_tva_acd", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_taxes_tva_acd", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtTaxesTVAACD;
     
     /**
      * @var float
      *
-     * @ORM\Column(name="mt_taxes_tva_acm", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="mt_taxes_tva_acm", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtACM;
+   
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="mt_total_marche_htva", type="float", precision=20, scale=0, nullable=true)
+     */
+    private $mtTotalMarcheHTVA;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="pourcent_realisation", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="pourcent_realisation", type="float", precision=20, scale=0, nullable=true)
      */
     private $pourcentRealisation; 
     
@@ -1413,8 +1420,70 @@ class Decompte extends GeneralClass {
         $this->searchData = $this->getMonthName();
     }
 
-    function getMtAvenant() {
+    /**
+     * Set mtAvenant
+     *
+     * @param float $mtAvenant
+     *
+     * @return Decompte
+     */
+    public function setMtAvenant($mtAvenant) {
+        $this->mtAvenant = $mtAvenant;
+
+        return $this;
+    }
+
+    /**
+     * Get mtAvenant
+     *
+     * @return float
+     */
+    public function getMtAvenant() {
         return $this->mtAvenant;
+    }
+    
+    /**
+     * Set mtTotalMarcheHTVA
+     *
+     * @param float $mtTotalMarcheHTVA
+     *
+     * @return Decompte
+     */
+    public function setMtTotalMarcheHTVA($mtTotalMarcheHTVA) {
+        $this->mtTotalMarcheHTVA = $mtTotalMarcheHTVA;
+
+        return $this;
+    }
+    
+    /**
+     * Set mtPenalite
+     *
+     * @param float $mtPenalite
+     *
+     * @return Decompte
+     */
+    public function setMtPenalite($mtPenalite) {
+        $this->mtPenalite = $mtPenalite;
+
+        return $this;
+    }
+
+    /**
+     * Get mtPenalite
+     *
+     * @return float
+     */
+    public function getMtPenalite() {
+        return $this->mtPenalite;
+    }
+
+    /**
+     * Get mtTotalMarcheHTVA
+     *
+     * @return float
+     */
+    public function getMtTotalMarcheHTVA() {
+        return $this->mtTotalMarcheHTVA;
     }
 
     function getMtAvanceDemarrage() {
@@ -1427,10 +1496,6 @@ class Decompte extends GeneralClass {
 
     function getMtRemboursementAvance() {
         return $this->mtRemboursementAvance;
-    }
-
-    function getMtPenalite() {
-        return $this->mtPenalite;
     }
 
     function getMtTotalPaiements() {
@@ -1505,10 +1570,6 @@ class Decompte extends GeneralClass {
         return $this->mtACM;
     }
 
-    function setMtAvenant($mtAvenant) {
-        $this->mtAvenant = $mtAvenant;
-    }
-
     function setMtAvanceDemarrage($mtAvanceDemarrage) {
         $this->mtAvanceDemarrage = $mtAvanceDemarrage;
     }
@@ -1521,10 +1582,7 @@ class Decompte extends GeneralClass {
         $this->mtRemboursementAvance = $mtRemboursementAvance;
     }
 
-    function setMtPenalite($mtPenalite) {
-        $this->mtPenalite = $mtPenalite;
-    }
-
+    
     function setMtTotalPaiements($mtTotalPaiements) {
         $this->mtTotalPaiements = $mtTotalPaiements;
     }

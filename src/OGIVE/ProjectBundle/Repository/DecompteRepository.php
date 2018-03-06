@@ -80,7 +80,7 @@ class DecompteRepository extends EntityRepository
             $qb->andWhere('u.id = :project');
             $qb->setParameter("project", intval($project));
         }
-        $qb->orderBy('e.createDate', 'DESC');
+        $qb->orderBy('e.monthNumber', 'ASC');
         
         if ($offset) {
             $qb->setFirstResult($offset);
@@ -114,7 +114,6 @@ class DecompteRepository extends EntityRepository
     public function getDecomptePrecByMonthAndProject($month = null, $project = null) {
         $qb = $this->createQueryBuilder('e');
         $qb->where('e.status = 1');
-//        $qb->andWhere('e.monthNumber = 1');
         if ($month >= 0) {
             $qb->andWhere('e.monthNumber < :month');
             $qb->setParameter("month", $month);
@@ -129,6 +128,56 @@ class DecompteRepository extends EntityRepository
             $decomptes = $qb->getQuery()->getResult();
             if($decomptes){
                 return $decomptes[0];
+            }else{
+                return null;
+            }
+        } catch(\Exception $ex){
+            return null;
+        }
+    }
+    
+    public function getDecompteNextByMonthAndProject($month = null, $project = null) {
+        $qb = $this->createQueryBuilder('e');
+        $qb->where('e.status = 1');
+        if ($month >= 0) {
+            $qb->andWhere('e.monthNumber > :month');
+            $qb->setParameter("month", $month);
+        }
+        if ($project >= 0) {
+            $qb->join("e.project", 'u');
+            $qb->andWhere('u.id = :project');
+            $qb->setParameter("project", $project);
+        }
+        $qb->orderBy('e.monthNumber', 'ASC');
+        try{
+            $decomptes = $qb->getQuery()->getResult();
+            if($decomptes){
+                return $decomptes[0];
+            }else{
+                return null;
+            }
+        } catch(\Exception $ex){
+            return null;
+        }
+    }
+    
+    public function getNextDecomptesOfProject($month = null, $project = null) {
+        $qb = $this->createQueryBuilder('e');
+        $qb->where('e.status = 1');
+        if ($month >= 0) {
+            $qb->andWhere('e.monthNumber > :month');
+            $qb->setParameter("month", $month);
+        }
+        if ($project >= 0) {
+            $qb->join("e.project", 'u');
+            $qb->andWhere('u.id = :project');
+            $qb->setParameter("project", $project);
+        }
+        $qb->orderBy('e.monthNumber', 'ASC');
+        try{
+            $decomptes = $qb->getQuery()->getResult();
+            if($decomptes){
+                return $decomptes;
             }else{
                 return null;
             }

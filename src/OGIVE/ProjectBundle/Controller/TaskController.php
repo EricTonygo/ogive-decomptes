@@ -23,81 +23,6 @@ use FOS\RestBundle\View\View;
 class TaskController extends Controller {
 
     /**
-     * @Rest\View()
-     * @Rest\Get("projects/{id}/tasks" , name="lot_index", options={ "method_prefix" = false, "expose" = true })
-     * @param Request $request
-    */
-    public function getTasksAction(Request $request, Project $project) {
-        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
-        $task = new Task();
-        $em = $this->getDoctrine()->getManager();
-        $page = 1;
-        $maxResults = 6;
-        $route_param_page = array();
-        $route_param_search_query = array();
-        $search_query = null;
-        $start_date = null;
-        $end_date = null;
-        $owner = null;
-        $domain = null;
-        $placeholder = "Rechercher un appel d'offre...";
-        if ($request->get('page')) {
-            $page = intval(htmlspecialchars(trim($request->get('page'))));
-            $route_param_page['page'] = $page;
-        }
-        if ($request->get('search_query')) {
-            $search_query = htmlspecialchars(trim($request->get('search_query')));
-            $route_param_search_query['search_query'] = $search_query;
-        }
-        if ($request->get('start-date')) {
-            $start_date = htmlspecialchars(trim($request->get('start-date')));
-            $route_param_search_query['start-date'] = $start_date;
-        }
-        if ($request->get('end-date')) {
-            $end_date = htmlspecialchars(trim($request->get('end-date')));
-            $route_param_search_query['end-date'] = $end_date;
-        }
-        if ($request->get('owner')) {
-            $owner = htmlspecialchars(trim($request->get('owner')));
-            $route_param_search_query['owner'] = $owner;
-        }
-        if ($request->get('domain')) {
-            $domain = htmlspecialchars(trim($request->get('domain')));
-            $route_param_search_query['domain'] = $domain;
-        }
-        $start_from = ($page - 1) * $maxResults >= 0 ? ($page - 1) * $maxResults : 0;
-        $total_procedures = count($em->getRepository('OGIVEProjectBundle:Task')->getAllByQueriedParameters($search_query, $start_date, $end_date, $owner, $domain));
-        $total_pages = ceil($total_procedures / $maxResults);
-        $form = $this->createForm('OGIVE\ProjectBundle\Form\TaskType', $task);
-        $lots = $em->getRepository('OGIVEProjectBundle:Task')->getAll($start_from, $maxResults, $search_query, $start_date, $end_date, $owner, $domain);
-        $owners = $em->getRepository('OGIVEProjectBundle:Owner')->findBy(array("state" => 1, "status" => 1));
-        $domains = $em->getRepository('OGIVEProjectBundle:Domain')->findBy(array("state" => 1, "status" => 1));
-        if ($start_date && $end_date) {
-            //$this->get('common_service')->getStatisticsOfProceduresByOwner($start_date, $end_date);
-            $this->get('common_service')->getStatisticsOfProceduresByMonth($start_date, $end_date);
-        }
-        return $this->render('OGIVEProjectBundle:lot:index.html.twig', array(
-                    'lots' => $lots,
-                    'total_procedures' => $total_procedures,
-                    'total_pages' => $total_pages,
-                    'page' => $page,
-                    'form' => $form->createView(),
-                    'route_param_page' => $route_param_page,
-                    'route_param_search_query' => $route_param_search_query,
-                    'search_query' => $search_query,
-                    'placeholder' => $placeholder,
-                    'owners' => $owners,
-                    'domains' => $domains,
-                    'start_date' => $start_date,
-                    'end_date' => $end_date,
-                    'queried_owner' => $owner,
-                    'queried_domain' => $domain,
-        ));
-    }
-
-    /**
      * @Rest\View(statusCode=Response::HTTP_CREATED)
      * @Rest\Get("/projects/{id}/tasks/new", name="task_add_get", options={ "method_prefix" = false, "expose" = true })
      */
@@ -113,7 +38,7 @@ class TaskController extends Controller {
                     'project' => $project
         ));
     }
-    
+
     /**
      * @Rest\View(statusCode=Response::HTTP_CREATED)
      * @Rest\Get("/projects/{idProject}/tasks/{id}/tasks/new", name="sub_task_add_get", options={ "method_prefix" = false, "expose" = true })
@@ -160,33 +85,56 @@ class TaskController extends Controller {
         }
         $task = new Task();
         $repositoryTask = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Task');
+        $decompte_manager = $this->get('app.decompte_manager');
 
         $form = $this->createForm('OGIVE\ProjectBundle\Form\TaskType', $task);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($task->getNumero() == null || $task->getNumero() == "") {
+                return new JsonResponse(["success" => false, 'message' => "Vôtre tâche est sans numéro. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
+            }
+            if ($task->getNom() == null || $task->getNom() == "") {
+                return new JsonResponse(["success" => false, 'message' => "Vôtre tâche est sans désignation. Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
+            }
+            if ($repositoryTask->findOneBy(array('numero' => $task->getNumero()))) {
+                return new JsonResponse(["success" => false, 'message' => 'Une tâche avec ce numéro existe déjà'], Response::HTTP_BAD_REQUEST);
+            }
+            $user = $this->getUser();
             $task->setProject($project);
+            $task->setProjectTask($project);
             $task->setParentTask(null);
 
             //***************gestion des sub tasks du projet ************************** */
             $subTasks = $task->getSubTasks();
             foreach ($subTasks as $subTask) {
-                $subTask->setProject($project);
+                if ($subTask->getNumero() == null || $subTask->getNumero() == "") {
+                    return new JsonResponse(["success" => false, 'message' => "Vous avez des sous tache sans numéros. Vueillez les remplir. "], Response::HTTP_BAD_REQUEST);
+                } else {
+                    if ($repositoryTask->findOneBy(array('numero' => $subTask->getNumero()))) {
+                        return new JsonResponse(["success" => false, 'message' => 'Une sous-tâche avec ce numéro existe déjà'], Response::HTTP_BAD_REQUEST);
+                    }
+                    if ($subTask->getNom() == null || $subTask->getNom() == "") {
+                        return new JsonResponse(["success" => false, 'message' => "La sous tache de numéro " . $subTask->getNumero() . " n'a pas de désignation" . "Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
+                    }
+                }
+                $task->setProject(null);
+                $subTask->setProjectTask($project);
                 $subTask->setParentTask($task);
+                $task->setCreatedUser($user);
             }
+            $task->setCreatedUser($user);
             $task = $repositoryTask->saveTask($task);
-            return $this->redirect($this->generateUrl('project_tasks_get', array('id' => $task->getProject()->getId())));
+            $decompte_manager->updateDecomptesDuringTaskUpdatingOrAdding($task);
+            //return $this->redirect($this->generateUrl('project_tasks_get', array('id' => $task->getProjectTask()->getId())));
+            $view = View::create(["message" => 'Tâche créée avec succès. Vous serez redirigé dans bientôt!', 'id_project' => $task->getProjectTask()->getId()]);
+            $view->setFormat('json');
+            return $view;
         } else {
-
-            $form = $this->createForm('OGIVE\ProjectBundle\Form\TaskType', $task, array('method' => 'PUT'));
-            return $this->render('OGIVEProjectBundle:task:add.html.twig', array(
-                        'project' => $project,
-                        'tab' => 3,
-                        'form' => $form->createView()
-            ));
+            return new JsonResponse(["success" => false, 'message' => 'Le formulaire a été soumis avec les données incorrectes'], Response::HTTP_BAD_REQUEST);
         }
     }
-    
+
     /**
      * @Rest\View(statusCode=Response::HTTP_CREATED)
      * @Rest\Post("/projects/{idProject}/tasks/{id}/tasks/new", name="sub_task_add_post", options={ "method_prefix" = false, "expose" = true })
@@ -198,48 +146,75 @@ class TaskController extends Controller {
         $task = new Task();
         $repositoryTask = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Task');
 
+        $decompte_manager = $this->get('app.decompte_manager');
+
         $form = $this->createForm('OGIVE\ProjectBundle\Form\TaskType', $task);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $task->setProject($parentTask->getProject());
+            if ($task->getNumero() == null || $task->getNumero() == "") {
+                return new JsonResponse(["success" => false, 'message' => "Vôtre tâche est sans numéro. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
+            }
+            if ($task->getNom() == null || $task->getNom() == "") {
+                return new JsonResponse(["success" => false, 'message' => "Vôtre tâche est sans désignation. Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
+            }
+            if ($repositoryTask->findOneBy(array('numero' => $task->getNumero(), 'parentTask'=> $parentTask))) {
+                return new JsonResponse(["success" => false, 'message' => 'Une tâche avec ce numéro existe déjà'], Response::HTTP_BAD_REQUEST);
+            }
+            $user = $this->getUser();
+            $task->setProject(null);
+            $task->setProjectTask($parentTask->getProjectTask());
             $task->setParentTask($parentTask);
 
             //***************gestion des sub tasks du projet ************************** */
             $subTasks = $task->getSubTasks();
             foreach ($subTasks as $subTask) {
-                //$subTask->setProject($task->getProject());
+                if ($subTask->getNumero() == null || $subTask->getNumero() == "") {
+                    return new JsonResponse(["success" => false, 'message' => "Vous avez des sous-tâches sans numéros. Vueillez les remplir. "], Response::HTTP_BAD_REQUEST);
+                } else {
+//                    if ($repositoryTask->findOneBy(array('numero' => $subTask->getNumero()))) {
+//                        return new JsonResponse(["success" => false, 'message' => 'Une sous-tâche avec ce numéro existe déjà'], Response::HTTP_BAD_REQUEST);
+//                    }
+                    if ($subTask->getNom() == null || $subTask->getNom() == "") {
+                        return new JsonResponse(["success" => false, 'message' => "La sous-tâche de numéro " . $subTask->getNumero() . " n'a pas de désignation" . "Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
+                    }
+                }
+                $task->setProject(null);
                 $subTask->setProjectTask($task->getProjectTask());
                 $subTask->setParentTask($task);
+                $subTask->setCreatedUser($user);
             }
-            $task = $repositoryTask->saveTask($task);
-            return $this->redirect($this->generateUrl('project_tasks_get', array('id' => $task->getProject()->getId())));
-        } else {
 
-            $form = $this->createForm('OGIVE\ProjectBundle\Form\TaskType', $task, array('method' => 'PUT'));
-            return $this->render('OGIVEProjectBundle:task:add.html.twig', array(
-                        'parentTask' => $parentTask,
-                        'project' => $parentTask->getProjectTask(),
-                        'tab' => 3,
-                        'form' => $form->createView()
-            ));
+
+            $task->setCreatedUser($user);
+            $task = $repositoryTask->saveTask($task);
+            $decompte_manager->updateDecomptesDuringTaskUpdatingOrAdding($task);
+            $view = View::create(["message" => 'Tâche créée avec succès. Vous serez redirigé dans bientôt!', 'id_project' => $task->getProjectTask()->getId()]);
+            $view->setFormat('json');
+            return $view;
+        } else {
+            return new JsonResponse(["success" => false, 'message' => 'Le formulaire a été soumis avec les données incorrectes'], Response::HTTP_BAD_REQUEST);
         }
     }
 
     /**
      * @Rest\View(statusCode=Response::HTTP_OK)
-     * @Rest\Get("/projects/{idProject}/tasks/{id}/remove", name="task_delete", options={ "method_prefix" = false, "expose" = true })
+     * @Rest\Delete("/projects/{idProject}/tasks/{id}/remove", name="task_delete", options={ "method_prefix" = false, "expose" = true })
      */
     public function removeTaskAction(Task $task) {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
+        $decompte_manager = $this->get('app.decompte_manager');
         $repositoryTask = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Task');
         if ($task) {
             $repositoryTask->deleteTask($task);
-            return $this->redirect($this->generateUrl('project_tasks_get', array('id' => $task->getProject()->getId())));
+            $decompte_manager->updateAllDecomptes($task->getProjectTask());
+            $view = View::create(["message" => "Tâche supprimée avec succès !"]);
+            $view->setFormat('json');
+            return $view;
         } else {
-            return $this->redirect($this->generateUrl('project_tasks_get', array('id' => $task->getProject()->getId())));
+            return new JsonResponse(["message" => "Tâche introuvable !"], Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -257,10 +232,10 @@ class TaskController extends Controller {
 
     public function updateTaskAction(Request $request, Task $task) {
         $repositoryTask = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Task');
-
+        $decompte_manager = $this->get('app.decompte_manager');
         $originalSubTasks = new \Doctrine\Common\Collections\ArrayCollection();
-        
-        
+
+
         foreach ($task->getSubTasks() as $subTask) {
             $originalSubTasks->add($subTask);
         }
@@ -268,41 +243,53 @@ class TaskController extends Controller {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $taskEdit = $repositoryTask->findOneBy(array('numero' => $task->getNumero(), 'parentTask'=> $task->getParentTask()));
+            if ($taskEdit && $taskEdit->getId() != $task->getId()) {
+                return new JsonResponse(["success" => false, 'message' => 'Une tâche avec ce numéro existe déjà'], Response::HTTP_BAD_REQUEST);
+            }
             $user = $this->getUser();
             $task->setUpdatedUser($user);
-            
+
             //***************gestion des tasks du project ************************** */
             // remove the relationship between the project and the tasks
             foreach ($originalSubTasks as $subTask) {
                 if (false === $task->getSubTasks()->contains($subTask)) {
                     // remove the project from the projectManagers
-                    $task->getSubTasks()->getTasks()->removeElement($task);
+                    $task->getSubTasks()->removeElement($task);
                     // if it was a many-to-one relationship, remove the relationship like this
-                    $repositoryTask->removeTask($subTask);
+                    $repositoryTask->deleteTask($subTask);
                     // if you wanted to delete the Subscriber entirely, you can also do that
                     // $em->remove($domain);
                 }
             }
             $subTasks = $task->getSubTasks();
             foreach ($subTasks as $subTask) {
+                if ($subTask->getNumero() == null || $subTask->getNumero() == "") {
+                    return new JsonResponse(["success" => false, 'message' => "Vous avez des sous tache sans numéros. Vueillez les remplir. "], Response::HTTP_BAD_REQUEST);
+                } else {
+                    $subTaskEdit = $repositoryTask->findOneBy(array('numero' => $subTask->getNumero(), 'parentTask' => $task));
+                    if ($subTaskEdit && $subTaskEdit->getId() != $subTask->getId()) {
+                        return new JsonResponse(["success" => false, 'message' => 'Une sous-tâche avec ce numéro existe déjà'], Response::HTTP_BAD_REQUEST);
+                    }
+                    if ($subTask->getNom() == null || $subTask->getNom() == "") {
+                        return new JsonResponse(["success" => false, 'message' => "La sous tache de numéro " . $subTask->getNumero() . " n'a pas de désignation" . "Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
+                    }
+                }
                 $subTask->setProjectTask($task->getProjectTask());
-                //if($subTask->getProject() == null){
-                    $subTask->setProject(null);
-                //}
-                if($subTask->getParentTask() == null){
+                $subTask->setProject(null);
+                if ($subTask->getParentTask() == null) {
                     $subTask->setParentTask($task);
                 }
+                $subTask->setUpdatedUser($user);
             }
             $task = $repositoryTask->updateTask($task);
-            return $this->redirect($this->generateUrl('project_tasks_get', array('id' => $task->getProject()->getId())));
+            $decompte_manager->updateDecomptesDuringTaskUpdatingOrAdding($task);
+            //return $this->redirect($this->generateUrl('project_tasks_get', array('id' => $task->getProjectTask()->getId())));
+            $view = View::create(["message" => 'Tâche modifée avec succès. Vous serez redirigé dans bientôt!', 'id_project' => $task->getProjectTask()->getId()]);
+            $view->setFormat('json');
+            return $view;
         } else {
-            $form = $this->createForm('OGIVE\ProjectBundle\Form\TaskType', $task, array('method' => 'PUT'));
-            return $this->render('OGIVEProjectBundle:task:update.html.twig', array(
-                        'task' => $task,
-                        'project' => $task->getProjectTask(),
-                        'tab' => 3,
-                        'form' => $form->createView()
-            ));
+            return new JsonResponse(["success" => false, 'message' => 'Le formulaire a été soumis avec les données incorrectes'], Response::HTTP_BAD_REQUEST);
         }
     }
 
