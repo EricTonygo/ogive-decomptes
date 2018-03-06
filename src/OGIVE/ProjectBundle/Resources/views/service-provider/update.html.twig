@@ -1,6 +1,6 @@
 {% extends "OGIVEProjectBundle::layout.html.twig" %}
 {% trans_default_domain 'OGIVEProjectBundle' %}
-{% block title %}Mise à jour du prestataire : {{holder.nom}} {% endblock %}
+{% block title %}Mise à jour du prestataire : {{serviceProvider.nom}} {% endblock %}
 
 {% block content %}
     <div class="ui basic fixed segment content">
@@ -14,17 +14,17 @@
                     <div class="ui fluid card od_add_project_card">
                         <div class="content">
                             <div class="header">
-                                Mise à jour du prestataire : {{holder.nom}}
+                                Mise à jour du prestataire : {{serviceProvider.nom}}
                             </div>
                         </div>
                         <div class="content description">
-                            {{ form_start(form, {'method': 'PUT', 'action': path('holder_update_post', {'idProject': project.id, 'id': holder.id}), 'attr': {'class': 'ui mini form', 'id': 'od_update_lot_form', "autocomplete":"off"} }) }}
+                            {{ form_start(form, {'method': 'PUT', 'action': path('service_provider_update_post', {'idProject': project.id, 'id': serviceProvider.id}), 'attr': {'class': 'ui mini form', 'id': 'od_update_service_provider_form', "autocomplete":"off"} }) }}
                             <h4 class="ui dividing header">Information du prestataire</h4>
                             <div class="two fields">
                                 <div class="field">
                                     <label>{{ form_label(form.nom,"Nom") }}</label>
                                     <div class="field"> 
-                                        {{ form_widget(form.nom,{'attr':{'placeholder':"Nom", 'data-validate': 'name'}})}}
+                                        {{ form_widget(form.nom,{'attr':{'placeholder':"Nom", 'data-validate': 'nom'}})}}
                                     </div>
                                 </div>
                                 <div class="field">

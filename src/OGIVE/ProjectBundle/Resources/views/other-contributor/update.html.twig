@@ -1,6 +1,6 @@
 {% extends "OGIVEProjectBundle::layout.html.twig" %}
 {% trans_default_domain 'OGIVEProjectBundle' %}
-{% block title %}Mise à jour de l' intervenant: {{projectManager.nom}} {% endblock %}
+{% block title %}Mise à jour de l' intervenant: {{otherContributor.nom}} {% endblock %}
 
 {% block content %}
     <div class="ui basic fixed segment content">
@@ -14,11 +14,11 @@
                         <div class="ui fluid card od_add_project_card">
                             <div class="content">
                                 <div class="header">
-                                    Mise à jour de l' intervenant: {{projectManager.nom}}
+                                    Mise à jour de l' intervenant: {{otherContributor.nom}}
                                 </div>
                             </div>
                             <div class="content description">
-                                {{ form_start(form, {'method': 'PUT', 'action': path('other_contributor_update_post', {'idProject': project.id, 'id': projectManager.id}), 'attr': {'class': 'ui mini form', 'id': 'od_update_other_contributor_form', "autocomplete":"off"} }) }}
+                                {{ form_start(form, {'method': 'PUT', 'action': path('other_contributor_update_post', {'idProject': project.id, 'id': otherContributor.id}), 'attr': {'class': 'ui mini form', 'id': 'od_update_other_contributor_form', "autocomplete":"off"} }) }}
                                 <h4 class="ui dividing header">Information de l' intervenant</h4>
                                 <div class="two fields">
                                     <div class="field">
