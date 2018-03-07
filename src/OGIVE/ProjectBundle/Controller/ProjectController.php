@@ -127,11 +127,11 @@ class ProjectController extends Controller {
         }
         $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectType', $project, array('method' => 'PUT'));
         return $this->render('OGIVEProjectBundle:project:update.html.twig', array(
-            'project' => $project,
-            'form' => $form->createView()
-        ));       
+                    'project' => $project,
+                    'form' => $form->createView()
+        ));
     }
-    
+
     /**
      * @Rest\View()
      * @Rest\Get("/projects/{id}/general-informations" , name="project_gen_infos_get", options={ "method_prefix" = false, "expose" = true })
@@ -146,15 +146,14 @@ class ProjectController extends Controller {
         $projectManager = $project->getProjectManagers()[0];
         $holder = $project->getHolders()[0];
         return $this->render('OGIVEProjectBundle:project:general-informations-project.html.twig', array(
-            'project' => $project,
-            'projects' => $projects,
-            'tab' => 1,
-            'projectManager' => $projectManager,
-            'holder' => $holder
+                    'project' => $project,
+                    'projects' => $projects,
+                    'tab' => 1,
+                    'projectManager' => $projectManager,
+                    'holder' => $holder
         ));
-        
     }
-    
+
     /**
      * @Rest\View()
      * @Rest\Get("/projects/{id}/tasks" , name="project_tasks_get", options={ "method_prefix" = false, "expose" = true })
@@ -192,22 +191,21 @@ class ProjectController extends Controller {
         $user = $this->getUser();
         $start_from = ($page - 1) * $maxResults >= 0 ? ($page - 1) * $maxResults : 0;
         $total_tasks = count($repositoryTask->getAll(null, null, $search_query, null, $project->getId()));
-        $total_pages = ceil($total_tasks / $maxResults);        
+        $total_pages = ceil($total_tasks / $maxResults);
         $tasks = $repositoryTask->findBy(array('parentTask' => null));
         $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(0, 8, null, $user->getId());
         return $this->render('OGIVEProjectBundle:project:project-tasks.html.twig', array(
-            'project' => $project,
-            'projects' => $projects,
-            'tasks' => $project->getTasks(),
-            'page' => $page,
-            'tab' => 3,
-            'total_pages' => $total_pages,
-            'total_tasks' => $total_tasks,
-            'placeholder' => $placeholder
+                    'project' => $project,
+                    'projects' => $projects,
+                    'tasks' => $project->getTasks(),
+                    'page' => $page,
+                    'tab' => 3,
+                    'total_pages' => $total_pages,
+                    'total_tasks' => $total_tasks,
+                    'placeholder' => $placeholder
         ));
-        
     }
-    
+
     /**
      * @Rest\View()
      * @Rest\Get("/projects/{id}/contributors" , name="project_contributors_get", options={ "method_prefix" = false, "expose" = true })
@@ -225,18 +223,17 @@ class ProjectController extends Controller {
         $holders = $em->getRepository('OGIVEProjectBundle:Holder')->getAll(null, null, null, $project->getId());
         $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(0, 8, null, $user->getId());
         return $this->render('OGIVEProjectBundle:project:project-contributors.html.twig', array(
-            'project' => $project,
-            'projects' => $projects,
-            'tasks' => $tasks,
-            'tab' => 4,
-            'projectManagers' => $projectManagers,
-            'holders' => $holders,
-            'serviceProviders' => $serviceProviders,
-            'otherContributors' => $otherContributors
+                    'project' => $project,
+                    'projects' => $projects,
+                    'tasks' => $tasks,
+                    'tab' => 4,
+                    'projectManagers' => $projectManagers,
+                    'holders' => $holders,
+                    'serviceProviders' => $serviceProviders,
+                    'otherContributors' => $otherContributors
         ));
-        
     }
-    
+
     /**
      * @Rest\View()
      * @Rest\Get("/projects/{id}/decomptes" , name="project_decomptes_get", options={ "method_prefix" = false, "expose" = true })
@@ -247,18 +244,16 @@ class ProjectController extends Controller {
         }
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $common_service = $this->get('app.common_service');
-        $monthName = $common_service->getMonthNameByNumber(1);
         $decomptes = $em->getRepository('OGIVEProjectBundle:Decompte')->getAll(null, null, null, $project->getId());
         $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(0, 8, null, $user->getId());
         return $this->render('OGIVEProjectBundle:project:project-decomptes.html.twig', array(
-            'project' => $project,
-            'projects' => $projects,
-            'tab' => 5,
-            'decomptes' => $decomptes
+                    'project' => $project,
+                    'projects' => $projects,
+                    'tab' => 5,
+                    'decomptes' => $decomptes
         ));
-        
     }
+    
 
     /**
      * @Rest\View(statusCode=Response::HTTP_CREATED)
@@ -276,6 +271,15 @@ class ProjectController extends Controller {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($project->getNumeroMarche() == null || $project->getNumeroMarche() == "") {
+                return new JsonResponse(["success" => false, 'message' => "Vôtre projet est sans numero. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
+            }
+            if ($project->getSubject() == null || $project->getSubject() == "") {
+                return new JsonResponse(["success" => false, 'message' => "Vôtre projet est sans objet. Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
+            }
+            if ($repositoryProject->findOneBy(array('numeroMarche' => $project->getNumeroMarche()))) {
+                return new JsonResponse(["success" => false, 'message' => 'Une tâche avec ce numéro existe déjà'], Response::HTTP_BAD_REQUEST);
+            }
             $user = $this->getUser();
             $project->setCreatedUser($user);
             $owner->setNom($user->getLastName());
@@ -287,32 +291,37 @@ class ProjectController extends Controller {
             foreach ($projectManagers as $projectManager) {
                 $projectManager->setProject($project);
             }
-            
+
             //***************gestion des titulaire du projet ************************** */
             $holders = $project->getHolders();
             foreach ($holders as $holder) {
                 $holder->setProject($project);
             }
-            
+
             //***************gestion des prestataire du projet ************************** */
             $servicesProviders = $project->getServiceProviders();
             foreach ($servicesProviders as $servicesProvider) {
                 $servicesProvider->setProject($project);
             }
-            
+
             //***************gestion des autres intervenant du projet ************************** */
             $otherContributors = $project->getOtherContributors();
             foreach ($otherContributors as $otherContributor) {
                 $otherContributor->setProject($project);
             }
-            
-            
+
+            $numerMarcheTab = explode("/", $project->getNumeroMarche());
+            $anneeBudgetaire = $numerMarcheTab[count($numerMarcheTab) - 1];
+            $project->setAnneeBudgetaire($anneeBudgetaire);
+//            $decompteTotal = new DecompteTotal();
+//            $project->setDecompteTotal($decompteTotal);
             $project = $repositoryProject->saveProject($project);
-            return $this->redirect($this->generateUrl('ogive_project_homepage'));
+            //return $this->redirect($this->generateUrl('project_gen_infos_get', array('id' => $project->getId())));
+            $view = View::create(["message" => 'Projet créé avec succès. Vous serez redirigé dans bientôt!', "id_project" => $project->getId()]);
+            $view->setFormat('json');
+            return $view;
         } else {
-            return $this->render('OGIVEProjectBundle:project:add.html.twig', array(
-                        'form' => $form->createView()
-            ));
+            return new JsonResponse(["success" => false, 'message' => 'Le formulaire a été soumis avec les données incorrectes'], Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -349,6 +358,7 @@ class ProjectController extends Controller {
 
     public function updateProjectAction(Request $request, Project $project) {
         $owner = new Owner();
+        $decompte_manager = $this->get('app.decompte_manager');
         $repositoryProject = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Project');
         $repositoryProjectManager = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:ProjectManager');
         $repositoryHolder = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Holder');
@@ -359,7 +369,7 @@ class ProjectController extends Controller {
         $originalHolders = new \Doctrine\Common\Collections\ArrayCollection();
         $originalServiceProviders = new \Doctrine\Common\Collections\ArrayCollection();
         $originalOtherContributors = new \Doctrine\Common\Collections\ArrayCollection();
-        
+
         foreach ($project->getProjectManagers() as $projectManager) {
             $originalProjectManagers->add($projectManager);
         }
@@ -372,13 +382,22 @@ class ProjectController extends Controller {
         foreach ($project->getOtherContributors() as $otherContributor) {
             $originalOtherContributors->add($otherContributor);
         }
-    
+
         $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectType', $project, array('method' => 'PUT'));
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
+            if ($project->getNumeroMarche() == null || $project->getNumeroMarche() == "") {
+                return new JsonResponse(["success" => false, 'message' => "Vôtre projet est sans numero du marché. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
+            }
+            if ($project->getSubject() == null || $project->getSubject() == "") {
+                return new JsonResponse(["success" => false, 'message' => "Vôtre projet est sans objet. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
+            }
+            $projectEdit = $repositoryProject->findOneBy(array('numeroMarche' => $project->getNumeroMarche()));
+            if (!is_null($projectEdit) && $projectEdit->getId() != $project->getId()) {
+                return new JsonResponse(["success" => false, 'message' => 'Un projet avec ce numero du marché existe déjà'], Response::HTTP_BAD_REQUEST);
+            }
             //***************gestion des projectManagers du project ************************** */
             // remove the relationship between the project and the projectManagers
             foreach ($originalProjectManagers as $projectManager) {
@@ -395,11 +414,11 @@ class ProjectController extends Controller {
             }
             $projectManagers = $project->getProjectManagers();
             foreach ($projectManagers as $projectManager) {
-                if($projectManager->getProject() == null){
+                if ($projectManager->getProject() == null) {
                     $projectManager->setProject($project);
                 }
             }
-            
+
             //***************gestion des holders du project ************************** */
             // remove the relationship between the project and the holders
             foreach ($originalHolders as $holder) {
@@ -416,11 +435,11 @@ class ProjectController extends Controller {
             }
             $holders = $project->getHolders();
             foreach ($holders as $holder) {
-                if($holder->getProject() == null){
+                if ($holder->getProject() == null) {
                     $holder->setProject($project);
                 }
             }
-            
+
             //***************gestion des prestataires du project ************************** */
             // remove the relationship between the project and the tasks
             foreach ($originalServiceProviders as $serviceProvider) {
@@ -435,11 +454,11 @@ class ProjectController extends Controller {
             }
             $serviceProviders = $project->getServiceProviders();
             foreach ($serviceProviders as $serviceProvider) {
-                if($serviceProvider->getProject() == null){
+                if ($serviceProvider->getProject() == null) {
                     $serviceProvider->setProject($project);
                 }
             }
-            
+
             //***************gestion des prestataires du project ************************** */
             // remove the relationship between the project and the tasks
             foreach ($originalOtherContributors as $otherContributor) {
@@ -454,19 +473,28 @@ class ProjectController extends Controller {
             }
             $otherContributors = $project->getOtherContributors();
             foreach ($otherContributors as $otherContributor) {
-                if($otherContributor->getProject() == null){
+                if ($otherContributor->getProject() == null) {
                     $otherContributor->setProject($project);
                 }
             }
-
+            $numerMarcheTab = explode("/", $project->getNumeroMarche());
+            $anneeBudgetaire = $numerMarcheTab[count($numerMarcheTab) - 1];
+            $project->setAnneeBudgetaire($anneeBudgetaire);
             $user = $this->getUser();
             $project->setUpdatedUser($user);
+//            $decompteTotal = $project->getDecompteTotal();
+//            if (is_null($decompteTotal)) {
+//                $decompteTotal = new DecompteTotal();
+//                $project->setDecompteTotal($decompteTotal);
+//            }
             $project = $repositoryProject->updateProject($project);
-            
-            return $this->redirect($this->generateUrl('project_gen_infos_get', array('id' => $project->getId())));
-        }  else {
-            return $this->render('OGIVEProjectBundle:project:update.html.twig', array('form' => $form->createView(), 'project' => $project));
-            
+            //$decompte_manager->updateDecompteTotalOfProject($project);
+            //return $this->redirect($this->generateUrl('project_gen_infos_get', array('id' => $project->getId())));
+            $view = View::create(["message" => 'Projet modifié avec succès. Vous serez redirigé dans bientôt!', "id_project" => $project->getId()]);
+            $view->setFormat('json');
+            return $view;
+        } else {
+            return new JsonResponse(["success" => false, 'message' => 'Le formulaire a été soumis avec les données incorrectes'], Response::HTTP_BAD_REQUEST);
         }
     }
 

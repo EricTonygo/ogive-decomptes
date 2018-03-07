@@ -118,3 +118,7 @@
         </div>
     </div>
 {% endblock %}
+{% block javascripts %}
+    {{ parent()}}
+    <script type="text/javascript" src="{{ asset('bundles/ogiveproject/js/other_contributor.js')}}"></script>
+{% endblock javascripts %}

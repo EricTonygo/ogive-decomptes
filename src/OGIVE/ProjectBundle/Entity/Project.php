@@ -44,6 +44,13 @@ class Project extends GeneralClass {
     /**
      * @var string
      *
+     * @ORM\Column(name="annee_budgetaire", type="string", length=255)
+     */
+    private $anneeBudgetaire;
+    
+    /**
+     * @var string
+     *
      * @ORM\Column(name="numero_lot", type="string", length=255, nullable=true)
      */
     private $numeroLot;
@@ -159,6 +166,13 @@ class Project extends GeneralClass {
      * @ORM\OneToMany(targetEntity="\OGIVE\ProjectBundle\Entity\Decompte", mappedBy="project", cascade={"remove", "persist"})
      */
     private $decomptes;
+    
+    /**
+     * @var \DecompteTotal 
+     * @ORM\OneToOne(targetEntity="DecompteTotal",cascade={"persist"})
+     * @ORM\JoinColumn(name="decompte_total", referencedColumnName="id")
+     */
+    private $decompteTotal;
 
     /**
      * Constructor
@@ -194,6 +208,28 @@ class Project extends GeneralClass {
      */
     public function getNumeroMarche() {
         return $this->numeroMarche;
+    }
+    
+    /**
+     * Set anneeBudgetaire
+     *
+     * @param string $anneeBudgetaire
+     *
+     * @return Project
+     */
+    public function setAnneeBudgetaire($anneeBudgetaire) {
+        $this->anneeBudgetaire = $anneeBudgetaire;
+
+        return $this;
+    }
+
+    /**
+     * Get anneeBudgetaire
+     *
+     * @return string
+     */
+    public function getAnneeBudgetaire() {
+        return $this->anneeBudgetaire;
     }
     
     /**
@@ -784,6 +820,28 @@ class Project extends GeneralClass {
      */
     public function getMtAvenant() {
         return $this->mtAvenant;
+    }
+    
+    /**
+     * Set decompte
+     *
+     * @param \OGIVE\ProjectBundle\Entity\DecompteTotal $decompteTotal
+     *
+     * @return Project
+     */
+    public function setDecompteTotal(\OGIVE\ProjectBundle\Entity\Decompte $decompteTotal=null) {
+        $this->decompteTotal = $decompteTotal;
+
+        return $this;
+    }
+
+    /**
+     * Get decompteTotal
+     *
+     * @return \OGIVE\ProjectBundle\Entity\DecompteTotal
+     */
+    public function getDecompteTotal() {
+        return $this->decompteTotal;
     }
 
     public function setSearchData() {

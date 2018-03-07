@@ -69,6 +69,23 @@ class DecompteController extends Controller {
                     'form' => $form->createView()
         ));
     }
+    
+    /**
+     * @Rest\View()
+     * @Rest\Get("/projects/{id}/decompte-total" , name="project_decompte_total_get", options={ "method_prefix" = false, "expose" = true })
+     */
+    public function getDecompteTotalByProjectAction(Request $request, Project $project) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+        $em = $this->getDoctrine()->getManager();
+        $decomptes = $em->getRepository('OGIVEProjectBundle:Decompte')->getAll(null, null, null, $project->getId());
+        return $this->render('OGIVEProjectBundle:decompte:project-decompte-total.html.twig', array(
+                    'project' => $project,
+                    'tab' => 6,
+                    'decomptes' => $decomptes
+        ));
+    }
 
     /**
      * @Rest\View()
@@ -123,7 +140,7 @@ class DecompteController extends Controller {
         $decompte->setProject($project);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($decompte->getMonthNumber() == null || $decompte->getMonthNumber() == "") {
-                return new JsonResponse(["success" => false, 'message' => "Vôtre décompte est sans numéros. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
+                return new JsonResponse(["success" => false, 'message' => "Vôtre décompte est sans numero. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }
             if ($decompte->getMonthName() == null || $decompte->getMonthName() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vôtre décompte est sans désignation. Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
@@ -166,7 +183,7 @@ class DecompteController extends Controller {
                 $decompte->setMtCumulMoisPrec($mtCumulMoisPrecDcpt);
                 $decompte->setMtCumulMois($mtCumulMoisDcpt);
                 $decompte->setMtMois($mtMoisDcpt);
-                if ($decompte->getMtCumulMois() >= 0 && $decompte->getMtPrevueProjetExec() > 0) {
+                if (is_numeric($decompte->getMtCumulMois()) && $decompte->getMtPrevueProjetExec() > 0) {
                     $decompte->setPourcentRealisation(round($decompte->getMtCumulMois() * 100 / $decompte->getMtPrevueProjetExec(), 2));
                 } else {
                     $decompte->setPourcentRealisation(0);
@@ -178,7 +195,7 @@ class DecompteController extends Controller {
                 $view->setFormat('json');
                 return $view;
             } else {
-                return new JsonResponse(["success" => false, 'message' => 'Un décompte avec numéro existe déjà !'], Response::HTTP_BAD_REQUEST);
+                return new JsonResponse(["success" => false, 'message' => 'Un décompte avec numero existe déjà !'], Response::HTTP_BAD_REQUEST);
             }
         } else {
             return new JsonResponse(["success" => false, 'message' => 'Le formulaire a été soumis avec les données incorrectes !'], Response::HTTP_BAD_REQUEST);
@@ -224,7 +241,7 @@ class DecompteController extends Controller {
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($decompte->getMonthNumber() == null || $decompte->getMonthNumber() == "") {
-                return new JsonResponse(["success" => false, 'message' => "Vôtre décompte est sans numéros. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
+                return new JsonResponse(["success" => false, 'message' => "Vôtre décompte est sans numero. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }
             if ($decompte->getMonthName() == null || $decompte->getMonthName() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vôtre décompte est sans désignation. Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);

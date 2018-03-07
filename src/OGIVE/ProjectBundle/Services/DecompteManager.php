@@ -5,6 +5,7 @@ namespace OGIVE\ProjectBundle\Services;
 use Doctrine\ORM\EntityManager;
 use OGIVE\ProjectBundle\Entity\Decompte;
 use OGIVE\ProjectBundle\Entity\DecompteTask;
+use OGIVE\ProjectBundle\Entity\DecompteTotal;
 use OGIVE\ProjectBundle\Entity\Task;
 use OGIVE\ProjectBundle\Entity\Project;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -39,18 +40,18 @@ class DecompteManager {
                 $subDecompteTask = $this->createDecompteTaskUsingTask($subTask, $decompte, $decomptePrec);
                 $subDecompteTask->setParentDecompteTask($decompteTask);
                 $decompteTask->addSubDecompteTask($subDecompteTask);
-                $mtPrevueMarche = $subDecompteTask->getMtPrevueMarche() >= 0 ? $mtPrevueMarche + $subDecompteTask->getMtPrevueMarche() : $mtPrevueMarche;
-                $mtPrevueProjetExec = $subDecompteTask->getMtPrevueProjetExec() >= 0 ? $mtPrevueProjetExec + $subDecompteTask->getMtPrevueProjetExec() : $mtPrevueProjetExec;
-                $mtMois = $subDecompteTask->getMtMois() >= 0 ? $mtMois + $subDecompteTask->getMtMois() : $mtMois;
-                $mtCumulMoisPrec = $subDecompteTask->getMtCumulMoisPrec() >= 0 ? $mtCumulMoisPrec + $subDecompteTask->getMtCumulMoisPrec() : $mtCumulMoisPrec;
-                $mtCumulMois = $subDecompteTask->getMtCumulMois() >= 0 ? $mtCumulMois + $subDecompteTask->getMtCumulMois() : $mtCumulMois;
+                $mtPrevueMarche = is_numeric($subDecompteTask->getMtPrevueMarche()) ? $mtPrevueMarche + $subDecompteTask->getMtPrevueMarche() : $mtPrevueMarche;
+                $mtPrevueProjetExec = is_numeric($subDecompteTask->getMtPrevueProjetExec()) ? $mtPrevueProjetExec + $subDecompteTask->getMtPrevueProjetExec() : $mtPrevueProjetExec;
+                $mtMois = is_numeric($subDecompteTask->getMtMois()) ? $mtMois + $subDecompteTask->getMtMois() : $mtMois;
+                $mtCumulMoisPrec = is_numeric($subDecompteTask->getMtCumulMoisPrec()) ? $mtCumulMoisPrec + $subDecompteTask->getMtCumulMoisPrec() : $mtCumulMoisPrec;
+                $mtCumulMois = is_numeric($subDecompteTask->getMtCumulMois()) ? $mtCumulMois + $subDecompteTask->getMtCumulMois() : $mtCumulMois;
             }
             $decompteTask->setMtPrevueMarche($mtPrevueMarche);
             $decompteTask->setMtPrevueProjetExec($mtPrevueProjetExec);
             $decompteTask->setMtMois($mtMois);
             $decompteTask->setMtCumulMoisPrec($mtCumulMoisPrec);
             $decompteTask->setMtCumulMois($mtCumulMois);
-            if ($decompteTask->getMtCumulMois() >= 0 && $decompteTask->getMtPrevueProjetExec() > 0) {
+            if (is_numeric($decompteTask->getMtCumulMois()) && $decompteTask->getMtPrevueProjetExec() > 0) {
                 $decompteTask->setPourcentRealisation(round($decompteTask->getMtCumulMois() * 100 / $decompteTask->getMtPrevueProjetExec(), 2));
             } else {
                 $decompteTask->setPourcentRealisation(0);
@@ -70,25 +71,25 @@ class DecompteManager {
             $decompteTask->setPrixUnitaire($task->getPrixUnitaire());
             $decompteTask->setQtePrevueMarche($task->getQtePrevueMarche());
             $decompteTask->setQtePrevueProjetExec($task->getQtePrevueProjetExec());
-            if ($decompteTask->getPrixUnitaire() >= 0) {
-                if ($decompteTask->getQteCumulMois() >= 0) {
-                    $decompteTask->setMtCumulMois($decompteTask->getPrixUnitaire() * $decompteTask->getQteCumulMois());
-                }
-                if ($decompteTask->getQteCumulMoisPrec() >= 0) {
-                    $decompteTask->setMtCumulMoisPrec($decompteTask->getPrixUnitaire() * $decompteTask->getQteCumulMoisPrec());
-                }
-                if ($decompteTask->getQteMois() >= 0) {
-                    $decompteTask->setMtMois($decompteTask->getQteMois() * $decompteTask->getPrixUnitaire());
-                }
-                if ($decompteTask->getQtePrevueMarche() >= 0) {
+            if (is_numeric($decompteTask->getPrixUnitaire())) {
+                if (is_numeric($decompteTask->getQtePrevueMarche())) {
                     $decompteTask->setMtPrevueMarche($decompteTask->getQtePrevueMarche() * $decompteTask->getPrixUnitaire());
                 }
-                if ($decompteTask->getQtePrevueProjetExec() >= 0) {
+                if (is_numeric($decompteTask->getQtePrevueProjetExec())) {
                     $decompteTask->setMtPrevueProjetExec($decompteTask->getQtePrevueProjetExec() * $decompteTask->getPrixUnitaire());
                 }
+                if (is_numeric($decompteTask->getQteCumulMoisPrec())) {
+                    $decompteTask->setMtCumulMoisPrec($decompteTask->getPrixUnitaire() * $decompteTask->getQteCumulMoisPrec());
+                }
+                if (is_numeric($decompteTask->getQteMois())) {
+                    $decompteTask->setMtMois($decompteTask->getQteMois() * $decompteTask->getPrixUnitaire());
+                }
+                if (is_numeric($decompteTask->getQteCumulMois())) {
+                    $decompteTask->setMtCumulMois($decompteTask->getPrixUnitaire() * $decompteTask->getQteCumulMois());
+                }
             }
-            if ($decompteTask->getQteCumulMois() >= 0 && $decompteTask->getQtePrevueProjetExec() > 0) {
-                $decompteTask->setPourcentRealisation(round($decompteTask->getQteCumulMois() * 100 / $decompteTask->getQtePrevueProjetExec(), 2));
+            if (is_numeric($decompteTask->getMtCumulMois()) && $decompteTask->getMtPrevueProjetExec() > 0) {
+                $decompteTask->setPourcentRealisation(round($decompteTask->getMtCumulMois() * 100 / $decompteTask->getMtPrevueProjetExec(), 2));
             } else {
                 $decompteTask->setPourcentRealisation(0);
             }
@@ -109,18 +110,18 @@ class DecompteManager {
             $mtCumulMois = 0;
             foreach ($subDecompteTasks as $subDecompteTask) {
                 $subDecompteTask = $this->updateDecompteTask($subDecompteTask, $decomptePrec);
-                $mtPrevueMarche = $subDecompteTask->getMtPrevueMarche() >= 0 ? $mtPrevueMarche + $subDecompteTask->getMtPrevueMarche() : $mtPrevueMarche;
-                $mtPrevueProjetExec = $subDecompteTask->getMtPrevueProjetExec() >= 0 ? $mtPrevueProjetExec + $subDecompteTask->getMtPrevueProjetExec() : $mtPrevueProjetExec;
-                $mtMois = $subDecompteTask->getMtMois() >= 0 ? $mtMois + $subDecompteTask->getMtMois() : $mtMois;
-                $mtCumulMoisPrec = $subDecompteTask->getMtCumulMoisPrec() >= 0 ? $mtCumulMoisPrec + $subDecompteTask->getMtCumulMoisPrec() : $mtCumulMoisPrec;
-                $mtCumulMois = $subDecompteTask->getMtCumulMois() >= 0 ? $mtCumulMois + $subDecompteTask->getMtCumulMois() : $mtCumulMois;
+                $mtPrevueMarche = is_numeric($subDecompteTask->getMtPrevueMarche()) ? $mtPrevueMarche + $subDecompteTask->getMtPrevueMarche() : $mtPrevueMarche;
+                $mtPrevueProjetExec = is_numeric($subDecompteTask->getMtPrevueProjetExec()) ? $mtPrevueProjetExec + $subDecompteTask->getMtPrevueProjetExec() : $mtPrevueProjetExec;
+                $mtMois = is_numeric($subDecompteTask->getMtMois()) ? $mtMois + $subDecompteTask->getMtMois() : $mtMois;
+                $mtCumulMoisPrec = is_numeric($subDecompteTask->getMtCumulMoisPrec()) ? $mtCumulMoisPrec + $subDecompteTask->getMtCumulMoisPrec() : $mtCumulMoisPrec;
+                $mtCumulMois = is_numeric($subDecompteTask->getMtCumulMois()) ? $mtCumulMois + $subDecompteTask->getMtCumulMois() : $mtCumulMois;
             }
             $decompteTask->setMtPrevueMarche($mtPrevueMarche);
             $decompteTask->setMtPrevueProjetExec($mtPrevueProjetExec);
             $decompteTask->setMtMois($mtMois);
             $decompteTask->setMtCumulMoisPrec($mtCumulMoisPrec);
             $decompteTask->setMtCumulMois($mtCumulMois);
-            if ($decompteTask->getMtCumulMois() >= 0 && $decompteTask->getMtPrevueProjetExec() > 0) {
+            if (is_numeric($decompteTask->getMtCumulMois()) && $decompteTask->getMtPrevueProjetExec() > 0) {
                 $decompteTask->setPourcentRealisation(round($decompteTask->getMtCumulMois() * 100 / $decompteTask->getMtPrevueProjetExec(), 2));
             } else {
                 $decompteTask->setPourcentRealisation(0);
@@ -133,24 +134,24 @@ class DecompteManager {
                 $decompteTask->setQteCumulMoisPrec(0);
             }
             $decompteTask->setQteCumulMois($decompteTask->getQteCumulMoisPrec() + $decompteTask->getQteMois());
-            if ($decompteTask->getPrixUnitaire() >= 0) {
-                if ($decompteTask->getQteCumulMois() >= 0) {
-                    $decompteTask->setMtCumulMois($decompteTask->getPrixUnitaire() * $decompteTask->getQteCumulMois());
-                }
-                if ($decompteTask->getQteCumulMoisPrec() >= 0) {
-                    $decompteTask->setMtCumulMoisPrec($decompteTask->getPrixUnitaire() * $decompteTask->getQteCumulMoisPrec());
-                }
-                if ($decompteTask->getQteMois() >= 0) {
-                    $decompteTask->setMtMois($decompteTask->getQteMois() * $decompteTask->getPrixUnitaire());
-                }
-                if ($decompteTask->getQtePrevueMarche() >= 0) {
+            if (is_numeric($decompteTask->getPrixUnitaire())) {
+                if (is_numeric($decompteTask->getQtePrevueMarche())) {
                     $decompteTask->setMtPrevueMarche($decompteTask->getQtePrevueMarche() * $decompteTask->getPrixUnitaire());
                 }
-                if ($decompteTask->getQtePrevueProjetExec() >= 0) {
+                if (is_numeric($decompteTask->getQtePrevueProjetExec())) {
                     $decompteTask->setMtPrevueProjetExec($decompteTask->getQtePrevueProjetExec() * $decompteTask->getPrixUnitaire());
                 }
+                if (is_numeric($decompteTask->getQteCumulMoisPrec())) {
+                    $decompteTask->setMtCumulMoisPrec($decompteTask->getPrixUnitaire() * $decompteTask->getQteCumulMoisPrec());
+                }
+                if (is_numeric($decompteTask->getQteMois())) {
+                    $decompteTask->setMtMois($decompteTask->getQteMois() * $decompteTask->getPrixUnitaire());
+                }
+                if (is_numeric($decompteTask->getQteCumulMois())) {
+                    $decompteTask->setMtCumulMois($decompteTask->getPrixUnitaire() * $decompteTask->getQteCumulMois());
+                }
             }
-            if ($decompteTask->getMtCumulMois() >= 0 && $decompteTask->getMtPrevueProjetExec() > 0) {
+            if (is_numeric($decompteTask->getMtCumulMois()) && $decompteTask->getMtPrevueProjetExec() > 0) {
                 $decompteTask->setPourcentRealisation(round($decompteTask->getMtCumulMois() * 100 / $decompteTask->getMtPrevueProjetExec(), 2));
             } else {
                 $decompteTask->setPourcentRealisation(0);
@@ -170,19 +171,19 @@ class DecompteManager {
         $decompteTasks = $decompte->getDecompteTasks();
         foreach ($decompteTasks as $decompteTask) {
             $decompteTask = $this->updateDecompteTask($decompteTask, $decomptePrec);
-            if ($decompteTask->getMtPrevueMarche()) {
+            if (is_numeric($decompteTask->getMtPrevueMarche())) {
                 $mtPrevueMarcheDcpt += $decompteTask->getMtPrevueMarche();
             }
-            if ($decompteTask->getMtPrevueProjetExec()) {
+            if (is_numeric($decompteTask->getMtPrevueProjetExec())) {
                 $mtPrevueProjetExecDcpt += $decompteTask->getMtPrevueProjetExec();
             }
-            if ($decompteTask->getMtCumulMoisPrec()) {
+            if (is_numeric($decompteTask->getMtCumulMoisPrec())) {
                 $mtCumulMoisPrecDcpt += $decompteTask->getMtCumulMoisPrec();
             }
-            if ($decompteTask->getMtCumulMois()) {
+            if (is_numeric($decompteTask->getMtCumulMois())) {
                 $mtCumulMoisDcpt += $decompteTask->getMtCumulMois();
             }
-            if ($decompteTask->getMtMois()) {
+            if (is_numeric($decompteTask->getMtMois())) {
                 $mtMoisDcpt += $decompteTask->getMtMois();
             }
         }
@@ -192,7 +193,7 @@ class DecompteManager {
         $decompte->setMtCumulMoisPrec($mtCumulMoisPrecDcpt);
         $decompte->setMtCumulMois($mtCumulMoisDcpt);
         $decompte->setMtMois($mtMoisDcpt);
-        if ($decompte->getMtCumulMois() >= 0 && $decompte->getMtPrevueProjetExec() > 0) {
+        if (is_numeric($decompte->getMtCumulMois()) && $decompte->getMtPrevueProjetExec() > 0) {
             $decompte->setPourcentRealisation(round($decompte->getMtCumulMois() * 100 / $decompte->getMtPrevueProjetExec(), 2));
         } else {
             $decompte->setPourcentRealisation(0);
@@ -279,74 +280,74 @@ class DecompteManager {
 
     public function updateMontantTVAOfDecompte(Decompte $decompte) {
         $tva = 19.5;
-        if ($decompte->getMtPrevueMarche() >= 0) {
+        if (is_numeric($decompte->getMtPrevueMarche())) {
             $decompte->setMtPrevueMarcheTVA(ceil($decompte->getMtPrevueMarche() * $tva / 100));
         }
-        if ($decompte->getMtPrevueProjetExec() >= 0) {
+        if (is_numeric($decompte->getMtPrevueProjetExec())) {
             $decompte->setMtPrevueProjetExecTVA(ceil($decompte->getMtPrevueProjetExec() * $tva / 100));
         }
-        if ($decompte->getMtMois() >= 0) {
+        if (is_numeric($decompte->getMtMois())) {
             $decompte->setMtMoisTVA(ceil($decompte->getMtMois() * $tva / 100));
         }
-        if ($decompte->getMtCumulMois() >= 0) {
+        if (is_numeric($decompte->getMtCumulMois())) {
             $decompte->setMtCumulMoisTVA(ceil($decompte->getMtCumulMois() * $tva / 100));
         }
-        if ($decompte->getMtCumulMoisPrec() >= 0) {
+        if (is_numeric($decompte->getMtCumulMoisPrec())) {
             $decompte->setMtCumulMoisPrecTVA(ceil($decompte->getMtCumulMoisPrec() * $tva / 100));
         }
     }
 
     public function updateMontantIROfDecompte(Decompte $decompte) {
         $ir = 2.2;
-        if ($decompte->getMtPrevueMarche() >= 0) {
+        if (is_numeric($decompte->getMtPrevueMarche())) {
             $decompte->setMtPrevueMarcheIR(ceil($decompte->getMtPrevueMarche() * $ir / 100));
         }
-        if ($decompte->getMtPrevueProjetExec() >= 0) {
+        if (is_numeric($decompte->getMtPrevueProjetExec())) {
             $decompte->setMtPrevueProjetExecIR(ceil($decompte->getMtPrevueProjetExec() * $ir / 100));
         }
-        if ($decompte->getMtMois() >= 0) {
+        if (is_numeric($decompte->getMtMois())) {
             $decompte->setMtMoisIR(ceil($decompte->getMtMois() * $ir / 100));
         }
-        if ($decompte->getMtCumulMois() >= 0) {
+        if (is_numeric($decompte->getMtCumulMois())) {
             $decompte->setMtCumulMoisIR(ceil($decompte->getMtCumulMois() * $ir / 100));
         }
-        if ($decompte->getMtCumulMoisPrec() >= 0) {
+        if (is_numeric($decompte->getMtCumulMoisPrec())) {
             $decompte->setMtCumulMoisPrecIR(ceil($decompte->getMtCumulMoisPrec() * $ir / 100));
         }
     }
 
     public function updateMontantNetAPercevoirOfDecompte(Decompte $decompte) {
-        if ($decompte->getMtPrevueMarche() >= 0 && $decompte->getMtPrevueMarcheIR() >= 0) {
+        if (is_numeric($decompte->getMtPrevueMarche()) && is_numeric($decompte->getMtPrevueMarcheIR())) {
             $decompte->setMtPrevueMarcheNetAPercevoir($decompte->getMtPrevueMarche() - $decompte->getMtPrevueMarcheIR());
         }
-        if ($decompte->getMtPrevueProjetExec() >= 0 && $decompte->getMtPrevueProjetExecIR() >= 0) {
+        if (is_numeric($decompte->getMtPrevueProjetExec()) && is_numeric($decompte->getMtPrevueProjetExecIR())) {
             $decompte->setMtPrevueProjetExecNetAPercevoir($decompte->getMtPrevueProjetExec() - $decompte->getMtPrevueProjetExecIR());
         }
-        if ($decompte->getMtMois() >= 0 && $decompte->getMtMoisIR() >= 0) {
+        if (is_numeric($decompte->getMtMois()) && is_numeric($decompte->getMtMoisIR())) {
             $decompte->setMtMoisNetAPercevoir($decompte->getMtMois() - $decompte->getMtMoisIR());
         }
-        if ($decompte->getMtCumulMois() >= 0 && $decompte->getMtCumulMoisIR() >= 0) {
+        if (is_numeric($decompte->getMtCumulMois()) && is_numeric($decompte->getMtCumulMoisIR())) {
             $decompte->setMtCumulMoisNetAPercevoir($decompte->getMtCumulMois() - $decompte->getMtCumulMoisIR());
         }
-        if ($decompte->getMtCumulMoisPrec() >= 0 && $decompte->getMtCumulMoisPrecIR() >= 0) {
+        if (is_numeric($decompte->getMtCumulMoisPrec()) && is_numeric($decompte->getMtCumulMoisPrecIR())) {
             $decompte->setMtCumulMoisPrecNetAPercevoir($decompte->getMtCumulMoisPrec() - $decompte->getMtCumulMoisPrecIR());
         }
     }
 
     public function updateMontantTTCOfDecompte(Decompte $decompte) {
-        if ($decompte->getMtPrevueMarche() >= 0 && $decompte->getMtPrevueMarcheTVA() >= 0) {
+        if (is_numeric($decompte->getMtPrevueMarche()) && is_numeric($decompte->getMtPrevueMarcheTVA())) {
             $decompte->setMtPrevueMarcheTTC($decompte->getMtPrevueMarche() + $decompte->getMtPrevueMarcheTVA());
         }
-        if ($decompte->getMtPrevueProjetExec() >= 0 && $decompte->getMtPrevueProjetExecTVA() >= 0) {
+        if (is_numeric($decompte->getMtPrevueProjetExec()) && is_numeric($decompte->getMtPrevueProjetExecTVA())) {
             $decompte->setMtPrevueProjetExecTTC($decompte->getMtPrevueProjetExec() + $decompte->getMtPrevueProjetExecTVA());
         }
-        if ($decompte->getMtMois() >= 0 && $decompte->getMtMoisTVA() >= 0) {
+        if (is_numeric($decompte->getMtMois()) && is_numeric($decompte->getMtMoisTVA())) {
             $decompte->setMtMoisTTC($decompte->getMtMois() + $decompte->getMtMoisTVA());
         }
-        if ($decompte->getMtCumulMois() >= 0 && $decompte->getMtCumulMoisTVA() >= 0) {
+        if (is_numeric($decompte->getMtCumulMois()) && is_numeric($decompte->getMtCumulMoisTVA())) {
             $decompte->setMtCumulMoisTTC($decompte->getMtCumulMois() + $decompte->getMtCumulMoisTVA());
         }
-        if ($decompte->getMtCumulMoisPrec() >= 0 && $decompte->getMtCumulMoisPrecTTC() >= 0) {
+        if (is_numeric($decompte->getMtCumulMoisPrec()) && is_numeric($decompte->getMtCumulMoisPrecTTC())) {
             $decompte->setMtCumulMoisPrecTTC($decompte->getMtCumulMoisPrec() + $decompte->getMtCumulMoisPrecTVA());
         }
     }
@@ -486,7 +487,7 @@ class DecompteManager {
     public function getTheExactNumberOfDecompteTasks($decompteTasks) {
         $numberDecompteTasks = 0;
         foreach ($decompteTasks as $decompteTask) {
-            if ($decompteTask->getPourcentRealisation() && $decompteTask->getPourcentRealisation() >= 0) {
+            if ($decompteTask->getPourcentRealisation() && is_numeric($decompteTask->getPourcentRealisation())) {
                 $numberDecompteTasks++;
             }
         }
@@ -537,6 +538,20 @@ class DecompteManager {
         $decomptes = $repositoryDecompte->getAll(null, null, null, $project->getId());
         foreach ($decomptes as $decompte) {
             $this->updateDecompte($decompte);
+        }
+    }
+
+    public function updateDecompteTotalOfProject(Project $project) {
+        $repositoryDecompte = $this->em->getRepository('OGIVEProjectBundle:Decompte');
+        $decomptes = $repositoryDecompte->getAll(null, null, null, $project->getId());
+        $decompteTotal = $project->getDecompteTotal();
+        if (is_null($decompteTotal)) {
+            foreach ($decomptes as $decompte) {
+                $decompte->setDecompteTotal($decompteTotal);
+                $decompte = $repositoryDecompte->updateDecompte($decompte);
+                //$decompteTotal->addDecompte($decompte);
+            }
+            //return $project->setDecompteTotal($decompteTotal);
         }
     }
 

@@ -38,7 +38,7 @@
                                     <div class="eleven wide field">
                                         {{ form_label(form.subject,"Objet") }}
                                         <div class="field"> 
-                                            {{ form_widget(form.subject,{'attr':{'placeholder':"Objet du marché", 'data-validate': 'objet'}})}}
+                                            {{ form_widget(form.subject,{'attr':{'placeholder':"Objet du marché", 'data-validate': 'subject'}})}}
                                         </div>
                                     </div>
                                 </div>
@@ -57,7 +57,7 @@
                                     <div class="five wide field">
                                         <label>Avance démarrage(%)</label>
                                         <div class="field">
-                                            {{ form_widget(form.avanceDemarrage,{'attr':{'placeholder':"Avance démarrage", 'data-validate': 'avance_demarrage'}})}}
+                                            {{ form_widget(form.avanceDemarrage,{'attr':{'placeholder':"Avance démarrage", 'data-validate': 'avance-demarrage'}})}}
                                         </div>
                                     </div>
                                 </div>
@@ -93,7 +93,7 @@
                                             <div class="ui calendar" >
                                                 <div class="ui input left icon">
                                                     <i class="calendar icon"></i>
-                                                    {{ form_widget(form.suscriptionDate,{'attr':{'placeholder':"Date de souscription", 'data-validate': 'suscription_date'}})}}
+                                                    {{ form_widget(form.suscriptionDate,{'attr':{'placeholder':"Date de souscription", 'data-validate': 'suscription-date'}})}}
                                                 </div>
                                             </div>
                                         </div>
@@ -104,7 +104,7 @@
                                             <div class="ui calendar" >
                                                 <div class="ui input left icon">
                                                     <i class="calendar icon"></i>
-                                                    {{ form_widget(form.signatureDate,{'attr':{'placeholder':"Date de signature", 'data-validate': 'signature_date'}})}}
+                                                    {{ form_widget(form.signatureDate,{'attr':{'placeholder':"Date de signature", 'data-validate': 'signature-date'}})}}
                                                 </div>
                                             </div>
                                         </div>
@@ -115,7 +115,7 @@
                                             <div class="ui calendar" >
                                                 <div class="ui input left icon">
                                                     <i class="calendar icon"></i>
-                                                    {{ form_widget(form.notificationDate,{'attr':{'placeholder':"Date de notification", 'data-validate': 'notification_date'}})}}
+                                                    {{ form_widget(form.notificationDate,{'attr':{'placeholder':"Date de notification", 'data-validate': 'notification-date'}})}}
                                                 </div>
                                             </div>
                                         </div>

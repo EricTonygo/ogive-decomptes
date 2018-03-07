@@ -77,7 +77,7 @@ $(document).ready(function () {
                             $('#form_message_success span').html(response.message);
                             $('#form_message_sucess').show();
                             var id_project = parseInt(response.id_project);
-                            window.location.replace(Routing.generate('project_holders_get', {id: id_project}));
+                            window.location.replace(Routing.generate('project_contributors_get', {id: id_project}));
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             $('#od_add_holder_submit_btn').removeClass('disabled');
@@ -169,7 +169,7 @@ $(document).ready(function () {
                             $('#form_message_success span').html(response.message);
                             $('#form_message_success').show();
                             var id_project = parseInt(response.id_project);
-                            window.location.replace(Routing.generate('project_holders_get', {id: id_project}));
+                            window.location.replace(Routing.generate('project_contributors_get', {id: id_project}));
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             $('#od_update_holder_submit_btn').removeClass('disabled');

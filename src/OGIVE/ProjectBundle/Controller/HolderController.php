@@ -81,6 +81,12 @@ class HolderController extends Controller {
             if ($holder->getPhone() == null || $holder->getPhone() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le téléphone du titulaire. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }
+            if ($repositoryHolder->findOneBy(array('email' => $holder->getEmail(), "project" => $project))) {
+                return new JsonResponse(["success" => false, 'message' => "Un titulaire avec cette adresse email existe déjà"], Response::HTTP_BAD_REQUEST);
+            }
+            if ($repositoryHolder->findOneBy(array('phone' => $holder->getPhone(), "project" => $project))) {
+                return new JsonResponse(["success" => false, 'message' => "Un titulaire avec ce numero de téléphone existe déjà"], Response::HTTP_BAD_REQUEST);
+            }
             $holder->setProject($project);
 
             $user = $this->getUser();
@@ -142,6 +148,14 @@ class HolderController extends Controller {
             }
             if ($holder->getPhone() == null || $holder->getPhone() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le téléphone du titulaire. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
+            }
+            $holderEdit = $repositoryHolder->findOneBy(array('email' => $holder->getEmail(), "project" => $holder->getProject()));
+            if (!is_null($holderEdit) && $holderEdit->getId() != $holder->getId()) {
+                return new JsonResponse(["success" => false, 'message' => "Un titulaire avec cette adresse email existe déjà"], Response::HTTP_BAD_REQUEST);
+            }
+            $holderEditByPhone = $repositoryHolder->findOneBy(array('phone' => $holder->getEmail(), "project" => $holder->getProject()));
+            if (!is_null($holderEditByPhone) && $holderEditByPhone->getId() != $holder->getId()) {
+                return new JsonResponse(["success" => false, 'message' => "Un titulaire avec ce numero de téléphone existe déjà"], Response::HTTP_BAD_REQUEST);
             }
             $user = $this->getUser();
             $holder->setUpdatedUser($user);

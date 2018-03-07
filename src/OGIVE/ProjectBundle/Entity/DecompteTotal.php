@@ -5,13 +5,13 @@ namespace OGIVE\ProjectBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Decompte
+ * DecompteTotal
  *
- * @ORM\Table(name="decompte")
- * @ORM\Entity(repositoryClass="\OGIVE\ProjectBundle\Repository\DecompteRepository")
+ * @ORM\Table(name="decompte_total")
+ * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks
  */
-class Decompte extends GeneralClass {
+class DecompteTotal extends GeneralClass {
 
      /**
      * @var string
@@ -454,23 +454,13 @@ class Decompte extends GeneralClass {
      */
     private $project;
     
-    /**
-     * @var \Decompte
-     *
-     * @ORM\ManyToOne(targetEntity="DecompteTotal")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="decompte_total", referencedColumnName="id")
-     * })
-     */
-    private $decompteTotal;
-    
     
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="\OGIVE\ProjectBundle\Entity\DecompteTask", mappedBy="decompte", cascade={"remove", "persist"})
+     * @ORM\OneToMany(targetEntity="\OGIVE\ProjectBundle\Entity\Decompte", mappedBy="decompteTotal", cascade={"remove", "persist"})
     */
-    private $decompteTasks;
+    private $decomptes;
     
 
     /**
@@ -478,7 +468,6 @@ class Decompte extends GeneralClass {
      */
     public function __construct() {
         parent::__construct();
-        $this->decompteTasks = new \Doctrine\Common\Collections\ArrayCollection();
         $this->decomptes = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
@@ -487,7 +476,7 @@ class Decompte extends GeneralClass {
      *
      * @param string $monthName
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMonthName($monthName) {
         $this->monthName = $monthName;
@@ -509,7 +498,7 @@ class Decompte extends GeneralClass {
      *
      * @param string $monthNumber
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMonthNumber($monthNumber) {
         $this->monthNumber = $monthNumber;
@@ -531,7 +520,7 @@ class Decompte extends GeneralClass {
      *
      * @param \DateTime $startDate
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setStartDate($startDate) {
         $this->startDate = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $startDate))));
@@ -554,7 +543,7 @@ class Decompte extends GeneralClass {
      *
      * @param \DateTime $endDate
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setEndDate($endDate) {
         $this->endDate = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $endDate))));
@@ -577,7 +566,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtPrevueMarche
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtPrevueMarche($mtPrevueMarche) {
         $this->mtPrevueMarche = $mtPrevueMarche;
@@ -599,7 +588,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtPrevueMarcheTVA
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtPrevueMarcheTVA($mtPrevueMarcheTVA) {
         $this->mtPrevueMarcheTVA = $mtPrevueMarcheTVA;
@@ -621,7 +610,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtPrevueMarcheIR
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtPrevueMarcheIR($mtPrevueMarcheIR) {
         $this->mtPrevueMarcheIR = $mtPrevueMarcheIR;
@@ -643,7 +632,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtPrevueMarcheNetAPercevoir
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtPrevueMarcheNetAPercevoir($mtPrevueMarcheNetAPercevoir) {
         $this->mtPrevueMarcheNetAPercevoir = $mtPrevueMarcheNetAPercevoir;
@@ -665,7 +654,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtPrevueMarcheTTC
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtPrevueMarcheTTC($mtPrevueMarcheTTC) {
         $this->mtPrevueMarcheTTC = $mtPrevueMarcheTTC;
@@ -687,7 +676,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $qtePrevueMarche
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setQtePrevueMarche($qtePrevueMarche) {
         $this->qtePrevueMarche = $qtePrevueMarche;
@@ -709,7 +698,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtPrevueProjetExec
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtPrevueProjetExec($mtPrevueProjetExec) {
         $this->mtPrevueProjetExec = $mtPrevueProjetExec;
@@ -731,7 +720,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtPrevueProjetExecTVA
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtPrevueProjetExecTVA($mtPrevueProjetExecTVA) {
         $this->mtPrevueProjetExecTVA = $mtPrevueProjetExecTVA;
@@ -753,7 +742,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtPrevueProjetExecIR
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtPrevueProjetExecIR($mtPrevueProjetExecIR) {
         $this->mtPrevueProjetExecIR = $mtPrevueProjetExecIR;
@@ -775,7 +764,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtPrevueProjetExecNetAPercevoir
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtPrevueProjetExecNetAPercevoir($mtPrevueProjetExecNetAPercevoir) {
         $this->mtPrevueProjetExecNetAPercevoir = $mtPrevueProjetExecNetAPercevoir;
@@ -797,7 +786,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtPrevueProjetExecTTC
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtPrevueProjetExecTTC($mtPrevueProjetExecTTC) {
         $this->mtPrevueProjetExecTTC = $mtPrevueProjetExecTTC;
@@ -820,7 +809,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $qtePrevueProjetExec
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setQtePrevueProjetExec($qtePrevueProjetExec) {
         $this->qtePrevueProjetExec = $qtePrevueProjetExec;
@@ -843,7 +832,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtCumulMoisPrec
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtCumulMoisPrec($mtCumulMoisPrec) {
         $this->mtCumulMoisPrec = $mtCumulMoisPrec;
@@ -865,7 +854,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtCumulMoisPrecTVA
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtCumulMoisPrecTVA($mtCumulMoisPrecTVA) {
         $this->mtCumulMoisPrecTVA = $mtCumulMoisPrecTVA;
@@ -887,7 +876,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtCumulMoisPrecIR
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtCumulMoisPrecIR($mtCumulMoisPrecIR) {
         $this->mtCumulMoisPrecIR = $mtCumulMoisPrecIR;
@@ -909,7 +898,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtCumulMoisPrecNetAPercevoir
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtCumulMoisPrecNetAPercevoir($mtCumulMoisPrecNetAPercevoir) {
         $this->mtCumulMoisPrecNetAPercevoir = $mtCumulMoisPrecNetAPercevoir;
@@ -931,7 +920,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtCumulMoisPrecTTC
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtCumulMoisPrecTTC($mtCumulMoisPrecTTC) {
         $this->mtCumulMoisPrecTTC = $mtCumulMoisPrecTTC;
@@ -953,7 +942,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $qteCumulMoisPrec
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setQteCumulMoisPrec($qteCumulMoisPrec) {
         $this->qteCumulMoisPrec = $qteCumulMoisPrec;
@@ -975,7 +964,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtMois
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtMois($mtMois) {
         $this->mtMois = $mtMois;
@@ -997,7 +986,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtMoisTVA
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtMoisTVA($mtMoisTVA) {
         $this->mtMoisTVA = $mtMoisTVA;
@@ -1019,7 +1008,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtMoisIR
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtMoisIR($mtMoisIR) {
         $this->mtMoisIR = $mtMoisIR;
@@ -1041,7 +1030,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtMoisNetAPercevoir
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtMoisNetAPercevoir($mtMoisNetAPercevoir) {
         $this->mtMoisNetAPercevoir = $mtMoisNetAPercevoir;
@@ -1063,7 +1052,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtMoisTTC
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtMoisTTC($mtMoisTTC) {
         $this->mtMoisTTC = $mtMoisTTC;
@@ -1085,7 +1074,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $qteMois
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setQteMois($qteMois) {
         $this->qteMois = $qteMois;
@@ -1107,7 +1096,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtCumulMois
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtCumulMois($mtCumulMois) {
         $this->mtCumulMois = $mtCumulMois;
@@ -1129,7 +1118,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtCumulMoisTVA
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtCumulMoisTVA($mtCumulMoisTVA) {
         $this->mtCumulMoisTVA = $mtCumulMoisTVA;
@@ -1151,7 +1140,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtCumulMoisIR
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtCumulMoisIR($mtCumulMoisIR) {
         $this->mtCumulMoisIR = $mtCumulMoisIR;
@@ -1173,7 +1162,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtCumulMoisNetAPercevoir
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtCumulMoisNetAPercevoir($mtCumulMoisNetAPercevoir) {
         $this->mtCumulMoisNetAPercevoir = $mtCumulMoisNetAPercevoir;
@@ -1195,7 +1184,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtCumulMoisTTC
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtCumulMoisTTC($mtCumulMoisTTC) {
         $this->mtCumulMoisTTC = $mtCumulMoisTTC;
@@ -1217,7 +1206,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $qteCumulMois
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setQteCumulMois($qteCumulMois) {
         $this->qteCumulMois = $qteCumulMois;
@@ -1239,7 +1228,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $pourcentRealisation
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setPourcentRealisation($pourcentRealisation) {
         $this->pourcentRealisation = $pourcentRealisation;
@@ -1262,7 +1251,7 @@ class Decompte extends GeneralClass {
      *
      * @param \OGIVE\ProjectBundle\Entity\Project $project
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setProject(\OGIVE\ProjectBundle\Entity\Project $project=null) {
         $this->project = $project;
@@ -1280,33 +1269,11 @@ class Decompte extends GeneralClass {
     }
     
     /**
-     * Set decompte
-     *
-     * @param \OGIVE\ProjectBundle\Entity\DecompteTotal $decompteTotal
-     *
-     * @return Decompte
-     */
-    public function setDecompteTotal(\OGIVE\ProjectBundle\Entity\Decompte $decompteTotal=null) {
-        $this->decompteTotal = $decompteTotal;
-
-        return $this;
-    }
-
-    /**
-     * Get decompteTotal
-     *
-     * @return \OGIVE\ProjectBundle\Entity\DecompteTotal
-     */
-    public function getDecompteTotal() {
-        return $this->decompteTotal;
-    }
-    
-    /**
      * Set decompteState
      *
      * @param integer $decompteState
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setDecompteState($decompteState) {
         $this->decompteState = $decompteState;
@@ -1324,47 +1291,48 @@ class Decompte extends GeneralClass {
     }
     
     /**
-     * Add decompteTask
+     * Add decompte
      *
-     * @param \OGIVE\ProjectBundle\Entity\DecompteTask $decompteTask 
-     * @return Decompte
+     * @param \OGIVE\ProjectBundle\Entity\Decompte $decompte
+     * @return DecompteTotal
      */
-    public function addDecompteTask(\OGIVE\ProjectBundle\Entity\DecompteTask $decompteTask) {
-        $this->decompteTasks[] = $decompteTask;
+    public function addDecompte(\OGIVE\ProjectBundle\Entity\Decompte $decompte) {
+        $this->decomptes[] = $decompte;
         return $this;
     }
 
     /**
-     * Get decompteTasks
+     * Get decomptes
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getDecompteTasks() {
-        return $this->decompteTasks;
+    public function getDecomptes() {
+        return $this->decomptes;
     }
 
     /**
-     * Set decompteTasks
+     * Set decomptes
      *
-     * @param \Doctrine\Common\Collections\Collection $decompteTasks
-     * @return Decompte
+     * @param \Doctrine\Common\Collections\Collection $decomptes
+     * @return DecompteTotal
      */
-    public function setDecompteTasks(\Doctrine\Common\Collections\Collection $decompteTasks = null) {
-        $this->decompteTasks = $decompteTasks;
+    public function setDecomptes(\Doctrine\Common\Collections\Collection $decomptes = null) {
+        $this->decomptes = $decomptes;
 
         return $this;
     }
 
     /**
-     * Remove decompteTask
+     * Remove decompte
      *
-     * @param \OGIVE\ProjectBundle\Entity\DecompteTask $decompteTask
-     * @return Decompte
+     * @param \OGIVE\ProjectBundle\Entity\DecompteT $decompte
+     * @return DecompteTotal
      */
-    public function removeDecompteTask(\OGIVE\ProjectBundle\Entity\DecompteTask $decompteTask) {
-        $this->decompteTasks->removeElement($decompteTask);
+    public function removeDecompte(\OGIVE\ProjectBundle\Entity\Decompte $decompte) {
+        $this->decomptes->removeElement($decompte);
         return $this;
     }
+    
 
     public function setSearchData() {
         $this->searchData = $this->getMonthName();
@@ -1375,7 +1343,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtAvenant
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtAvenant($mtAvenant) {
         $this->mtAvenant = $mtAvenant;
@@ -1397,7 +1365,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtTotalMarcheHTVA
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtTotalMarcheHTVA($mtTotalMarcheHTVA) {
         $this->mtTotalMarcheHTVA = $mtTotalMarcheHTVA;
@@ -1410,7 +1378,7 @@ class Decompte extends GeneralClass {
      *
      * @param float $mtPenalite
      *
-     * @return Decompte
+     * @return DecompteTotal
      */
     public function setMtPenalite($mtPenalite) {
         $this->mtPenalite = $mtPenalite;

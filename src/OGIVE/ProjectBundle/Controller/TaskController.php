@@ -97,7 +97,7 @@ class TaskController extends Controller {
             if ($task->getNom() == null || $task->getNom() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vôtre tâche est sans désignation. Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
             }
-            if ($repositoryTask->findOneBy(array('numero' => $task->getNumero()))) {
+            if ($repositoryTask->findOneBy(array('numero' => $task->getNumero(), "parentTask" => null, "project" => $project))) {
                 return new JsonResponse(["success" => false, 'message' => 'Une tâche avec ce numéro existe déjà'], Response::HTTP_BAD_REQUEST);
             }
             $user = $this->getUser();

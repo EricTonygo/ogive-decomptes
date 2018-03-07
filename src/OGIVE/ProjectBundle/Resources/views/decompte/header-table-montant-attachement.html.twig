@@ -1,0 +1,50 @@
+{#<table class="ui celled structured small fluid table table_header_decompte">
+    <tbody>
+        <tr style="text-align: center; font-weight: bold;">
+            <td>{{project.subject}}</td>
+        </tr>
+        <tr style="text-align: center; font-weight: bold;">
+            <td>DECOMPTE  PROVISOIRE N°{{decompte.monthNumber}} DES TRAVAUX REALISES AU {{decompte.endDate|date('d/m/Y')}}</td>
+        </tr>
+    </tbody>
+</table>#}
+        {%set holder = project.holders[0] %}
+        {%set projectManager = project.projectManagers[0] %}
+        <table class="ui celled structured small fluid table table_header_decompte" style="font-weight: bold;">
+    <tbody>
+        <tr>
+            <td style="width: 45em; font-weight: bold;">OBJET: </td>
+            <td rowspan="8" style="text-align: center; font-weight: bold;">Marché<br> {{decompte.project.numeroMarche}}</td>
+            <td style="width: 33em; font-weight: bold;">TITULAIRE: {%if project.holders %}{{holder.nom|upper}}{%endif %}</td>
+        </tr>
+        <tr>
+            <td >{{decompte.project.subject}}</td>
+            <td>B.P.{{holder.codePostal}}</td>
+        </tr>
+        <tr>
+            <td >LOT N° {{decompte.project.numeroLot}}</td>
+            
+            <td>Tel/fax: {{holder.phone}}/{{holder.faxNumber}}</td>
+        </tr>
+        <tr>
+            <td>LIEU D'EXECUTION: {{decompte.project.lieuExecution}}</td>
+            <td>RC N° {{holder.rc}}</td>
+        </tr>
+        <tr>
+            <td>REGION: {{decompte.project.region}}</td>
+            <td>N° Contribuable: {{holder.numeroContribuable}}</td>
+        </tr>
+        <tr>
+            <td>DEPARTEMENT: {{decompte.project.departement}}</td>
+            <td>N° Compte bancaire: {{holder.numeroCompteBancaire}}</td>
+        </tr>
+        <tr>
+            <td>Notifié le, {{decompte.project.notificationDate|date('d/m/Y')}}</td>
+            <td>{{holder.nomBanque}}</td>
+        </tr>
+        <tr>
+            <td>MISSION DE CONTROLE: {{projectManager.nom|upper}}</td>
+            <td>INTITULE: {{holder.intitule}}</td>
+        </tr>
+    </tbody>
+</table>

@@ -82,6 +82,12 @@ class ServiceProviderController extends Controller {
             if ($service_provider->getPhone() == null || $service_provider->getPhone() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le téléphone du prestataire. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }
+            if ($repositoryServiceProvider->findOneBy(array('email' => $service_provider->getEmail(), "project" => $project))) {
+                return new JsonResponse(["success" => false, 'message' => "Un prestataire avec cette adresse email existe déjà"], Response::HTTP_BAD_REQUEST);
+            }
+            if ($repositoryServiceProvider->findOneBy(array('phone' => $service_provider->getPhone(), "project" => $project))) {
+                return new JsonResponse(["success" => false, 'message' => "Un prestataire avec ce numero téléphone existe déjà"], Response::HTTP_BAD_REQUEST);
+            }
             $service_provider->setProject($project);
             $user = $this->getUser();
             $service_provider->setCreatedUser($user);
@@ -143,6 +149,14 @@ class ServiceProviderController extends Controller {
             }
             if ($service_provider->getPhone() == null || $service_provider->getPhone() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le téléphone du prestataire. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
+            }
+            $serviceProviderEdit = $repositoryServiceProvider->findOneBy(array('email' => $service_provider->getEmail(), "project" => $service_provider->getProject()));
+            if (!is_null($serviceProviderEdit) && $serviceProviderEdit->getId() != $service_provider->getId()) {
+                return new JsonResponse(["success" => false, 'message' => "Un prestataire avec cette adresse email existe déjà"], Response::HTTP_BAD_REQUEST);
+            }
+            $serviceProviderEditByPhone = $repositoryServiceProvider->findOneBy(array('phone' => $service_provider->getEmail(), "project" => $service_provider->getProject()));
+            if (!is_null($serviceProviderEditByPhone) && $serviceProviderEditByPhone->getId() != $service_provider->getId()) {
+                return new JsonResponse(["success" => false, 'message' => "Un prestataire avec ce numero de téléphone existe déjà"], Response::HTTP_BAD_REQUEST);
             }
             $user = $this->getUser();
             $service_provider->setUpdatedUser($user);

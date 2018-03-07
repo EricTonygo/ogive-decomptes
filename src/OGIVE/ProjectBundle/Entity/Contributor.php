@@ -231,7 +231,7 @@ class Contributor  extends GeneralClass{
      * @return string
      */
     public function getFaxNumber() {
-        return $this->updatedUser;
+        return $this->faxNumber;
     }
 
 

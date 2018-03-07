@@ -1,13 +1,22 @@
 $(document).ready(function () {
-    $('#od_add_project_manager_submit_btn').click(function (e) {
+    $('#od_add_other_contributor_submit_btn').click(function (e) {
         e.preventDefault();
         $('#form_message_error').hide();
         $('#form_message_success').hide();
-        $('#od_add_project_manager_form.ui.form').submit();
+        $('#od_add_other_contributor_form.ui.form').submit();
     });
-    $('#od_add_project_manager_form.ui.form')
+    $('#od_add_other_contributor_form.ui.form')
             .form({
                 fields: {
+                    contributor_type: {
+                        identifier: 'contributorType',
+                        rules: [
+                            {
+                                type: 'empty',
+                                prompt: "Veuillez saisir le type d'intervenant"
+                            }
+                        ]
+                    },
                     name: {
                         identifier: 'nom',
                         rules: [
@@ -41,16 +50,16 @@ $(document).ready(function () {
                 onSuccess: function (event, fields) {
                     $.ajax({
                         type: 'POST',
-                        url: $('#od_add_project_manager_form.ui.form').attr('action'),
-                        data: $('#od_add_project_manager_form.ui.form').serialize(),
+                        url: $('#od_add_other_contributor_form.ui.form').attr('action'),
+                        data: $('#od_add_other_contributor_form.ui.form').serialize(),
                         dataType: 'json',
                         processData: false,
                         //contentType: false,
                         cache: false,
                         beforeSend: function () {
-                            $('#od_add_project_manager_submit_btn').addClass('disabled');
-                            $('#od_add_project_manager_cancel_btn').addClass('disabled');
-                            $('#od_add_project_manager_form.ui.form').addClass('loading');
+                            $('#od_add_other_contributor_submit_btn').addClass('disabled');
+                            $('#od_add_other_contributor_cancel_btn').addClass('disabled');
+                            $('#od_add_other_contributor_form.ui.form').addClass('loading');
                         },
                         statusCode: {
                             500: function (xhr) {
@@ -60,9 +69,9 @@ $(document).ready(function () {
                             400: function (response, textStatus, jqXHR) {
                                 var myerrors = response.responseJSON;
                                 if (myerrors.success === false) {
-                                    $('#od_add_project_manager_submit_btn').removeClass('disabled');
-                                    $('#od_add_project_manager_cancel_btn').removeClass('disabled');
-                                    $('#od_add_project_manager_form.ui.form').removeClass('loading');
+                                    $('#od_add_other_contributor_submit_btn').removeClass('disabled');
+                                    $('#od_add_other_contributor_cancel_btn').removeClass('disabled');
+                                    $('#od_add_other_contributor_form.ui.form').removeClass('loading');
                                     $('#form_message_error span').html(myerrors.message);
                                     $('#form_message_error').show();
                                 } else {
@@ -73,16 +82,16 @@ $(document).ready(function () {
                             }
                         },
                         success: function (response, textStatus, jqXHR) {
-                            $('#od_add_project_manager_form.ui.form').removeClass('loading');
+                            $('#od_add_other_contributor_form.ui.form').removeClass('loading');
                             $('#form_message_success span').html(response.message);
                             $('#form_message_sucess').show();
                             var id_project = parseInt(response.id_project);
                             window.location.replace(Routing.generate('project_contributors_get', {id: id_project}));
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-                            $('#od_add_project_manager_submit_btn').removeClass('disabled');
-                            $('#od_add_project_manager_cancel_btn').removeClass('disabled');
-                            $('#od_add_project_manager_form.ui.form').removeClass('loading');
+                            $('#od_add_other_contributor_submit_btn').removeClass('disabled');
+                            $('#od_add_other_contributor_cancel_btn').removeClass('disabled');
+                            $('#od_add_other_contributor_form.ui.form').removeClass('loading');
                         }
                     });
                     return false;
@@ -90,15 +99,24 @@ $(document).ready(function () {
             }
             );
 
-    $('#od_update_project_manager_submit_btn').click(function (e) {
+    $('#od_update_other_contributor_submit_btn').click(function (e) {
         e.preventDefault();
         $('#form_message_error').hide();
         $('#form_message_success').hide();
-        $('#od_update_project_manager_form.ui.form').submit();
+        $('#od_update_other_contributor_form.ui.form').submit();
     });
-    $('#od_update_project_manager_form.ui.form')
+    $('#od_update_other_contributor_form.ui.form')
             .form({
                 fields: {
+                    contributor_type: {
+                        identifier: 'contributorType',
+                        rules: [
+                            {
+                                type: 'empty',
+                                prompt: "Veuillez saisir le type d'intervenant"
+                            }
+                        ]
+                    },
                     name: {
                         identifier: 'nom',
                         rules: [
@@ -132,16 +150,16 @@ $(document).ready(function () {
                 onSuccess: function (event, fields) {
                     $.ajax({
                         type: 'PUT',
-                        url: $('#od_update_project_manager_form.ui.form').attr('action'),
-                        data: $('#od_update_project_manager_form.ui.form').serialize(),
+                        url: $('#od_update_other_contributor_form.ui.form').attr('action'),
+                        data: $('#od_update_other_contributor_form.ui.form').serialize(),
                         dataType: 'json',
                         processData: false,
                         //contentType: false,
                         cache: false,
                         beforeSend: function () {
-                            $('#od_update_project_manager_submit_btn').addClass('disabled');
-                            $('#od_update_project_manager_cancel_btn').addClass('disabled');
-                            $('#od_update_project_manager_form.ui.form').addClass('loading');
+                            $('#od_update_other_contributor_submit_btn').addClass('disabled');
+                            $('#od_update_other_contributor_cancel_btn').addClass('disabled');
+                            $('#od_update_other_contributor_form.ui.form').addClass('loading');
                         },
                         statusCode: {
                             500: function (xhr) {
@@ -151,9 +169,9 @@ $(document).ready(function () {
                             400: function (response, textStatus, jqXHR) {
                                 var myerrors = response.responseJSON;
                                 if (myerrors.success === false) {
-                                    $('#od_update_project_manager_submit_btn').removeClass('disabled');
-                                    $('#od_update_project_manager_cancel_btn').removeClass('disabled');
-                                    $('#od_update_project_manager_form.ui.form').removeClass('loading');
+                                    $('#od_update_other_contributor_submit_btn').removeClass('disabled');
+                                    $('#od_update_other_contributor_cancel_btn').removeClass('disabled');
+                                    $('#od_update_other_contributor_form.ui.form').removeClass('loading');
                                     $('#form_message_error span').html(myerrors.message);
                                     $('#form_message_error').show();
 
@@ -165,16 +183,16 @@ $(document).ready(function () {
                             }
                         },
                         success: function (response, textStatus, jqXHR) {
-                            $('#od_update_project_manager_form.ui.form').removeClass('loading');
+                            $('#od_update_other_contributor_form.ui.form').removeClass('loading');
                             $('#form_message_success span').html(response.message);
                             $('#form_message_success').show();
                             var id_project = parseInt(response.id_project);
                             window.location.replace(Routing.generate('project_contributors_get', {id: id_project}));
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-                            $('#od_update_project_manager_submit_btn').removeClass('disabled');
-                            $('#od_update_project_manager_cancel_btn').removeClass('disabled');
-                            $('#od_update_project_manager_form.ui.form').removeClass('loading');
+                            $('#od_update_other_contributor_submit_btn').removeClass('disabled');
+                            $('#od_update_other_contributor_cancel_btn').removeClass('disabled');
+                            $('#od_update_other_contributor_form.ui.form').removeClass('loading');
                         }
                     });
                     return false;

@@ -81,6 +81,13 @@ class ProjectManagerController extends Controller {
             if ($project_manager->getPhone() == null || $project_manager->getPhone() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le téléphone du maître d'oeuvre. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }
+            if ($repositoryProjectManager->findOneBy(array('email' => $project_manager->getEmail(), "project" => $project))) {
+                return new JsonResponse(["success" => false, 'message' => "Un maitre d'oeuvre avec cette adresse email existe déjà"], Response::HTTP_BAD_REQUEST);
+            }
+            if ($repositoryProjectManager->findOneBy(array('email' => $project_manager->getEmail(), "project" => $project))) {
+                return new JsonResponse(["success" => false, 'message' => "Un maitre d'oeuvre avec ce numero téléphone existe déjà"], Response::HTTP_BAD_REQUEST);
+            }
+            
             $project_manager->setProject($project);
             $user = $this->getUser();
             $project_manager->setCreatedUser($user);
@@ -139,6 +146,14 @@ class ProjectManagerController extends Controller {
             }
             if ($project_manager->getPhone() == null || $project_manager->getPhone() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le téléphone du maître d'oeuvre. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
+            }
+            $projectManagerEdit = $repositoryProjectManager->findOneBy(array('email' => $project_manager->getEmail(), "project" => $project_manager->getProject()));
+            if (!is_null($projectManagerEdit) && $projectManagerEdit->getId() != $project_manager->getId()) {
+                return new JsonResponse(["success" => false, 'message' => "Un maître d'oeuvre avec cette adresse email existe déjà"], Response::HTTP_BAD_REQUEST);
+            }
+            $projectManagerEditByPhone = $repositoryProjectManager->findOneBy(array('phone' => $project_manager->getEmail(), "project" => $project_manager->getProject()));
+            if (!is_null($projectManagerEditByPhone) && $projectManagerEditByPhone->getId() != $project_manager->getId()) {
+                return new JsonResponse(["success" => false, 'message' => "Un maître d'oeuvre avec ce numero de téléphone existe déjà"], Response::HTTP_BAD_REQUEST);
             }
             $user = $this->getUser();
             $project_manager->setUpdatedUser($user);

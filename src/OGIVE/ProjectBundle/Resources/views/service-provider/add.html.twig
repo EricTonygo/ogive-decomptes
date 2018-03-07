@@ -112,3 +112,7 @@
         </div>
     </div>
 {% endblock %}
+{% block javascripts %}
+    {{ parent()}}
+    <script type="text/javascript" src="{{ asset('bundles/ogiveproject/js/service_provider.js')}}"></script>
+{% endblock javascripts %}

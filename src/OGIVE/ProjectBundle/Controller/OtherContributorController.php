@@ -81,6 +81,12 @@ class OtherContributorController extends Controller {
             if ($other_contributor->getPhone() == null || $other_contributor->getPhone() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le téléphone du prestataire. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }
+            if ($repositoryOtherContributor->findOneBy(array('email' => $other_contributor->getEmail(), "project" => $project))) {
+                return new JsonResponse(["success" => false, 'message' => "Un intervenant avec cette adresse email existe déjà"], Response::HTTP_BAD_REQUEST);
+            }
+            if ($repositoryOtherContributor->findOneBy(array('phone' => $other_contributor->getPhone(), "project" => $project))) {
+                return new JsonResponse(["success" => false, 'message' => "Un intervenant avec ce numero téléphone existe déjà"], Response::HTTP_BAD_REQUEST);
+            }
             $other_contributor->setProject($project);
 
             $user = $this->getUser();
@@ -142,6 +148,14 @@ class OtherContributorController extends Controller {
             }
             if ($other_contributor->getPhone() == null || $other_contributor->getPhone() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le téléphone du prestataire. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
+            }
+            $otherContributorEdit = $repositoryOtherContributor->findOneBy(array('email' => $other_contributor->getEmail(), "project" => $other_contributor->getProject()));
+            if (!is_null($otherContributorEdit) && $otherContributorEdit->getId() != $other_contributor->getId()) {
+                return new JsonResponse(["success" => false, 'message' => "Un titulaire avec cette adresse email existe déjà"], Response::HTTP_BAD_REQUEST);
+            }
+            $otherContributorEditByPhone = $repositoryOtherContributor->findOneBy(array('phone' => $other_contributor->getEmail(), "project" => $other_contributor->getProject()));
+            if (!is_null($otherContributorEditByPhone) && $otherContributorEditByPhone->getId() != $other_contributor->getId()) {
+                return new JsonResponse(["success" => false, 'message' => "Un titulaire avec ce numero de téléphone existe déjà"], Response::HTTP_BAD_REQUEST);
             }
             $user = $this->getUser();
             $other_contributor->setUpdatedUser($user);
