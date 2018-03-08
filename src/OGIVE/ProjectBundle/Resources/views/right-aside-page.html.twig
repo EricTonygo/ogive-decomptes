@@ -1,44 +1,42 @@
-<div class="ui fluid card">
+<div class="ui fluid card right_mini_card_project">
     <div class="content">
-        <div class="ui left floated"><div class="header">Your Projects</div></div>
-        <div class="ui right floated"><a href="{{path('project_add')}}" class="ui yellow mini button">New project</a></div>
+        <div class="ui left floated"><div class="header">Vos projets</div></div>
+        <div class="ui right floated"><a href="{{path('project_add')}}" class="ui yellow mini button">Nouveau projet</a></div>
     </div>
-    <div class="content">
+    <div class="content right_mini_card_project_first_content">
         <div class="ui fluid mini input">
-            <input type="text" placeholder="Search...">
+            <input type="text" placeholder="Recherche...">
         </div>
-        <div class="ui secondary pointing mini menu">
-            <div class="ui container">
-                <a class="active item">
-                    Activés
-                </a>
-                <a class="item">
-                    Desactivés
-                </a>
-                <a class="item">
-                    Cloturés
-                </a>
-            </div>
+        <div class="ui pointing secondary stackable mini menu">
+            <a class="item active" data-tab="in-progress">Encours</a>
+            <a class="item" data-tab="suspended">Suspendus</a>
+            <a class="item" data-tab="closed">Cloturés</a>
         </div>
     </div>
-    <div class="content">
-        <div class="ui relaxed divided list">
-            {%if projects %}
-                {%for project in projects %}
+    <div class="content right_mini_card_project_second_content">
+        <div class="ui tab segment active" data-tab="in-progress">
+            <div class="ui relaxed divided list">
+                {%if projects %}
+                    {%for project in projects %}
+                        <div class="item">
+                            <i class="large github middle aligned icon"></i>
+                            <div class="content">
+                                <a href="{{path('project_gen_infos_get', {'id': project.id})}}" class="header">{{project.numeroMarche}}</a>
+                            </div>
+                        </div>
+                    {%endfor %}
+                {%else %}
                     <div class="item">
-                        <i class="large github middle aligned icon"></i>
-                        <div class="content">
-                            <a href="{{path('project_gen_infos_get', {'id': project.id})}}" class="header">{{project.numeroMarche}}</a>
+                        <div class="center aligned content">
+                            <div >No project created at this moment</div>
                         </div>
                     </div>
-                {%endfor %}
-            {%else %}
-                <div class="item">
-                    <div class="center aligned content">
-                        <div >No project created at this moment</div>
-                    </div>
-                </div>
-            {%endif %}
+                {%endif %}
+            </div>
+        </div>
+        <div class="ui tab segment" data-tab="suspended">
+        </div>
+        <div class="ui tab segment" data-tab="closed">
         </div>
     </div>
     {%if projects | length > 8 %}

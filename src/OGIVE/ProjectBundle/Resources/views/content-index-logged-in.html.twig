@@ -1,18 +1,64 @@
 <div class="ui basic fixed segment content">
     <div class='ui container'>
         <div class="ui two column stackable grid padded">
-            <div class="eleven wide column">
+            <div class="eleven wide column home_tab">
                 <div class="ui top attached tabular menu od_project_menu">
-                    <a href="" class="active item">
-                        Overviews
+                    <a class="active item" data-tab="overview">
+                        Vue d'ensemble
                     </a>
-                    <a href="" class="item">
-                        xxxxx
+                    <a class="item" data-tab="my-projects">
+                        Mes projets
                     </a>
+                </div>
+                <div class="ui bottom attached active tab segment od_project_menu_content " data-tab="overview">
 
                 </div>
-                <div class="ui bottom attached segment od_project_menu_content">
+                <div class="ui bottom attached tab segment od_project_menu_content" data-tab="my-projects">
+                    <div class="ui fluid card od_card_top_table_action">
+                        <div class="content">
+                            <a class="ui right floated yellow mini button" href="{{path('project_add')}}"><i class="plus icon"></i> Créer un nouveau projet</a>
+                        </div>
+                    </div>
+                    <table class="ui celled yellow small table">
+                        <thead>
+                            <tr>
+                                <th>Numéro du marche</th>
+                                <th>Objet</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr></thead>
+                            {%if projects %}
+                            <tbody>
+                                {%for project in projects %}
+                                    <tr id="project{{project.id}}">
+                                        <td>
+                                            <a class="" href="{{path('project_gen_infos_get', {'id': project.id})}}">{{project.numeroMarche}}</a>
+                                        </td>
+                                        <td>
+                                            {{project.subject}}                                               
+                                        </td>
+                                        <td>{{project.status}}</td>
+                                        <td>
+                                            <div class="ui dropdown right dropdown_actions">
+                                                <i class="large ellipsis vertical icon"></i>
+                                                <div class="menu">
+                                                    <a class="item" href="{{path('project_update_get', {'id': project.id})}}"><i class="edit icon"></i> Modifier</a>
+                                                    <a id="delete_project_btn{{project.id}}" class="item" onclick="delete_project({{project.id}});"><i class="trash icon"></i> Supprimer</a>
+                                                </div>
+                                            </div>
+                                            {#<a class="ui mini compact icon button" data-tooltip="Modifier" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('project_update_get', {'id': project.id})}}"><i class="edit icon"></i></a> |
+                                            <a id="delete_project_btn{{project.id}}" class="ui mini compact icon red button" data-tooltip="Supprimer" data-position="bottom center" data-inverted="" data-variation="mini" onclick="delete_project({{project.id}});"><i class="trash icon"></i></a>#}
+                                        </td>
+                                    </tr>
+                                {%endfor %}
 
+                            </tbody>
+                        {%else %}
+                            <tfoot><tr><th colspan="6">
+                                        <div class='center aligned'>No project created at the moment</div>
+                                    </th></tr></tfoot>
+                                {%endif %}
+                    </table>
                 </div>
             </div>
             <div class="five wide column">

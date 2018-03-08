@@ -36,89 +36,98 @@ body, a, p, h1, div, h2, h3, h4, h5, h6 {
   border: none;
 }
 /* line 31, ../../sass/imports/app_content.scss */
+.ui.bottom.attached.segment.pushable.od_app_content .right_mini_card_project_second_content .ui.tab.segment {
+  border: none;
+  box-shadow: none !important;
+}
+/* line 36, ../../sass/imports/app_content.scss */
+.ui.bottom.attached.segment.pushable.od_app_content .ui.dropdown.dropdown_actions .menu {
+  left: -55px;
+}
+/* line 40, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.dividing.header {
   font-size: 14px;
 }
-/* line 37, ../../sass/imports/app_content.scss */
+/* line 46, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.table.table_header_decompte tr td {
   padding: .2em;
 }
-/* line 42, ../../sass/imports/app_content.scss */
+/* line 51, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_project_details_card {
   border-radius: 0;
   box-shadow: none;
   border: none;
 }
-/* line 47, ../../sass/imports/app_content.scss */
+/* line 56, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_project_details_card .content .header {
   text-transform: uppercase;
   font-weight: 700;
   font-size: 12px;
   color: #515151;
 }
-/* line 57, ../../sass/imports/app_content.scss */
+/* line 66, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_project_details_card .content.description .ui.stackable.grid .column .ui.dividing.header {
   text-transform: uppercase;
   font-weight: normal;
   font-size: 12px;
   color: #515151;
 }
-/* line 65, ../../sass/imports/app_content.scss */
+/* line 74, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_project_details_card .content.description .ui.stackable.grid .column .ui.form .field .description {
   font-size: 14px;
 }
-/* line 71, ../../sass/imports/app_content.scss */
+/* line 80, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_project_details_card .content.description .ui.stackable.grid .column table.od_project_details_table {
   border: none;
 }
-/* line 75, ../../sass/imports/app_content.scss */
+/* line 84, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_project_details_card .content.description .ui.stackable.grid .column table.od_project_details_table tbody tr td {
   border-top: none;
   font-size: 12px;
   min-width: 12em;
 }
-/* line 79, ../../sass/imports/app_content.scss */
+/* line 88, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_project_details_card .content.description .ui.stackable.grid .column table.od_project_details_table tbody tr td label {
   font-weight: 700;
   font-size: 12px;
 }
-/* line 92, ../../sass/imports/app_content.scss */
+/* line 101, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.small.table {
   font-size: 12px;
 }
-/* line 97, ../../sass/imports/app_content.scss */
+/* line 106, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.small.table tr td .ui.image.header .content {
   font-size: 14px;
 }
-/* line 99, ../../sass/imports/app_content.scss */
+/* line 108, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.small.table tr td .ui.image.header .content .sub.header {
   font-size: 12px;
 }
-/* line 107, ../../sass/imports/app_content.scss */
+/* line 116, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_card_top_table_action {
   box-shadow: none;
 }
-/* line 110, ../../sass/imports/app_content.scss */
+/* line 119, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.mini.form {
   font-size: 12px;
 }
-/* line 114, ../../sass/imports/app_content.scss */
+/* line 123, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_add_project_card {
   border-radius: 0;
 }
-/* line 117, ../../sass/imports/app_content.scss */
+/* line 126, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_add_project_card .content .header {
   text-transform: uppercase;
   font-weight: 700;
   font-size: 12px;
   color: #515151;
 }
-/* line 125, ../../sass/imports/app_content.scss */
+/* line 134, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_add_project_card .content.description.od_decompte_content .ui.tab.segment {
   box-shadow: none;
   border: none;
 }
-/* line 132, ../../sass/imports/app_content.scss */
+/* line 141, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_add_project_card .content.description .ui.mini.form .ui.dividing.header {
   text-transform: uppercase;
   font-weight: normal;
@@ -126,32 +135,32 @@ body, a, p, h1, div, h2, h3, h4, h5, h6 {
   color: #515151;
   margin-top: 0px;
 }
-/* line 139, ../../sass/imports/app_content.scss */
+/* line 148, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_add_project_card .content.description .ui.mini.form .field > label {
   color: #515151;
   font-size: 12px;
   font-weight: 700;
 }
-/* line 148, ../../sass/imports/app_content.scss */
+/* line 157, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_add_project_card .content.description .ui.mini.form table tbody tr td input.qtemois {
   border: 2px solid #fbbd08 !important;
 }
-/* line 157, ../../sass/imports/app_content.scss */
+/* line 166, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_add_project_card .content.description .ui.mini.form table thead tr th.qtemois {
   background: #fbbd08 !important;
 }
-/* line 171, ../../sass/imports/app_content.scss */
+/* line 180, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.container .ui.fluid.card.od_add_project_card {
   border-radius: 0;
 }
-/* line 174, ../../sass/imports/app_content.scss */
+/* line 183, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.container .ui.fluid.card.od_add_project_card .content .header {
   text-transform: uppercase;
   font-weight: 700;
   font-size: 12px;
   color: #515151;
 }
-/* line 183, ../../sass/imports/app_content.scss */
+/* line 192, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.container .ui.fluid.card.od_add_project_card .content.description .ui.mini.form .ui.dividing.header {
   text-transform: uppercase;
   font-weight: normal;
@@ -159,35 +168,35 @@ body, a, p, h1, div, h2, h3, h4, h5, h6 {
   color: #515151;
   margin-top: 0px;
 }
-/* line 190, ../../sass/imports/app_content.scss */
+/* line 199, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content .ui.container .ui.fluid.card.od_add_project_card .content.description .ui.mini.form .field > label {
   color: #515151;
   font-size: 12px;
   font-weight: 700;
 }
-/* line 201, ../../sass/imports/app_content.scss */
+/* line 210, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content #od_nav_menu.ui.tiny.menu {
   /*border: none;*/
   box-shadow: none;
   /*border-radius: 0px;*/
 }
-/* line 205, ../../sass/imports/app_content.scss */
+/* line 214, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content #od_nav_menu.ui.tiny.menu a.item {
   color: #f4b80a;
 }
-/* line 208, ../../sass/imports/app_content.scss */
+/* line 217, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content #od_nav_menu.ui.tiny.menu div.item {
   color: #565657;
 }
-/* line 211, ../../sass/imports/app_content.scss */
+/* line 220, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content #od_nav_menu.ui.tiny.menu .item {
   font-weight: 700;
 }
-/* line 213, ../../sass/imports/app_content.scss */
+/* line 222, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content #od_nav_menu.ui.tiny.menu .item:hover {
   background: none;
 }
-/* line 216, ../../sass/imports/app_content.scss */
+/* line 225, ../../sass/imports/app_content.scss */
 .ui.bottom.attached.segment.pushable.od_app_content #od_nav_menu.ui.tiny.menu .item:before {
   background: none;
 }
@@ -195,50 +204,50 @@ body, a, p, h1, div, h2, h3, h4, h5, h6 {
 /*body, html{
     height: auto;
 }*/
-/* line 227, ../../sass/imports/app_content.scss */
+/* line 236, ../../sass/imports/app_content.scss */
 #od_footer_menu.ui.menu {
   margin: 0;
   background-color: #313133;
   border-radius: 0px;
   box-shadow: none;
 }
-/* line 233, ../../sass/imports/app_content.scss */
+/* line 242, ../../sass/imports/app_content.scss */
 #od_footer_menu.ui.menu .ui.container .item {
   color: white;
 }
-/* line 235, ../../sass/imports/app_content.scss */
+/* line 244, ../../sass/imports/app_content.scss */
 #od_footer_menu.ui.menu .ui.container .item a.link_website {
   color: #fbbd08;
 }
-/* line 237, ../../sass/imports/app_content.scss */
+/* line 246, ../../sass/imports/app_content.scss */
 #od_footer_menu.ui.menu .ui.container .item a.link_website:hover {
   color: #b5cc18;
 }
-/* line 240, ../../sass/imports/app_content.scss */
+/* line 249, ../../sass/imports/app_content.scss */
 #od_footer_menu.ui.menu .ui.container .item a.link_website:focus {
   color: #b5cc18;
 }
-/* line 246, ../../sass/imports/app_content.scss */
+/* line 255, ../../sass/imports/app_content.scss */
 #od_footer_menu.ui.menu .ui.container .right.secondary.menu .item {
   font-size: 12px;
 }
-/* line 249, ../../sass/imports/app_content.scss */
+/* line 258, ../../sass/imports/app_content.scss */
 #od_footer_menu.ui.menu .ui.container .right.secondary.menu .item.separator {
   margin-left: 0px;
   margin-right: 0px;
 }
 
-/* line 257, ../../sass/imports/app_content.scss */
+/* line 266, ../../sass/imports/app_content.scss */
 .ui.modal > .close {
   color: #1b1c1d;
 }
 
-/* line 261, ../../sass/imports/app_content.scss */
+/* line 270, ../../sass/imports/app_content.scss */
 .ui.dimmer {
   background-color: rgba(255, 255, 255, 0.75);
 }
 
-/* line 265, ../../sass/imports/app_content.scss */
+/* line 274, ../../sass/imports/app_content.scss */
 .ui.modal > .close {
   top: 0.2rem;
   right: 0.2rem;

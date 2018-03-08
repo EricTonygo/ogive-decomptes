@@ -27,11 +27,20 @@ body, a, p, h1, div, h2, h3, h4, h5, h6 {
     .od_project_menu_content.bottom.attached.segment{
         border:none;
     }
+    .right_mini_card_project_second_content{
+        .ui.tab.segment{
+            border: none;
+            box-shadow: none!important;
+        }
+    }
+    .ui.dropdown.dropdown_actions .menu {
+        left: -55px;
+    }
     .ui.bottom.attached.segment.od_project_menu_content{
         .ui.dividing.header{
             font-size: 14px;
         }
-        
+
         .ui.table.table_header_decompte{
             tr{
                 td{

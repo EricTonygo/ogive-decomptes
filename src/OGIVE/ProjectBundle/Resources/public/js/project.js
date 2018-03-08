@@ -165,7 +165,7 @@ $(document).ready(function () {
             );
 });
 
-function delete_project(idProject, id) {
+function delete_project(id) {
     $('#confirm_delete_project.ui.small.modal')
             .modal('show');
 
@@ -177,7 +177,7 @@ function delete_project(idProject, id) {
         $('#message_success').hide();
         $.ajax({
             type: 'DELETE',
-            url: Routing.generate('project_delete', {idProject: idProject, id: id}),
+            url: Routing.generate('project_delete', {id: id}),
             dataType: 'json',
             beforeSend: function () {
                 $("#delete_project_btn" + id).addClass("loading");

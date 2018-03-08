@@ -387,7 +387,7 @@
                                     <a class="item"> | </a>
                                     <a id="edit_decompte" class="item"> <i class="inverted blue edit icon"></i> Modifier</a>
                                     <a class="item"> | </a>
-                                    <a id="delete_decompte" class="item"> <i class="inverted red trash icon"></i> Supprimer</a>
+                                    <a id="delete_decompte" class="item" onclick="delete_decompte({{decompte.project.id}}, {{decompte.id}});"> <i class="inverted red trash icon"></i> Supprimer</a>
                                 </div>
 
                             </div>
@@ -416,14 +416,14 @@
                                             <tr>
                                                 <th class='center aligned'>marché</th>
                                                 <th class='center aligned'>projet d'exec.</th>
-                                                <th class='center aligned'>Cumul préc.</th>
+                                                <th class='center aligned'>cumul préc.</th>
                                                 <th class='center aligned'>du mois</th>
-                                                <th class='center aligned'>Cumul mois</th>
+                                                <th class='center aligned'>cumul mois</th>
                                                 <th class='center aligned'>marché</th>
                                                 <th class='center aligned'>projet d'exec.</th>
-                                                <th class='center aligned'>Cumul préc.</th>
+                                                <th class='center aligned'>cumul préc.</th>
                                                 <th class='center aligned'>du mois</th>
-                                                <th class='center aligned'>Cumul mois</th>
+                                                <th class='center aligned'>cumul mois</th>
                                             </tr>
 
                                         </thead>
@@ -594,16 +594,16 @@
                                                 <th rowspan="2" class='center aligned'>% réalisé</th>
                                             </tr>
                                             <tr>
-                                                <th class='center aligned'>Marché</th>
-                                                <th class='center aligned'>Projet d'exec.</th>
-                                                <th class='center aligned'>Cumul préc.</th>
+                                                <th class='center aligned'>marché</th>
+                                                <th class='center aligned'>projet d'exec.</th>
+                                                <th class='center aligned'>cumul préc.</th>
                                                 <th class='center aligned qtemois'>Du mois</th>
-                                                <th class='center aligned'>Cumul mois</th>
+                                                <th class='center aligned'>cumul mois</th>
                                                 <th class='center aligned'>Marché</th>
                                                 <th class='center aligned'>Projet d'exec.</th>
-                                                <th class='center aligned'>Cumul préc.</th>
+                                                <th class='center aligned'>cumul préc.</th>
                                                 <th class='center aligned'>Du mois</th>
-                                                <th class='center aligned'>Cumul mois</th>
+                                                <th class='center aligned'>cumul mois</th>
                                             </tr>
 
                                         </thead>
@@ -675,6 +675,27 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block confirmation_modal %}
+        <div id="confirm_delete_decompte" class="ui small modal">
+            <i class="close icon"></i>
+            <div class="header">
+                Confirmation de la suppression
+            </div>
+            <div class="content">
+                <p>Vous êtes sur le point de supprimer ce décompte.</p>
+                <p>Voulez-vous vraiment réaliser cette action ?</p>
+            </div>
+            <div class="actions">
+                <div class="ui red deny button">
+                    Non
+                </div>
+                <div id="execute_delete_decompte"  class="ui green right labeled icon button">
+                    Oui
+                    <i class="checkmark icon"></i>
+                </div>
+            </div>
+        </div>
 {% endblock %}
 {% block javascripts %}
     {{ parent()}}

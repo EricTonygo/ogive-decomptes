@@ -73,8 +73,17 @@
                                 </div>                                   
                             </div>
                             <div class="content">
-                                <a class="ui yellow mini button" href="{{path('project_update_get', {'id': project.id})}}"><i class="edit icon"></i> Edit</a>
-                                <a class="ui red mini button"><i class="trash icon"></i> Delete</a>
+                                <div class='right aligned'>
+                                    <div class="ui dropdown dropdown_actions">
+                                        <i class="large ellipsis horizontal icon"></i>
+                                        <div class="menu">
+                                            <a class="item" href="{{path('project_update_get', {'id': project.id})}}"><i class="edit icon"></i> Modifier</a>
+                                            <a id="delete_project_btn{{project.id}}" class="item" onclick="delete_project({{project.id}});"><i class="trash icon"></i> Supprimer</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {#<a class="ui yellow mini button" href="{{path('project_update_get', {'id': project.id})}}"><i class="edit icon"></i> Edit</a>
+                                <a class="ui red mini button"><i class="trash icon"></i> Delete</a>#}
                             </div>
                         </div>
                     </div>

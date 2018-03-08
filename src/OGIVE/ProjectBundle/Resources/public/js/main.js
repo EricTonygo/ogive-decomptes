@@ -82,4 +82,14 @@ $(document).ready(function () {
             })
             ;
 
+    $('.right_mini_card_project_first_content .menu .item')
+            .tab({
+                context: '.right_mini_card_project_second_content'
+            })
+            ;
+            
+    $('.home_tab .menu .item')
+            .tab()
+            ;
+
 });
