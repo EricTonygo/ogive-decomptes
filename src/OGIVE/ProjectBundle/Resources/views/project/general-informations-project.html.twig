@@ -5,7 +5,8 @@
 {% block content %}
     <div class="ui basic fixed segment content">
         <div class='ui container'>
-            <div class="ui two column stackable grid padded">
+            {% include('OGIVEProjectBundle:project:top-content-project-page.html.twig') %}
+            <div class="ui two column stackable grid padded">               
                 <div class="eleven wide column">
                     <div class="ui top attached tabular menu od_project_menu">
                         {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
@@ -66,7 +67,24 @@
                                                     </td>
                                                     <td>{%if holder %} {{holder.nom}} {% endif %}</td>
                                                 </tr>
-
+                                                <tr>
+                                                    <td>
+                                                        <label>DATE DE SOUSCRIPTION</label>
+                                                    </td>
+                                                    <td>{{project.suscriptionDate|date('d/m/Y')}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>DATE DE SIGNATURE</label>
+                                                    </td>
+                                                    <td>{{project.signatureDate|date('d/m/Y')}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>DATE DE NOTIFICATION</label>
+                                                    </td>
+                                                    <td>{{project.notification|date('d/m/Y')}}</td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>

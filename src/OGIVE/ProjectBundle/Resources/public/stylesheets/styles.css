@@ -2,6 +2,27 @@
 .ui.inverted.segment {
   border-radius: 0;
 }
+/* line 5, ../sass/imports/header.scss */
+.ui.inverted.segment .app_main_menu .ui.secondary.menu .dropdown.item > .menu {
+  margin-top: 1.27em;
+  border-radius: 0px;
+  background-color: #ffffff;
+  color: black;
+}
+/* line 10, ../sass/imports/header.scss */
+.ui.inverted.segment .app_main_menu .ui.secondary.menu .dropdown.item > .menu .item {
+  border-radius: 0px;
+}
+/* line 12, ../sass/imports/header.scss */
+.ui.inverted.segment .app_main_menu .ui.secondary.menu .dropdown.item > .menu .item:hover {
+  background-color: #ffdb0f !important;
+  color: #ffffff !important;
+  font-weight: bold !important;
+}
+/* line 18, ../sass/imports/header.scss */
+.ui.inverted.segment .app_main_menu .ui.secondary.menu .dropdown.item > .menu .divider {
+  margin: 0px;
+}
 
 /* line 1, ../sass/imports/app_content.scss */
 body, a, p, h1, div, h2, h3, h4, h5, h6 {

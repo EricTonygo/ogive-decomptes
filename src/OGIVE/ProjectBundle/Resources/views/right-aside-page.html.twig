@@ -17,11 +17,11 @@
         <div class="ui tab segment active" data-tab="in-progress">
             <div class="ui relaxed divided list">
                 {%if projects %}
-                    {%for project in projects %}
+                    {%for single_project in projects %}
                         <div class="item">
-                            <i class="large github middle aligned icon"></i>
+                            <i class="large caret right middle aligned icon"></i>
                             <div class="content">
-                                <a href="{{path('project_gen_infos_get', {'id': project.id})}}" class="header">{{project.numeroMarche}}</a>
+                                <a href="{{path('project_gen_infos_get', {'id': single_project.id})}}" class="header">{{single_project.numeroMarche}}</a>
                             </div>
                         </div>
                     {%endfor %}

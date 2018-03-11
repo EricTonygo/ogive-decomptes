@@ -99,32 +99,32 @@
                                                 {% import _self as forms %}
                                                 <tr>
                                                     {%if childForm.subDecompteTasks is defined and childForm.subDecompteTasks|length > 0 %}
-                                                        <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'decompteTask_number', 'class': 'ui mini disabled input'}}) }}</td>
-                                                        <td colspan="15">{{ form_widget(childForm.nom,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'decompteTask_number', 'class': 'ui mini disabled input'}}) }}{{childForm.numero.vars.value}}</td>
+                                                        <td colspan="15">{{ form_widget(childForm.nom,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.nom.vars.value}}</td>
                                                         {%for subDecompteTask in childForm.subDecompteTasks %}
                                                             {{ forms.decompteTask_prototype(subDecompteTask) }}
 
                                                         {%endfor %}
 
                                                     {% elseif childForm.unite.vars.value and childForm.prixUnitaire.vars.value and childForm.qtePrevueMarche.vars.value and  childForm.qtePrevueProjetExec.vars.value %}
-                                                        <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'decompteTask_number', 'class': 'ui mini disabled input'}}) }}</td>
-                                                        <td>{{ form_widget(childForm.nom,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
-                                                        <td>{{ form_widget(childForm.unite,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
-                                                        <td>{{ form_widget(childForm.prixUnitaire,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
-                                                        <td>{{ form_widget(childForm.qtePrevueMarche,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
-                                                        <td>{{ form_widget(childForm.qtePrevueProjetExec,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
-                                                        <td>{{ form_widget(childForm.qteCumulMoisPrec,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'decompteTask_number', 'class': 'ui mini disabled input'}}) }}{{childForm.numero.vars.value}}</td>
+                                                        <td>{{ form_widget(childForm.nom,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.nom.vars.value}}</td>
+                                                        <td>{{ form_widget(childForm.unite,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.unite.vars.value}}</td>
+                                                        <td>{{ form_widget(childForm.prixUnitaire,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.prixUnitaire.vars.value}}</td>
+                                                        <td>{{ form_widget(childForm.qtePrevueMarche,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.qtePrevueMarche.vars.value}}</td>
+                                                        <td>{{ form_widget(childForm.qtePrevueProjetExec,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.qtePrevueProjetExec.vars.value}}</td>
+                                                        <td>{{ form_widget(childForm.qteCumulMoisPrec,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.qteCumulMoisPrec.vars.value}}</td>
                                                         <td>{{ form_widget(childForm.qteMois,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini input qtemois'}}) }}</td>
-                                                        <td>{{ form_widget(childForm.qteCumulMois,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
-                                                        <td>{{ form_widget(childForm.mtPrevueMarche,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
-                                                        <td>{{ form_widget(childForm.mtPrevueProjetExec,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
-                                                        <td>{{ form_widget(childForm.mtCumulMoisPrec,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
-                                                        <td>{{ form_widget(childForm.mtMois,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
-                                                        <td>{{ form_widget(childForm.mtCumulMois,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
-                                                        <td>{{ form_widget(childForm.pourcentRealisation,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        <td>{{ form_widget(childForm.qteCumulMois,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.qteCumulMois.vars.value}}</td>
+                                                        <td>{{ form_widget(childForm.mtPrevueMarche,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.mtPrevueMarche.vars.value}}</td>
+                                                        <td>{{ form_widget(childForm.mtPrevueProjetExec,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.mtPrevueProjetExec.vars.value}}</td>
+                                                        <td>{{ form_widget(childForm.mtCumulMoisPrec,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.mtCumulMoisPrec.vars.value}}</td>
+                                                        <td>{{ form_widget(childForm.mtMois,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.mtMois.vars.value}}</td>
+                                                        <td>{{ form_widget(childForm.mtCumulMois,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.mtCumulMois.vars.value}}</td>
+                                                        <td>{{ form_widget(childForm.pourcentRealisation,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.pourcentRealisation.vars.value}}</td>
                                                     {%else %}
-                                                        <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'decompteTask_number', 'class': 'ui mini disabled input'}}) }}</td>
-                                                        <td colspan="15">{{ form_widget(childForm.nom,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}</td>
+                                                        <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'decompteTask_number', 'class': 'ui mini disabled input'}}) }}{{childForm.numero.vars.value}}</td>
+                                                        <td colspan="15">{{ form_widget(childForm.nom,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.nom.vars.value}}</td>
                                                         {%for subDecompteTask in childForm.subDecompteTasks %}
                                                             {{ forms.decompteTask_prototype(subDecompteTask) }}
 

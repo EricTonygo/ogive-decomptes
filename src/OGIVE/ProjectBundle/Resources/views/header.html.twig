@@ -7,20 +7,20 @@
                         LOGO
                     </a>
                     <a class="item">
-                        About us
+                        A propos
                     </a>
                     <a class="item">
-                        How it works?
+                        Comment ça marche?
                     </a>
                     <a class="item">
-                        Help
+                        Aide
                     </a>
                 </div>
                 <div class="ui right inverted secondary menu">
 
                     <div class="item">
                         <div class="ui icon input">
-                            <input type="text" placeholder="Search...">
+                            <input type="text" placeholder="Recherche...">
                             <i class="search icon"></i>
                         </div>
                     </div>
@@ -28,37 +28,39 @@
                         <div class="ui dropdown top right pointing item"> 
                             <i class="plus icon"></i>
                             <div class="menu">
-                                <a href="" class="ui item">
-                                    New project
+                                <a href="{{path('project_add')}}" class="ui item">
+                                    Nouveau projet
                                 </a>
-                                <a href="" class="ui item">
-                                    New lot
+                               
+                                <a href="{{path('task_add_get', {'id': project.id})}}" class="ui item">
+                                    Nouvelle tâche                        
                                 </a>
-                                <a href="" class="ui item">
-                                    New task                        
+                                
+                                <a href="{{path('decompte_add_get', {'id': project.id})}}" class="ui item">
+                                    Nouveau décompte                        
                                 </a>
                             </div>
                         </div>
                         <div class="ui dropdown top right pointing item"> 
                             <i class="user circle icon"></i>
                             <div class="menu">
-                                <h2 class="header">Signed in as {{ app.user.username }}</h2>
+                                <h2 class="header">Connecté en tant que {{ app.user.username }}</h2>
                                 <div class="divider"></div>
                                 <a href='{{path('fos_user_profile_show')}}' class="ui item">
-                                    Profile                        
+                                    Profil                        
                                 </a>
                                 <div class="divider"></div>
                                 <a href="{{ path('fos_user_security_logout') }}" class="ui item">
-                                    Sign out
+                                    Deconnexion
                                 </a>
                             </div>
                         </div>
                     {% else %}
                         <a class="ui item" href="{{path('fos_user_security_login')}}">
-                            Sign in
+                            Se connecter
                         </a>
                         <a class="item" href="{{path("fos_user_registration_register")}}">
-                            Sign up
+                            S'inscrire
                         </a>
                     {% endif %}
                 </div>

@@ -1,4 +1,25 @@
 .ui.inverted.segment{
     border-radius: 0;
+    .app_main_menu{
+        .ui.secondary.menu{
+            .dropdown.item>.menu{
+                margin-top: 1.27em;
+                border-radius: 0px;
+                background-color: #ffffff;
+                color: black;
+                .item{
+                    border-radius: 0px;
+                    &:hover{
+                        background-color: #ffdb0f!important;
+                        color: #ffffff!important;
+                        font-weight: bold!important;
+                    }
+                }
+                .divider{
+                    margin: 0px;
+                }
+            }
+        } 
+    }
 }
 
