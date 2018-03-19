@@ -8,11 +8,11 @@
     Intervenants
 </a>
 <a href="{{path('project_decomptes_get', {'id': project.id})}}" class="{% if tab == 5 %}active{% endif %} item">
-    Décomptes partiels
+    Décomptes mensuels
 </a>
 {% set decomptes = project.decomptes %}
 {% if decomptes and decomptes|length > 0  %}
     <a href="{{path('project_decompte_total_get', {'id': project.id})}}" class="{% if tab == 6 %}active{% endif %} item">
-        Décompte total
+        Décompte général et définitif
     </a>
 {%endif %}

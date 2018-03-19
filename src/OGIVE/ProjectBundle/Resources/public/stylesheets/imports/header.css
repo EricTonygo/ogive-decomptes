@@ -12,14 +12,15 @@
 /* line 10, ../../sass/imports/header.scss */
 .ui.inverted.segment .app_main_menu .ui.secondary.menu .dropdown.item > .menu .item {
   border-radius: 0px;
+  width: 100%;
 }
-/* line 12, ../../sass/imports/header.scss */
+/* line 13, ../../sass/imports/header.scss */
 .ui.inverted.segment .app_main_menu .ui.secondary.menu .dropdown.item > .menu .item:hover {
-  background-color: #ffdb0f !important;
-  color: #ffffff !important;
+  background-color: #f9f9f9 !important;
+  /*color: #ffffff!important;*/
   font-weight: bold !important;
 }
-/* line 18, ../../sass/imports/header.scss */
+/* line 19, ../../sass/imports/header.scss */
 .ui.inverted.segment .app_main_menu .ui.secondary.menu .dropdown.item > .menu .divider {
   margin: 0px;
 }

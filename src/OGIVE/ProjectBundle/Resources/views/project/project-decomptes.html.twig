@@ -5,9 +5,10 @@
 {% block content %}
     <div class="ui basic fixed segment content">
         <div class='ui container'>
+            {% include('OGIVEProjectBundle:project:top-content-project-page.html.twig') %}
             <div class="ui two column stackable grid padded">
                 <div class="eleven wide column">
-                    <div class="ui top attached tabular menu od_project_menu">
+                    <div class="ui top attached stackable tabular menu od_project_menu">
                         {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
                     </div>
                     <div class="ui bottom attached segment od_project_menu_content">
@@ -32,7 +33,7 @@
                                     {%for decompte in decomptes %}
                                         <tr id="decompte{{decompte.id}}">
                                             <td>
-                                                <a class="" href="{{path('decompte_show_get', {'idProject': decompte.project.id, 'id': decompte.id})}}">{{decompte.monthNumber}}</a>
+                                                <a class="" href="{{path('decompte_show_get', {'idProject': decompte.project.id, 'id': decompte.id})}}">Décompte N°{{decompte.monthNumber}}</a>
                                             </td>
                                             <td>
                                                 {{decompte.monthName}}                                               
@@ -40,9 +41,22 @@
                                             <td>{{decompte.startDate}}</td>
                                             <td>{{decompte.endDate}}</td>
                                             <td>{{decompte.decompteState}}</td>
-                                            <td>
-                                                <a class="ui mini compact icon button" data-tooltip="Modifier" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('decompte_update_get', {'idProject': decompte.project.id, 'id': decompte.id})}}"><i class="edit icon"></i></a> |
-                                                <a id="delete_decompte_btn{{decompte.id}}" class="ui mini compact icon red button" data-tooltip="Supprimer" data-position="bottom center" data-inverted="" data-variation="mini" onclick="delete_decompte({{decompte.project.id}}, {{decompte.id}});"><i class="trash icon"></i></a>
+                                            <td style="padding: 0px;">
+                                                <div class="ui text menu" style="margin: 0px;">
+                                                    <div class="left menu">
+                                                    </div>
+                                                    <div class="center menu">
+                                                        <a class="item" data-tooltip="Modifier" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('decompte_update_get', {'idProject': decompte.project.id, 'id': decompte.id})}}"><i class="blue write icon"></i></a>
+                                                        <div class="ui dropdown dropdown_actions item">
+                                                            <i class="large ellipsis vertical icon"></i>
+                                                            <div class="menu">
+                                                                <a id="delete_decompte_btn{{decompte.id}}" class="item"  onclick="delete_decompte({{decompte.project.id}}, {{decompte.id}});"><i class="red trash icon"></i> Supprimer</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="right menu">
+                                                    </div>
+                                                </div>                                                
                                             </td>
                                         </tr>
                                         {% set i = i+1 %}
@@ -65,25 +79,25 @@
     </div>
 {% endblock %}
 {% block confirmation_modal %}
-        <div id="confirm_delete_decompte" class="ui small modal">
-            <i class="close icon"></i>
-            <div class="header">
-                Confirmation de la suppression
+    <div id="confirm_delete_decompte" class="ui small modal">
+        <i class="close icon"></i>
+        <div class="header">
+            Confirmation de la suppression
+        </div>
+        <div class="content">
+            <p>Vous êtes sur le point de supprimer ce décompte.</p>
+            <p>Voulez-vous vraiment réaliser cette action ?</p>
+        </div>
+        <div class="actions">
+            <div class="ui red deny button">
+                Non
             </div>
-            <div class="content">
-                <p>Vous êtes sur le point de supprimer ce décompte.</p>
-                <p>Voulez-vous vraiment réaliser cette action ?</p>
-            </div>
-            <div class="actions">
-                <div class="ui red deny button">
-                    Non
-                </div>
-                <div id="execute_delete_decompte"  class="ui green right labeled icon button">
-                    Oui
-                    <i class="checkmark icon"></i>
-                </div>
+            <div id="execute_delete_decompte"  class="ui green right labeled icon button">
+                Oui
+                <i class="checkmark icon"></i>
             </div>
         </div>
+    </div>
 {% endblock %}
 {% block javascripts %}
     {{ parent()}}

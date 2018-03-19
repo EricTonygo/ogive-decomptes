@@ -1,6 +1,11 @@
 @import "mixins.scss";
-.ui.bottom.attached.segment.pushable.od_app_content{
+.pusher.od_app_content{
     .signup_page{
+        min-height: 40em;
+        color: rgba(255,255,255,0.6);
+        background: url(../images/decompte-graph.jpg),#2b3137;
+        background-position: center 10%;
+        background-size: cover;
         .container{
             margin-top: 20px;
             .signup_page_left_column{
@@ -11,6 +16,7 @@
                         .header{
                             font-size: 72px;
                             font-weight: 300;
+                            color: rgba(255, 255, 255, 0.85);
                         }
                         .ui.form{
                             .field>label{
@@ -20,6 +26,7 @@
                         .description{
                             font-size: 26px;
                             font-weight: 300;
+                            color: rgba(255, 255, 255, 0.85);
                         }
                     }
                 }

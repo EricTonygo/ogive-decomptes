@@ -1,6 +1,6 @@
 {% extends "OGIVEProjectBundle::layout.html.twig" %}
 {% trans_default_domain 'FOSUserBundle' %}
-{% block title %}Create Account{% endblock %}
+{% block title %}Create personal account{% endblock %}
 
 {% block content %}
     <div class="ui basic segment signup_segment">
@@ -42,7 +42,22 @@
                 <div class="content">
                     <div class="ui two column stackable grid padded">
                         <div class="ten wide column">
-                            {{ form_start(form, {'method': 'POST', 'action': path('fos_user_registration_register'), 'attr': {'class': 'ui form', 'id': 'register_form'} }) }}
+                            {% for flash_message in app.session.flashBag.get('error') %}
+                                <div  class="ui error message">
+                                    <i class="remove circle icon"></i>
+                                    <span>{{ flash_message }}</span>
+                                    <i class="close icon"></i>
+                                </div>
+                            {% endfor %}
+                            {% for flash_message in app.session.flashBag.get('warning') %}
+                                <div  class="ui warning message">
+                                    <i class="warning circle icon"></i>
+                                    <span>{{ flash_message }}</span>
+                                    <i class="close icon"></i>
+                                </div>
+                            {% endfor %}
+                            {{ form_start(form, {'method': 'POST', 'action': path('create_personal_account_post'), 'attr': {'class': 'ui form', 'id': 'register_form'} }) }}
+
                             <div class="field">
                                 <label>Owner's name</label>
                                 {{ form_widget(form.lastname,{'attr':{'placeholder': "Enter your owner's name", 'data-validate': 'lastname'}})}}
@@ -59,14 +74,14 @@
                                 <label>Password</label>
                                 {{ form_widget(form.plainPassword.first,{'attr':{'placeholder':'Create a password', 'data-validate': 'password'}})}}
                             </div>
-                            
+
                             <div class="field">
                                 <label>Confirm password</label>
                                 {{ form_widget(form.plainPassword.second,{'attr':{'placeholder':'Confirm a password', 'data-validate': 'passwordConfirm'}})}}
                             </div>
                             <div class="field">
                                 <div class="ui checkbox">
-                                    <input type="checkbox" tabindex="0" class="">
+                                    <input type="checkbox" tabindex="0" data-validate="termsConditions" class="">
                                     <label>I agree to the Terms and Conditions</label>
                                 </div>
                             </div>

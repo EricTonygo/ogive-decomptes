@@ -56,3 +56,13 @@ services:
         class: OGIVE\ProjectBundle\Services\DecompteManager
         public: true
         arguments: ["@doctrine.orm.entity_manager", "@security.token_storage"]
+    
+    app.project_mail_service:
+        class: OGIVE\ProjectBundle\Services\ProjectMailService
+        public: true
+        arguments: ["@mailer", "@templating"]
+        
+    app.user_mail_service:
+        class: OGIVE\UserBundle\Services\MailService
+        public: true
+        arguments: ["@mailer", "@templating"]

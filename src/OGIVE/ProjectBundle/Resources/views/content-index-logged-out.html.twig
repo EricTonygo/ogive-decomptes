@@ -1,4 +1,4 @@
-<div class="ui basic fixed segment content signup_page">
+<div class="ui basic segment signup_page">
     <div class='ui container'>
         <div class="ui two column stackable grid padded">
             <div class="ten wide column signup_page_left_column">
@@ -15,31 +15,38 @@
             <div class="six wide column signup_page_right_column">
                 <div class="ui fluid card">
                     <div class="content">
-                        <form class="ui form">
+                        {{ form_start(form, {'method': 'POST', 'action': path('create_personal_account_post'), 'attr': {'class': 'ui form', 'id': 'register_form'} }) }}
                             <div class="field">
                                 <label>Username</label>
-                                <input type="text" name="user-name" placeholder="Pick a username">
+                                {{ form_widget(form.username,{'attr':{'placeholder':'Pick a username', 'data-validate': 'username'}})}}
                             </div>
                             <div class="field">
                                 <label>Email address</label>
-                                <input type="text" name="email" placeholder="you@example.com">
+                                {{ form_widget(form.email,{'attr':{'placeholder':'you@example.com', 'data-validate': 'email'}})}}
                             </div>
                             <div class="field">
                                 <label>Password</label>
-                                <input type="password" name="password" placeholder="Create a password">
+                                {{ form_widget(form.plainPassword.first,{'attr':{'placeholder':'Create a password', 'data-validate': 'password'}})}}
+                            </div>
+                            <div class="field">
+                                <label>Confirm password</label>
+                                {{ form_widget(form.plainPassword.second,{'attr':{'placeholder':'Confirm a password', 'data-validate': 'passwordConfirm'}})}}
                             </div>
                             <div class="field">
                                 <label>Owner's name</label>
-                                <input type="text" name="owners-name" placeholder="Enter your owner's name">
+                                {{ form_widget(form.lastname,{'attr':{'placeholder': "Enter your owner's name", 'data-validate': 'lastname'}})}}
                             </div>
                             <div class="field">
                                 <div class="ui checkbox">
-                                    <input type="checkbox" tabindex="0" class="">
+                                    <input type="checkbox" tabindex="0" data-validate="termsConditions" class="">
                                     <label>I agree to the Terms and Conditions</label>
                                 </div>
                             </div>
-                            <button class="ui fluid yellow button" type="submit">Sign up for OGIVE-DC</button>
-                        </form>
+                             <div class="field">
+                                {{form_rest(form)}}
+                            </div>
+                            <button id="submit_register_form" class="ui fluid yellow button" type="submit">Sign up for OGIVE-DC</button>
+                        {{ form_end(form) }}
                     </div>
                 </div>
             </div>

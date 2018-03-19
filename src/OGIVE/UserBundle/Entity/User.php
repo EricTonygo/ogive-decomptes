@@ -37,10 +37,31 @@ class User extends BaseUser
      */
     private $firstname;
     
+     /**
+     * @var integer
+     *
+     * @ORM\Column(name="choosed_plan", type="integer", nullable=true)
+     */
+    private $choosedPlan;
+    
+     /**
+     * @var integer
+     *
+     * @ORM\Column(name="confirmed_informations", type="integer", nullable=true)
+     */
+    private $confirmedInformations;
+    
     /**
      * @ORM\Column(type="string", length=255, nullable=true) 
      */
     private $photo;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="activation_hast", type="string", length=255, nullable=true)
+     */
+    private $activationHash;
 
     /**
      * @Assert\File(maxSize="6000000") 
@@ -57,7 +78,7 @@ class User extends BaseUser
         parent::__construct();
         // your own logic
     }
-
+    
     /**
      * Get id
      *
@@ -117,10 +138,78 @@ class User extends BaseUser
     }
     
     /**
+     * Set choosedPlan
+     *
+     * @param integer $choosedPlan
+     *
+     * @return User
+     */
+    public function setChoosedPlan($choosedPlan) {
+        $this->choosedPlan = $choosedPlan;
+
+        return $this;
+    }
+
+    /**
+     * Get choosedPlan
+     *
+     * @return integer
+     */
+    public function getChoosedPlan() {
+        return $this->choosedPlan;
+    }
+    
+    /**
+     * Set confirmedInformations
+     *
+     * @param integer $confirmedInformations
+     *
+     * @return User
+     */
+    public function setConfirmedInformations($confirmedInformations) {
+        $this->confirmedInformations = $confirmedInformations;
+
+        return $this;
+    }
+
+    /**
+     * Get confirmedInformations
+     *
+     * @return integer
+     */
+    public function getConfirmedInformations() {
+        return $this->confirmedInformations;
+    }
+    
+    /**
+     * Set activationHash
+     *
+     * @param string $activationHash
+     *
+     * @return User
+     */
+    public function setActivationHash($activationHash)
+    {
+        $this->activationHash = $activationHash;
+
+        return $this;
+    }
+
+    /**
+     * Get activationHash
+     *
+     * @return string
+     */
+    public function getActivationHash()
+    {
+        return $this->activationHash;
+    }
+    
+    /**
      * Set photo
      *
      * @param string $photo
-     * @return Utilisateur
+     * @return User
      */
     public function setPhoto($photo) {
         $this->photo = $photo;

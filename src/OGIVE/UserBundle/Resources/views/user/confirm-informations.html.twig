@@ -1,0 +1,77 @@
+{% extends "OGIVEProjectBundle::layout.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block title %}Confirm informations{% endblock %}
+
+{% block content %}
+    <div class="ui basic segment signup_segment">
+        <div class='ui container signup_page_container'>
+            <div class="ui centered card page_title">
+                <div class="content">
+                    <h2>Join OGIVE-DC</h2>
+                    <span class="description_app">The best way to drive your exécution project, manage decomptes</span>
+                </div>
+            </div>
+            <div class="ui centered card page_title">
+                <div class="content">
+                    <div class="ui fluid tablet stackable steps">
+                        <a class="step" href="{{path('create_personal_account_get')}}">
+                            <i class="user icon"></i>
+                            <div class="content">
+                                <div class="title">Step 1:</div>
+                                <div class="description">Create personal account</div>
+                            </div>
+                        </a>
+                        <a class="step" href="{{path('choose_your_plan_get')}}">
+                            <i class="dollar icon"></i>
+                            <div class="content">
+                                <div class="title">Step 2:</div>
+                                <div class="description">Choose your plan</div>
+                            </div>
+                        </a>
+                        <a class="step" href="{{path('confirm_informations_get')}}">
+                            <i class="yellow info circle icon"></i>
+                            <div class="content">
+                                <div class="title">Step 3:</div>
+                                <div class="description">Confirm informations</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="ui centered card">
+                <div class="content">
+                    <div class="ui one column stackable grid padded">
+                        <div class="sixtheen wide column">
+                            {% for flash_message in app.session.flashBag.get('error') %}
+                                <div  class="ui error message">
+                                    <i class="remove circle icon"></i>
+                                    <span>{{ flash_message }}</span>
+                                    <i class="close icon"></i>
+                                </div>
+                            {% endfor %}
+                            {{ form_start(form, {'method': 'POST', 'action': path('confirm_informations_post'), 'attr': {'class': 'ui form', 'id': 'register_form'} }) }}
+                            {{ form_widget(form.confirmedInformations)}}
+                            <div class="field">
+                                <p>Lastname: {{user.lastname}}</p>
+                                <p>Username: {{user.username}}</p>
+                                <p>Email: {{user.email}}</p>
+                                <p>Password: *******</p>
+                                <p>Choosed plan: {{user.choosedPlan}}</p>
+                            </div>
+                            {{form_rest(form)}}
+                            <div class="field">
+                                <button id="submit_register_form" class="ui yellow button" type="submit">Confirm your informations</button>
+                            </div
+                            {{ form_end(form) }}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent()}}
+    <script type="text/javascript" src="{{ asset('bundles/ogiveuser/js/user.js')}}"></script>
+{% endblock %}

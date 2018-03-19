@@ -25,10 +25,26 @@
             <td>
                 {{task.qtePrevueProjetExec}}                                               
             </td>
-            <td style="text-align: center;">               
-                <a class="ui mini compact icon button" data-tooltip="Ajouter sous tâche" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('sub_task_add_get', {'idProject': task.projectTask.id, 'id': task.id,})}}"><i class="plus icon"></i></a> |
+            <td style="text-align: center; padding: 0px;">
+                <div class="ui text menu" style="margin: 0px;">
+                    <div class="left menu">
+                    </div>
+                    <div class="center menu">
+                        <a class="item" data-tooltip="Ajouter sous tâche" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('sub_task_add_get', {'idProject': task.projectTask.id, 'id': task.id,})}}"><i class="green plus icon"></i></a>
+                        <a class="item" data-tooltip="Modifier" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('task_update_get', {'idProject': task.projectTask.id, 'id': task.id})}}"><i class="blue write icon"></i></a>
+                        <div class="ui dropdown dropdown_actions item">
+                            <i class="large ellipsis vertical icon"></i>
+                            <div class="menu">
+                                <a id="delete_task_btn{{task.id}}" class="item" onclick="delete_task({{task.projectTask.id}}, {{task.id}});"><i class="red trash icon"></i> Supprimer</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right menu">
+                    </div>
+                </div>
+                {#<a class="ui mini compact icon button" data-tooltip="Ajouter sous tâche" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('sub_task_add_get', {'idProject': task.projectTask.id, 'id': task.id,})}}"><i class="plus icon"></i></a> |
                 <a class="ui mini compact icon button" data-tooltip="Modifier" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('task_update_get', {'idProject': task.projectTask.id, 'id': task.id})}}"><i class="edit icon"></i></a> |
-                <a id="delete_task_btn{{task.id}}" class="ui mini red compact icon button" data-tooltip="Supprimer" data-position="bottom center" data-inverted="" data-variation="mini" onclick="delete_task({{task.projectTask.id}}, {{task.id}});"><i class="trash icon"></i></a>
+                <a id="delete_task_btn{{task.id}}" class="ui mini red compact icon button" data-tooltip="Supprimer" data-position="bottom center" data-inverted="" data-variation="mini" onclick="delete_task({{task.projectTask.id}}, {{task.id}});"><i class="trash icon"></i></a>#}
             </td>
         </tr>
         {%if task.subTasks %}
@@ -39,9 +55,10 @@
     {% endmacro %}
     <div class="ui basic fixed segment content">
         <div class='ui container'>
+            {% include('OGIVEProjectBundle:project:top-content-project-page.html.twig') %}
             <div class="ui one column stackable grid padded">
                 <div class="wide column">
-                    <div class="ui top attached tabular menu od_project_menu">
+                    <div class="ui top attached stackable tabular menu od_project_menu">
                         {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
                     </div>
                     <div class="ui bottom attached segment od_project_menu_content">

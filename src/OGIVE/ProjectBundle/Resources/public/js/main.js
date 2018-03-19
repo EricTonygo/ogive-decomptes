@@ -38,14 +38,14 @@ $(document).ready(function () {
         lang: 'fr',
         scrollInput: false
     });
-    $('input[data-validate="suscription_date"]').datetimepicker({
+    $('input[data-validate="suscription-date"]').datetimepicker({
         timepicker: false,
         //minDate: '0',
         format: 'd-m-Y',
         lang: 'fr',
         scrollInput: false
     });
-    $('input[data-validate="signature_date"]').datetimepicker({
+    $('input[data-validate="signature-date"]').datetimepicker({
         timepicker: false,
         //minDate: '0',
         format: 'd-m-Y',
@@ -53,7 +53,7 @@ $(document).ready(function () {
         scrollInput: false
     });
 
-    $('input[data-validate="notification_date"]').datetimepicker({
+    $('input[data-validate="notification-date"]').datetimepicker({
         timepicker: false,
         //minDate: '0',
         format: 'd-m-Y',

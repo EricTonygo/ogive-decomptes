@@ -43,3 +43,7 @@ ogive_project_service_provider:
 ogive_project_other_contributor:    
     resource: "@OGIVEProjectBundle/Controller/OtherContributorController.php"
     type:     rest
+    
+ogive_project_user:    
+    resource: "@OGIVEUserBundle/Controller/UserController.php"
+    type:     rest

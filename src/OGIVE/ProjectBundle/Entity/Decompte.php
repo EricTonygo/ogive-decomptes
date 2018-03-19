@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Decompte extends GeneralClass {
 
      /**
-     * @var string
+     * @var integer
      *
      * @ORM\Column(name="month_number", type="integer", nullable=true)
      */
@@ -507,7 +507,7 @@ class Decompte extends GeneralClass {
     /**
      * Set monthNumber
      *
-     * @param string $monthNumber
+     * @param integer $monthNumber
      *
      * @return Decompte
      */
@@ -520,7 +520,7 @@ class Decompte extends GeneralClass {
     /**
      * Get monthNumber
      *
-     * @return string
+     * @return integer
      */
     public function getMonthNumber() {
         return $this->monthNumber;

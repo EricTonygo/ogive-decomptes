@@ -9,9 +9,10 @@
                 color: black;
                 .item{
                     border-radius: 0px;
+                    width: 100%;
                     &:hover{
-                        background-color: #ffdb0f!important;
-                        color: #ffffff!important;
+                        background-color: #f9f9f9!important;
+                        /*color: #ffffff!important;*/
                         font-weight: bold!important;
                     }
                 }

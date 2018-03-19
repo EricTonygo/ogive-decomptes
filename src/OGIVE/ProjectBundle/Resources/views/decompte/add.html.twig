@@ -1,27 +1,21 @@
 {% extends "OGIVEProjectBundle::layout.html.twig" %}
 {% trans_default_domain 'OGIVEProjectBundle' %}
 {% block title %}Création d'un nouveau décompte{% endblock %}
-{% block stylesheets %}
-    {{ parent()}}
-    <script rel="stylesheet" href="{{ asset('bundles/ogiveproject/spreadsheet/codebase/spreadsheet.php?load=js') }}"></script>
-    <link rel="stylesheet" href="{{ asset('bundles/ogiveproject/spreadsheet/codebase/dhtmlx_core.css') }}">
-    <link rel="stylesheet" href="{{ asset('bundles/ogiveproject/spreadsheet/codebase/dhtmlxspreadsheet.css') }}">
-    <link rel="stylesheet" href="{{ asset('bundles/ogiveproject/spreadsheet/codebase/dhtmlxgrid_wp.css') }}">
-{% endblock %}
 
 {% block content %}
     <div class="ui basic fixed segment content">
         <div class='ui container'>
+            {% include('OGIVEProjectBundle:project:top-content-project-page.html.twig') %}
             <div class="ui one column stackable grid padded">
                 <div class="wide column">
-                    <div class="ui top attached tabular menu od_project_menu">
+                    <div class="ui top attached stackable tabular menu od_project_menu">
                         {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
                     </div>
                     <div class="ui bottom attached segment od_project_menu_content">
                         <div class="ui fluid card od_add_project_card">
                             <div class="content">
                                 <div class="header">
-                                    Création du décompte N°{{form.monthNumber.vars.value}}
+                                    Création du décompte mensuel N°{{form.monthNumber.vars.value}}
                                 </div>
                             </div>
                             <div class="content description">
@@ -84,5 +78,4 @@
 {% block javascripts %}
     {{ parent()}}
     <script type="text/javascript" src="{{ asset('bundles/ogiveproject/js/decompte.js')}}"></script>
-
 {% endblock %}

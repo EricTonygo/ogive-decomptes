@@ -6,7 +6,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
         <title>{% block title %}{% endblock %} - OGIVE DC</title>
         {% block stylesheets %}
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
+{#            <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">#}
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.0/semantic.min.css">
             <link rel="stylesheet" href="{{ asset('bundles/ogiveproject/stylesheets/styles.css') }}">
             <link rel="stylesheet" href="{{ asset('bundles/ogiveproject/css/jquery.datetimepicker.min.css') }}">
         {% endblock %}
@@ -19,7 +20,8 @@
                 src="https://code.jquery.com/jquery-3.1.1.min.js"
                 integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
             crossorigin="anonymous"></script>
-            <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>
+{#            <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>#}
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.0/semantic.min.js"></script>
             <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
             <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
             <script type="text/javascript" src="{{ asset('bundles/ogiveproject/js/main.js')}}"></script>

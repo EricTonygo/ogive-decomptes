@@ -5,12 +5,13 @@
 {% block content %}
     <div class="ui basic fixed segment content">
         <div class='ui container'>
+            {% include('OGIVEProjectBundle:project:top-content-project-page.html.twig') %}
             <div class="ui one column stackable grid padded">
                 <div class="wide column">
                     <div class="ui top attached tabular menu od_project_menu">
                         {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
                     </div>
-                    <div class="ui bottom attached segment od_project_menu_content">
+                    <div class="ui bottom attached stackable segment od_project_menu_content">
                         <div class="ui fluid card od_add_project_card">
                             <div class="content">
                                 <div class="header">

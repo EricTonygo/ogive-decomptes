@@ -1,18 +1,18 @@
-body, a, p, h1, div, h2, h3, h4, h5, h6 {
+body, a, p, h1, div, h2, h3, h4, h5, h6, button {
     font-family: "Segoe UI Light", "Segoe UI", Tahoma, Arial, "Helvetica Neue", Helvetica, Sans-Serif!important;
 }
 
-.ui.button{
+/*.ui.button{
     border-radius: 0px!important;
-}
+}*/
 
 .ui.message{
     border-radius: 0px;
 }
-.ui.bottom.attached.segment.pushable.od_app_content{
-    overflow-x: visible;
+.pusher.od_app_content{
+    /*overflow-x: visible;*/
     border: none;
-    height: 82.9%;
+    min-height: 40em;
     .ui.modal {
         border-radius: 0px!important;
         .header{
@@ -26,6 +26,7 @@ body, a, p, h1, div, h2, h3, h4, h5, h6 {
     }
     .od_project_menu_content.bottom.attached.segment{
         border:none;
+        background-color: #f9f9f9;
     }
     .right_mini_card_project_second_content{
         .ui.tab.segment{
@@ -154,6 +155,7 @@ body, a, p, h1, div, h2, h3, h4, h5, h6 {
                         tbody{
                             tr{
                                 td{
+
                                     input.qtemois{
                                         border: 2px solid rgb(251, 189, 8)!important;
                                     }
@@ -241,6 +243,7 @@ body, a, p, h1, div, h2, h3, h4, h5, h6 {
     .ui.container{
         .item{
             color: white;
+            font-weight: 300;
             a.link_website{
                 color: #fbbd08;;
                 &:hover{
@@ -275,4 +278,17 @@ body, a, p, h1, div, h2, h3, h4, h5, h6 {
     top: 0.2rem;
     right: 0.2rem;
     font-size: 1em;
+}
+
+table{
+    tr{
+        td{
+            a{
+                &:hover{
+                    font-size: bold;
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
 }

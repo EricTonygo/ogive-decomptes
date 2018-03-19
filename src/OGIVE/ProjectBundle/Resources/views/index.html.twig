@@ -9,3 +9,32 @@
         {% include('OGIVEProjectBundle::content-index-logged-out.html.twig') %}
     {%endif%}
 {% endblock %}
+
+{%if projects%}
+    {% block confirmation_modal %}
+        <div id="confirm_delete_project" class="ui small modal">
+            <i class="close icon"></i>
+            <div class="header">
+                Confirmation de la suppression
+            </div>
+            <div class="content">
+                <p>Vous êtes sur le point de supprimer cet projet.</p>
+                <p>Voulez-vous vraiment réaliser cette action ?</p>
+            </div>
+            <div class="actions">
+                <div class="ui red deny button">
+                    Non
+                </div>
+                <div id="execute_delete_project"  class="ui green right labeled icon button">
+                    Oui
+                    <i class="checkmark icon"></i>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+{%endif %}
+{% block javascripts %}
+    {{ parent()}}
+    <script type="text/javascript" src="{{ asset('bundles/ogiveuser/js/user.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ogiveproject/js/project.js')}}"></script>
+{% endblock %}

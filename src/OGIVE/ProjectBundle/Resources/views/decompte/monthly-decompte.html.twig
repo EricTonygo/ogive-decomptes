@@ -1,7 +1,7 @@
 {% import _self as forms %}
 {% extends "OGIVEProjectBundle::layout.html.twig" %}
 {% trans_default_domain 'OGIVEProjectBundle' %}
-{% block title %}Décompte N°{{decompte.monthNumber}} de {{decompte.monthName}}{% endblock %}
+{% block title %}Décompte mensuel N°{{decompte.monthNumber}} de {{decompte.monthName}}{% endblock %}
 
 {% block content %}
     {% macro show_decompteTask_infos(decompteTask) %}
@@ -350,15 +350,16 @@
     {% endmacro %}
     <div class="ui basic fixed segment content">
         <div class='ui container' style="width: 100%">
+            {% include('OGIVEProjectBundle:project:top-content-project-page.html.twig') %}
             <div class="ui one column stackable grid padded">
                 <div class="wide column">
-                    <div class="ui top attached tabular menu od_project_menu">
+                    <div class="ui top attached stackable tabular menu od_project_menu">
                         {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
                     </div>
                     <div class="ui bottom attached segment od_project_menu_content">
                         {%if allDecomptes > 1 %}
-                            <div class="ui right floated pagination menu mini form" style="margin-bottom: 1em;">
-{#                                <span style="font-weight: bold;">Parcourir les décomptes</span>#}
+                            <div class="ui right floated pagination menu mini form" style="margin-bottom: 1em; border-radius: 0px;">
+                                {#                                <span style="font-weight: bold;">Parcourir les décomptes</span>#}
                                 {%if previousDecompte %}
                                     <a href="{{path('decompte_show_get', {'idProject': previousDecompte.project.id, 'id': previousDecompte.id})}}" class="yellow icon item">
                                         <i class="left chevron icon"></i>
@@ -379,18 +380,25 @@
                         <div class="ui fluid card od_add_project_card view_field">
                             <div class="content">
                                 <div class="left floated header">
-                                    Décompte N°{{decompte.monthNumber}} de {{decompte.monthName}}
+                                    Décompte mensuel N°{{decompte.monthNumber}} de {{decompte.monthName}}
                                 </div>
 
                                 <div class="right floated meta">
-                                    <a id="excel_export_decompte" class="item"> <i class="file pdf icon"></i> Exporter en Excel</a>
+                                    <a id="excel_export_decompte" class="item"> <i class="green file excel icon"></i> Exporter en excel</a>
+                                    <a class="item"> | </a>
+                                    <a id="pdf_export_decompte" class="item"> <i class="red file pdf icon"></i> Exporter en PDF</a>
+                                    <a class="item"> | </a>
                                     <a id="notify_decompte" class="item"> <i class="inverted yellow send icon"></i> Soumettre</a>
                                     <a class="item"> | </a>
-                                    <a id="edit_decompte" class="item"> <i class="inverted blue edit icon"></i> Modifier</a>
+                                    <a id="edit_decompte" class="item"> <i class="inverted blue write icon"></i> Modifier</a>
                                     <a class="item"> | </a>
-                                    <a id="delete_decompte" class="item" onclick="delete_decompte({{decompte.project.id}}, {{decompte.id}});"> <i class="inverted red trash icon"></i> Supprimer</a>
+                                    <div class="ui dropdown dropdown_actions item">
+                                        <i class="large ellipsis horizontal icon"></i>
+                                        <div class="menu">
+                                            <a id="delete_decompte" class="item" onclick="delete_decompte({{decompte.project.id}}, {{decompte.id}});"> <i class="inverted red trash icon"></i> Supprimer</a>
+                                        </div>
+                                    </div>
                                 </div>
-
                             </div>
                             <div class="content description od_decompte_content">
                                 <div class="ui pointing secondary stackable mini menu">
@@ -535,7 +543,7 @@
                         <div class="ui fluid card od_add_project_card form_field" style="display: none;">
                             <div class="content">
                                 <div class="left floated header">
-                                    Mise à jour du décompte N°{{decompte.monthNumber}} de {{decompte.monthName}}
+                                    Mise à jour du décompte mensuel N°{{decompte.monthNumber}} de {{decompte.monthName}}
                                 </div>
                                 <div class="right floated meta">
                                     <a class="item cancel_edit_decompte"> Cancel</a>
@@ -677,25 +685,25 @@
     </div>
 {% endblock %}
 {% block confirmation_modal %}
-        <div id="confirm_delete_decompte" class="ui small modal">
-            <i class="close icon"></i>
-            <div class="header">
-                Confirmation de la suppression
+    <div id="confirm_delete_decompte" class="ui small modal">
+        <i class="close icon"></i>
+        <div class="header">
+            Confirmation de la suppression
+        </div>
+        <div class="content">
+            <p>Vous êtes sur le point de supprimer ce décompte.</p>
+            <p>Voulez-vous vraiment réaliser cette action ?</p>
+        </div>
+        <div class="actions">
+            <div class="ui red deny button">
+                Non
             </div>
-            <div class="content">
-                <p>Vous êtes sur le point de supprimer ce décompte.</p>
-                <p>Voulez-vous vraiment réaliser cette action ?</p>
-            </div>
-            <div class="actions">
-                <div class="ui red deny button">
-                    Non
-                </div>
-                <div id="execute_delete_decompte"  class="ui green right labeled icon button">
-                    Oui
-                    <i class="checkmark icon"></i>
-                </div>
+            <div id="execute_delete_decompte"  class="ui green right labeled icon button">
+                Oui
+                <i class="checkmark icon"></i>
             </div>
         </div>
+    </div>
 {% endblock %}
 {% block javascripts %}
     {{ parent()}}

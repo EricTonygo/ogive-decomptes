@@ -69,29 +69,28 @@
                                 </div>
 
                                 <div class="two fields">                                        
-                                    <div class="ui field">
+                                    <div class="three wide field">
                                         <label>Lot (cas d'un marché alloti)<em>*</em></label>
                                         <div class="field"> 
                                             {{ form_widget(form.numeroLot,{'attr':{'placeholder':"Lot", 'data-validate': 'numero-lot'}})}}
                                         </div>
                                     </div>
-                                    <div class="ui field">
+                                    <div class="five wide field">
                                         <label>Lieu d'exécution</label>
                                         <div class="field"> 
                                             {{ form_widget(form.lieuExecution,{'attr':{'placeholder':"Lieu d'exécution", 'data-validate': 'lieu-execution'}})}}
                                         </div>
                                     </div>
-                                </div>
-                                <div class="two fields">                                        
-                                    <div class="ui field">
+                                    <div class="four wide field">
                                         <label>Région</label>
                                         {{ form_widget(form.region,{'attr':{'placeholder':"Région", 'data-validate': 'region'}})}}
                                     </div>
-                                    <div class="ui field">
+                                    <div class="four wide field">
                                         <label>Département</label>
                                         {{ form_widget(form.departement,{'attr':{'placeholder':"departement", 'data-validate': 'departement'}})}}
                                     </div>
                                 </div>
+                                
                                 <div class="three fields">                                        
                                     <div class="ui field">
                                         <label>Date de souscription</label>

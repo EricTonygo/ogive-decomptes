@@ -1,0 +1,12 @@
+<div style="font-size: 12.8px;">Hi {{user.username}}. Welcomme to OGIVE-DC !</div>
+<div><br></div>
+<div style="font-size: 12.8px;">You have just registered on our site and we thank you for your confidence. </div>
+<div><br></div>
+<div style="font-size: 12.8px;">For security reasons, you must activate your account by clicking on the activation link opposite <a href="{{path("activate_user_account_get", {'username': user.username, 'hash': user.activationHash})}}">activate my OGIVE-DC account</a>.</div>
+<div><br></div>
+<div style="font-size: 12.8px;">Do not hesitate to <a href='mailto:contact@siogive.com'>contact us</a> if you encounter difficulties during this activation !</div>
+<div><br></div>
+<div>
+    <p style="margin:0px;padding:0px;border:0px;font-size:12.8px;font-stretch:normal;line-height:normal;font-family:Tahoma;width:auto;height:auto;float:none;color:rgb(0,0,0)">Best regards,</p>
+    <p style="margin:0px 0px 1em;padding:0px;border:0px;font-size:12.8px;font-stretch:normal;line-height:normal;font-family:Tahoma;width:auto;height:auto;float:none;color:rgb(0,0,0)">Your Bledshare Team.</p>
+</div>

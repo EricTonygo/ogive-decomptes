@@ -62,30 +62,29 @@
                                     </div>
                                 </div>
 
-                                <div class="two fields">                                        
-                                    <div class="ui field">
+                                <div class="fields">                                        
+                                    <div class="three wide field">
                                         <label>Lot (cas d'un marché alloti)<em>*</em></label>
                                         <div class="field"> 
                                             {{ form_widget(form.numeroLot,{'attr':{'placeholder':"Lot", 'data-validate': 'numero-lot'}})}}
                                         </div>
                                     </div>
-                                    <div class="ui field">
+                                    <div class="five wide field">
                                         <label>Lieu d'exécution</label>
                                         <div class="field"> 
                                             {{ form_widget(form.lieuExecution,{'attr':{'placeholder':"Lieu d'exécution", 'data-validate': 'lieu-execution'}})}}
                                         </div>
                                     </div>
-                                </div>
-                                <div class="two fields">                                        
-                                    <div class="ui field">
+                                    <div class="four wide field">
                                         <label>Région</label>
                                         {{ form_widget(form.region,{'attr':{'placeholder':"Région", 'data-validate': 'region'}})}}
                                     </div>
-                                    <div class="ui field">
+                                    <div class="four wide field">
                                         <label>Département</label>
                                         {{ form_widget(form.departement,{'attr':{'placeholder':"departement", 'data-validate': 'departement'}})}}
                                     </div>
                                 </div>
+                                
                                 <div class="three fields">                                        
                                     <div class="ui field">
                                         <label>Date de souscription</label>
@@ -229,7 +228,7 @@
                                         {% endmacro %}
                                     </table>
                                 </div>#}
-                                
+
                                 {#<h4 class="ui dividing header">Tâches</h4>
                                 <div class="ui field">
                                     <table class="ui very basic table">
@@ -262,7 +261,7 @@
                                         {% endmacro %}
                                     </table>
                                 </div>#}
-                                
+
                                 {{form_widget(form._token)}}
                                 <div class="field">
                                     {% include('OGIVEProjectBundle::form-message-success-error.html.twig') %}
@@ -271,7 +270,7 @@
                                     <button id='od_update_project_submit_btn'  class="ui mini yellow button" type="submit">Sauvegarder</button>
                                     <a id='od_update_project_cancel_btn' class="ui mini red button"  href="{{path('project_gen_infos_get', {'id': project.id})}}">Annuler</a>
                                 </div>
-                            </form>
+                                </form>
                             </div>
                         </div>
                     </div>

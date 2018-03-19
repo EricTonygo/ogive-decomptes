@@ -2,7 +2,7 @@
     <div class='ui container'>
         <div class="ui two column stackable grid padded">
             <div class="eleven wide column home_tab">
-                <div class="ui top attached tabular menu od_project_menu">
+                <div class="ui top attached stackable tabular menu od_project_menu">
                     <a class="active item" data-tab="overview">
                         Vue d'ensemble
                     </a>
@@ -42,8 +42,8 @@
                                             <div class="ui dropdown right dropdown_actions">
                                                 <i class="large ellipsis vertical icon"></i>
                                                 <div class="menu">
-                                                    <a class="item" href="{{path('project_update_get', {'id': single_project.id})}}"><i class="edit icon"></i> Modifier</a>
-                                                    <a id="delete_project_btn{{project.id}}" class="item" onclick="delete_project({{single_project.id}});"><i class="trash icon"></i> Supprimer</a>
+                                                    <a class="item" href="{{path('project_update_get', {'id': single_project.id})}}"><i class="blue write icon"></i> Modifier</a>
+                                                    <a id="delete_project_btn{{single_project.id}}" class="item" onclick="delete_project({{single_project.id}});"><i class="red trash icon"></i> Supprimer</a>
                                                 </div>
                                             </div>
                                             {#<a class="ui mini compact icon button" data-tooltip="Modifier" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('project_update_get', {'id': project.id})}}"><i class="edit icon"></i></a> |
@@ -51,7 +51,6 @@
                                         </td>
                                     </tr>
                                 {%endfor %}
-
                             </tbody>
                         {%else %}
                             <tfoot><tr><th colspan="6">

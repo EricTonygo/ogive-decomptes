@@ -1,0 +1,177 @@
+{% extends "OGIVEProjectBundle::layout.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block title %}Choose your plan{% endblock %}
+
+{% block content %}
+    <div class="ui basic segment signup_segment">
+        <div class='ui container signup_page_container'>
+            <div class="ui centered card page_title">
+                <div class="content">
+                    <h2>Join OGIVE-DC</h2>
+                    <span class="description_app">The best way to drive your exécution project, manage decomptes</span>
+                </div>
+            </div>
+            <div class="ui centered card page_title">
+                <div class="content">
+                    <div class="ui fluid tablet stackable steps">
+                        <a class="step" href="{{path('create_personal_account_get')}}">
+                            <i class="user icon"></i>
+                            <div class="content">
+                                <div class="title">Step 1:</div>
+                                <div class="description">Create personal account</div>
+                            </div>
+                        </a>
+                        <a class="step" href="{{path('choose_your_plan_get')}}">
+                            <i class="yellow dollar icon"></i>
+                            <div class="content">
+                                <div class="title">Step 2:</div>
+                                <div class="description">Choose your plan</div>
+                            </div>
+                        </a>
+                        <div class="disabled step">
+                            <i class="info circle icon"></i>
+                            <div class="content">
+                                <div class="title">Step 3:</div>
+                                <div class="description">Confirm informations</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui centered card">
+                <div class="content">
+                    <div class="ui one column stackable grid padded">
+                        <div class="sixtheen wide column">
+                            {% for flash_message in app.session.flashBag.get('error') %}
+                                <div  class="ui error message">
+                                    <i class="remove circle icon"></i>
+                                    <span>{{ flash_message }}</span>
+                                    <i class="close icon"></i>
+                                </div>
+                            {% endfor %}
+                            {{ form_start(form, {'method': 'POST', 'action': path('choose_your_plan_post'), 'attr': {'class': 'ui form', 'id': 'register_form'} }) }}
+                            <div class="field">
+                                <div class="ui stackable three column grid container">
+                                    <div class='row'>
+                                        <div class="column">
+                                            <div class="ui fluid card">
+                                                <div class="content center aligned">
+                                                    <h2 class='header'>Free plan</h2>
+                                                </div>
+                                                <div class="content center aligned">
+                                                    <p><h2 class="header">0XAF</h2><p>
+                                                    <p><button class="ui secondary basic button" type="submit" name="choosed-plan" value="1">Select plan</button>
+                                                </div>
+                                                <div class="content">
+                                                    <div class="ui list">
+                                                        <div class="item">
+                                                            <i class="green checkmark icon"></i>
+                                                            <div class="content">
+                                                                Managing of projects
+                                                            </div>
+                                                        </div>
+                                                        <div class="item">
+                                                            <i class="green checkmark icon"></i>
+                                                            <div class="content">
+                                                                Collaboration 
+                                                            </div>
+                                                        </div>
+                                                        <div class="item">
+                                                            <i class="green checkmark icon"></i>
+                                                            <div class="content">
+                                                                Facturation
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="column">
+                                            <div class="ui fluid card">
+                                                <div class="content center aligned">
+                                                    <h2 class='header'>Monthly plan</h2>
+                                                </div>
+                                                <div class="content center aligned">
+                                                    <p><h2 class="header">10000XAF</h2><p>
+                                                    <p><button class="ui secondary basic button" type="submit" name="choosed-plan" value="2">Select plan</button>
+                                                </div>
+                                                <div class="content">
+                                                    <div class="ui list">
+                                                        <div class="item">
+                                                            <i class="green checkmark icon"></i>
+                                                            <div class="content">
+                                                                Managing of projects
+                                                            </div>
+                                                        </div>
+                                                        <div class="item">
+                                                            <i class="green checkmark icon"></i>
+                                                            <div class="content">
+                                                                Collaboration 
+                                                            </div>
+                                                        </div>
+                                                        <div class="item">
+                                                            <i class="green checkmark icon"></i>
+                                                            <div class="content">
+                                                                Facturation
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="column">
+                                            <div class="ui fluid card">
+                                                <div class="content center aligned">
+                                                    <h2 class='header'>Yearly plan</h2>
+                                                </div>
+                                                <div class="content center aligned">
+                                                    <p><h2 class="header">100000XAF</h2><p>
+                                                    <p><button class="ui secondary basic button" type="submit" name="choosed-plan" value="3">Select plan</button>
+                                                </div>
+                                                <div class="content">
+                                                    <div class="ui list">
+                                                        <div class="item">
+                                                            <i class="green checkmark icon"></i>
+                                                            <div class="content">
+                                                                Managing of projects
+                                                            </div>
+                                                        </div>
+                                                        <div class="item">
+                                                            <i class="green checkmark icon"></i>
+                                                            <div class="content">
+                                                                Collaboration 
+                                                            </div>
+                                                        </div>
+                                                        <div class="item">
+                                                            <i class="green checkmark icon"></i>
+                                                            <div class="content">
+                                                                Facturation
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{form_rest(form)}}
+
+                            {{ form_end(form) }}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent()}}
+    <script type="text/javascript" src="{{ asset('bundles/ogiveuser/js/user.js')}}"></script>
+{% endblock %}

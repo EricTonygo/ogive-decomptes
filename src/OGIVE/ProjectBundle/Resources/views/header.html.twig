@@ -25,23 +25,25 @@
                         </div>
                     </div>
                     {% if app.user %}
-                        <div class="ui dropdown top right pointing item"> 
-                            <i class="plus icon"></i>
-                            <div class="menu">
-                                <a href="{{path('project_add')}}" class="ui item">
-                                    Nouveau projet
-                                </a>
-                               
-                                <a href="{{path('task_add_get', {'id': project.id})}}" class="ui item">
-                                    Nouvelle tâche                        
-                                </a>
-                                
-                                <a href="{{path('decompte_add_get', {'id': project.id})}}" class="ui item">
-                                    Nouveau décompte                        
-                                </a>
+                        {% if project is defined %}
+                            <div class="ui dropdown top right pointing item"> 
+                                <i class="plus icon"></i>
+                                <div class="menu">
+                                    <a href="{{path('project_add')}}" class="ui item">
+                                        Nouveau projet
+                                    </a>
+
+                                    <a href="{{path('task_add_get', {'id': project.id})}}" class="ui item">
+                                        Nouvelle tâche                        
+                                    </a>
+
+                                    <a href="{{path('decompte_add_get', {'id': project.id})}}" class="ui item">
+                                        Nouveau décompte                        
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="ui dropdown top right pointing item"> 
+                        {% endif %}
+                        <div class="ui top right pointing dropdown item"> 
                             <i class="user circle icon"></i>
                             <div class="menu">
                                 <h2 class="header">Connecté en tant que {{ app.user.username }}</h2>
@@ -49,7 +51,6 @@
                                 <a href='{{path('fos_user_profile_show')}}' class="ui item">
                                     Profil                        
                                 </a>
-                                <div class="divider"></div>
                                 <a href="{{ path('fos_user_security_logout') }}" class="ui item">
                                     Deconnexion
                                 </a>
@@ -59,7 +60,7 @@
                         <a class="ui item" href="{{path('fos_user_security_login')}}">
                             Se connecter
                         </a>
-                        <a class="item" href="{{path("fos_user_registration_register")}}">
+                        <a class="item" href="{{path("create_personal_account_get")}}"> 
                             S'inscrire
                         </a>
                     {% endif %}
