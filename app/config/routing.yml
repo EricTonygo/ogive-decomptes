@@ -15,6 +15,9 @@ fos_user:
     
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+ogive_project_default:    
+    resource: "@OGIVEProjectBundle/Controller/DefaultController.php"
+    type:     rest
     
 ogive_project_project:    
     resource: "@OGIVEProjectBundle/Controller/ProjectController.php"

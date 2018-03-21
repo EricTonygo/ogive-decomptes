@@ -20,6 +20,15 @@
                     margin: 0px;
                 }
             }
+            @media only screen and (max-width: 767px){
+                .mobile_item{
+                    display: flex!important;
+                }
+                .desktop_item{
+                    display: none;
+
+                }
+            }
         } 
     }
 }

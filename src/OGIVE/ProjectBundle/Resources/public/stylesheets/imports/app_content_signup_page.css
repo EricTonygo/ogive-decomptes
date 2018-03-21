@@ -2,74 +2,76 @@
 .pusher.od_app_content .signup_page {
   min-height: 40em;
   color: rgba(255, 255, 255, 0.6);
-  background: url(../images/decompte-graph.jpg), #2b3137;
+  background-image: linear-gradient(-225deg, rgba(30, 30, 30, 0.6) 30%, rgba(46, 46, 46, 0.5) 80%), url(../images/decompte-graph.jpg);
   background-position: center 10%;
   background-size: cover;
+  margin: 0px !important;
 }
-/* line 9, ../../sass/imports/app_content_signup_page.scss */
+/* line 11, ../../sass/imports/app_content_signup_page.scss */
 .pusher.od_app_content .signup_page .container {
   margin-top: 20px;
 }
-/* line 12, ../../sass/imports/app_content_signup_page.scss */
+/* line 14, ../../sass/imports/app_content_signup_page.scss */
 .pusher.od_app_content .signup_page .container .signup_page_left_column .ui.card {
   box-shadow: none;
   background: transparent;
 }
-/* line 16, ../../sass/imports/app_content_signup_page.scss */
+/* line 18, ../../sass/imports/app_content_signup_page.scss */
 .pusher.od_app_content .signup_page .container .signup_page_left_column .ui.card .content .header {
-  font-size: 72px;
+  font-size: 54px;
   font-weight: 300;
   color: rgba(255, 255, 255, 0.85);
 }
-/* line 22, ../../sass/imports/app_content_signup_page.scss */
+/* line 24, ../../sass/imports/app_content_signup_page.scss */
 .pusher.od_app_content .signup_page .container .signup_page_left_column .ui.card .content .ui.form .field > label {
   font-weight: 700;
   font-size: 14px;
   color: #2c3e50;
 }
-/* line 26, ../../sass/imports/app_content_signup_page.scss */
+/* line 28, ../../sass/imports/app_content_signup_page.scss */
 .pusher.od_app_content .signup_page .container .signup_page_left_column .ui.card .content .description {
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 300;
   color: rgba(255, 255, 255, 0.85);
 }
-/* line 39, ../../sass/imports/app_content_signup_page.scss */
+/* line 41, ../../sass/imports/app_content_signup_page.scss */
 .pusher.od_app_content .signup_page .signup_page_right_column .ui.card .content .ui.form .field > label {
   font-weight: 700;
   font-size: 14px;
   color: #2c3e50;
 }
 
-/* line 50, ../../sass/imports/app_content_signup_page.scss */
+/* line 52, ../../sass/imports/app_content_signup_page.scss */
 .signup_segment {
   background-image: linear-gradient(180deg, rgba(27, 31, 35, 0.065), rgba(27, 31, 35, 0)) !important;
   background-repeat: no-repeat !important;
   background-size: 100% 200px !important;
+  margin: 0px !important;
 }
-/* line 55, ../../sass/imports/app_content_signup_page.scss */
+/* line 58, ../../sass/imports/app_content_signup_page.scss */
 .signup_segment .container.signup_page_container .ui.card {
   background-color: transparent;
 }
-/* line 58, ../../sass/imports/app_content_signup_page.scss */
+/* line 61, ../../sass/imports/app_content_signup_page.scss */
 .signup_segment .container.signup_page_container .ui.centered.card {
   width: 62.4em;
   box-shadow: none;
 }
-/* line 62, ../../sass/imports/app_content_signup_page.scss */
+/* line 65, ../../sass/imports/app_content_signup_page.scss */
 .signup_segment .container.signup_page_container .ui.centered.card .content .description_app {
   font-size: 16px;
 }
-/* line 67, ../../sass/imports/app_content_signup_page.scss */
+/* line 70, ../../sass/imports/app_content_signup_page.scss */
 .signup_segment .container.signup_page_container .ui.centered.card .content .ui.form .field > label {
   font-weight: 700;
   font-size: 14px;
   color: #2c3e50;
 }
-/* line 73, ../../sass/imports/app_content_signup_page.scss */
+/* line 76, ../../sass/imports/app_content_signup_page.scss */
 .signup_segment .container.signup_page_container .ui.centered.card .content .ui.form .wide.column .ui.card .content h2.header {
   font-size: 16px;
 }
-/* line 83, ../../sass/imports/app_content_signup_page.scss */
+/* line 86, ../../sass/imports/app_content_signup_page.scss */
 .signup_segment .container.signup_page_container .ui.centered.card .content .six.wide.column .ui.card .content h2.header {
   font-size: 16px;
 }

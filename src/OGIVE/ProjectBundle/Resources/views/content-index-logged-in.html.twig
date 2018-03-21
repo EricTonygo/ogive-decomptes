@@ -3,17 +3,22 @@
         <div class="ui two column stackable grid padded">
             <div class="eleven wide column home_tab">
                 <div class="ui top attached stackable tabular menu od_project_menu">
-                    <a class="active item" data-tab="overview">
+                    {#<a class="active item" data-tab="overview">
                         Vue d'ensemble
-                    </a>
-                    <a class="item" data-tab="my-projects">
+                    </a>#}
+                    <a class="active item" data-tab="my-projects">
                         Mes projets
                     </a>
                 </div>
-                <div class="ui bottom attached active tab segment od_project_menu_content " data-tab="overview">
-
-                </div>
-                <div class="ui bottom attached tab segment od_project_menu_content" data-tab="my-projects">
+                {#<div class="ui bottom attached active tab segment od_project_menu_content " data-tab="overview">
+                    <div class='ui fluid card'>
+                        <div class="content">
+                            <div class='header'>Découvrez la meilleur manière les décomptes de vos projets(marchés publics).</div>
+                            <div class='description'></div>
+                        </div>
+                    </div>
+                </div>#}
+                <div class="ui bottom attached active tab segment od_project_menu_content" data-tab="my-projects">
                     <div class="ui fluid card od_card_top_table_action">
                         <div class="content">
                             <a class="ui right floated yellow mini button" href="{{path('project_add')}}"><i class="plus icon"></i> Créer un nouveau projet</a>

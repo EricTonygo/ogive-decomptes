@@ -1,49 +1,60 @@
 /* line 2, ../../sass/imports/app_content_signin_page.scss */
 body {
-  background-color: #f9f9f9;
+  background-color: #f9f9f9 !important;
 }
 
 /* line 5, ../../sass/imports/app_content_signin_page.scss */
+body.pushable {
+  background-color: #f9f9f9 !important;
+}
+
+/* line 8, ../../sass/imports/app_content_signin_page.scss */
 .pusher.od_app_content.signin_pusher {
   height: 93.7%;
   background-color: transparent;
 }
-/* line 9, ../../sass/imports/app_content_signin_page.scss */
-.pusher.od_app_content.signin_pusher .segment.content.signin_page .container {
-  margin-top: 100px;
-}
 /* line 11, ../../sass/imports/app_content_signin_page.scss */
+.pusher.od_app_content.signin_pusher .segment.content.signin_page {
+  margin: 0px;
+  background-color: #f9f9f9;
+  height: 100%;
+}
+/* line 15, ../../sass/imports/app_content_signin_page.scss */
+.pusher.od_app_content.signin_pusher .segment.content.signin_page .container {
+  margin-top: 5%;
+}
+/* line 17, ../../sass/imports/app_content_signin_page.scss */
 .pusher.od_app_content.signin_pusher .segment.content.signin_page .container .ui.card.page_title {
   box-shadow: none;
   background: transparent;
 }
-/* line 14, ../../sass/imports/app_content_signin_page.scss */
+/* line 20, ../../sass/imports/app_content_signin_page.scss */
 .pusher.od_app_content.signin_pusher .segment.content.signin_page .container .ui.card.page_title h2 {
   font-weight: lighter;
   font-size: 24px;
   text-align: center;
 }
-/* line 20, ../../sass/imports/app_content_signin_page.scss */
+/* line 26, ../../sass/imports/app_content_signin_page.scss */
 .pusher.od_app_content.signin_pusher .segment.content.signin_page .container .ui.card {
   width: 23em;
 }
-/* line 23, ../../sass/imports/app_content_signin_page.scss */
+/* line 29, ../../sass/imports/app_content_signin_page.scss */
 .pusher.od_app_content.signin_pusher .segment.content.signin_page .container .ui.card .content .header {
   font-size: 72px;
   font-weight: 300;
 }
-/* line 28, ../../sass/imports/app_content_signin_page.scss */
+/* line 34, ../../sass/imports/app_content_signin_page.scss */
 .pusher.od_app_content.signin_pusher .segment.content.signin_page .container .ui.card .content .ui.form label {
   font-weight: 700;
   font-size: 14px;
   color: #2c3e50;
 }
-/* line 32, ../../sass/imports/app_content_signin_page.scss */
+/* line 38, ../../sass/imports/app_content_signin_page.scss */
 .pusher.od_app_content.signin_pusher .segment.content.signin_page .container .ui.card .content .description {
   font-size: 26px;
   font-weight: 300;
 }
-/* line 38, ../../sass/imports/app_content_signin_page.scss */
+/* line 44, ../../sass/imports/app_content_signin_page.scss */
 .pusher.od_app_content.signin_pusher .segment.content.signin_page .container .ui.card.signup_message {
   width: 23em;
   box-shadow: none;

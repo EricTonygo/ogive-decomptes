@@ -1,0 +1,14 @@
+{% extends "OGIVEProjectBundle::layout.html.twig" %}
+
+{% block content %}
+    <div class="ui basic segment header_static_page">
+        <div class='ui container'>
+            <div class="ui left floated segment"><h2 class="header">{% block page_title %}{% endblock %}</h2></div>
+        </div>
+    </div>
+    <div class="ui basic segment content_static_page">
+        <div class='ui container'>
+            {% block page_content %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

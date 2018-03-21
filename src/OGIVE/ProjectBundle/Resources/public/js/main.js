@@ -5,13 +5,11 @@ $(document).ready(function () {
 
     $('.ui.sidebar')
             .sidebar({
-                context: $('.bottom.segment.egis_app_content'),
-                dimPage: false,
-                closable: true,
-                scrollLock: true
+                //context: $('.bottom.segment'),
+                dimPage: false
             })
-            .sidebar('setting', 'transition', 'push')
-            .sidebar('attach events', '.egis_toc.item')
+            .sidebar('setting', 'transition', 'overlay')
+            .sidebar('attach events', '.toc.item')
             ;
 
     $('.message .close')

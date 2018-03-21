@@ -26,7 +26,7 @@ use Doctrine\Common\Collections\Collection;
 class DecompteController extends Controller {
 
     /**
-     * @Rest\View(statusCode=Response::HTTP_CREATED)
+     * @Rest\View()
      * @Rest\Get("/projects/{id}/decomptes/new", name="decompte_add_get", options={ "method_prefix" = false, "expose" = true })
      */
     public function getAddDecomptesAction(Request $request, Project $project) {
@@ -248,6 +248,7 @@ class DecompteController extends Controller {
             }
             $decompte = $decompte_manager->updateDecompte($decompte);
             $decompte_manager->updateNextDecomptesOfProject($decompte);
+            $decompte_manager->exportDecompteToExcel($decompte);
             //return $this->redirect($this->generateUrl('decompte_show_get', array('idProject' => $decompte->getProject()->getId(), 'id' => $decompte->getId())));
             $view = View::create(["message" => 'Décompte modifié avec succès. Vous serez redirigé dans bientôt !', 'id_project' => $decompte->getProject()->getId(), 'id_decompte' => $decompte->getId()]);
             $view->setFormat('json');

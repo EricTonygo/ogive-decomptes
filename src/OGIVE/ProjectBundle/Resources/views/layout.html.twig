@@ -3,15 +3,17 @@
 {% block title %}{% endblock %}
 
 {% block body %}
-    {% include('OGIVEProjectBundle::header.html.twig') %}
+    
     {% include('OGIVEProjectBundle::top-message-success-error.html.twig') %}
     {% include('OGIVEProjectBundle::sidebar.html.twig') %}
     <div class="pusher od_app_content">
+        {% include('OGIVEProjectBundle::header.html.twig') %}
         {% block content %}
 
         {% endblock content %}
+        {% include('OGIVEProjectBundle::footer.html.twig') %}
     </div>
-    {% include('OGIVEProjectBundle::footer.html.twig') %}
+    
 {% block confirmation_modal %}{% endblock %}
 
 {% endblock body %}

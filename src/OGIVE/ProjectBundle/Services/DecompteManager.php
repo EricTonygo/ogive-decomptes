@@ -555,4 +555,88 @@ class DecompteManager {
         }
     }
 
+    public function exportDecompteToExcel(Decompte $decompte) {
+        set_include_path(get_include_path() . PATH_SEPARATOR . "..");
+        include_once("xlsxwriter.class.php");
+        $writer = new \XLSXWriter();
+        $writer->setAuthor("SOCIETE D'INGENIEURIE OGIVE");
+        $writer->setTempDir(sys_get_temp_dir()); //set custom tempdir
+        $header = array("string", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string");
+        $sheet_attachement = "ATTACHEMENT";
+        $attachement_rows = array();
+        $this->createAttachementRows($decompte, $attachement_rows);
+        $writer->writeSheetHeader($sheet_attachement, $header, $suppress_header_row = true);
+        foreach ($attachement_rows as $row) {
+            $writer->writeSheetRow($sheet_attachement, $row);
+        }
+        if (!is_dir($this->getExportExcelRootDir())) {
+            mkdir($this->getExportExcelRootDir(), $mode = 0777, $recursive = true);
+        }
+        $writer->writeToFile($this->getExportExcelRootDir() . '/decompte_mensuel_N°'.$decompte->getMonthNumber().'.xlsx');
+    }
+
+    public function createAttachementRows(Decompte $decompte, $rows) {
+        $holder = $decompte->getProject()->getHolders()[0];
+        $projectManager = $decompte->getProject()->getProjectManagers()[0];
+        /* Header attachement for project informations */
+        $rows[] = array("OBJET: ", "", "", "", "", "", $decompte->getProject()->getNumeroMarche(), "", "", "", "TITULAIRE: " . $holder->getNom(), "", "", "", "");
+        $rows[] = array($decompte->getProject()->getSubject(), "", "", "", "", "", "", "", "", "", "B.P." . $holder->getCodePostal(), "", "", "", "");
+        $rows[] = array("LOT N°" . $decompte->getProject()->getNumeroLot(), "", "", "", "", "", "", "", "", "", "Tel/Fax: " . $holder->getPhone() . "/" . $holder->getFaxNumber(), "", "", "", "");
+        $rows[] = array("LIEU D'EXECUTION: " . $decompte->getProject()->getLieuExecution(), "", "", "", "", "", "", "", "", "", "RC N° " . $holder->getCodePostal(), "", "", "", "");
+        $rows[] = array("REGION: " . $decompte->getProject()->getRegion(), "", "", "", "", "", "", "", "", "", "N° Contribuable: " . $holder->getNumeroContribuable(), "", "", "", "");
+        $rows[] = array("DEPARTEMENT: " . $decompte->getProject()->getDepartement(), "", "", "", "", "", "", "", "", "", "N° compte bancaire: " . $holder->getNumeroCompteBancaire(), "", "", "", "");
+        $rows[] = array("Notifié le, : " . $decompte->getProject()->getNotificationDate(), "", "", "", "", "", "", "", "", "", $holder->getNomBanque(), "", "", "", "");
+        $rows[] = array("MISSION DE CONTROLE: " . $projectManager->getNom(), "", "", "", "", "", "", "", "", "", $holder->getNomBanque(), "", "", "", "");
+        $rows[] = array("", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+        $rows[] = array("ATTACHEMENT RELATIF AU DECOMPTE  PROVISOIRE  N°" . $decompte->getMonthNumber() . " DES TRAVAUX  REALISES AU " . $decompte->getEndDate(), "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+        /* Header attachement for tasks informations */
+        $rows[] = array("", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+        $rows[] = array("N°", "Désignation des ouvrages", "U", "P.U", "Quantité", "", "", "", "", "Montant[" . $decompte->getProject()->getProjectCostCurrency() . "]", "", "", "", "", "% réalisé");
+        $rows[] = array("", "", "", "", "marché", "projet d'exec", "cumul préc.", "du mois", "cumul mois", "marché", "projet d'exec", "cumul préc.", "du mois", "cumul mois", "");
+        /* content attachement for tasks informations */
+        $decompteTasks = $decompte->getDecompteTasks();
+        if ($decompteTasks && count($decompteTasks) > 0) {
+            foreach ($decompteTasks as $decompteTask) {
+                $this->addDecompteTaskRow($decompteTask, $rows);
+            }
+        }
+        $rows[] = array("", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+        /*Content of general recap*/
+        $rows[] = array("", "RECAPITULATIF GENERAL", "", "", "", "", "", "", "", "", "", "", "", "", "");
+        if ($decompteTasks && count($decompteTasks) > 0) {
+            foreach ($decompteTasks as $decompteTask) {
+                $rows[] = array($decompteTask->getNumero(), "LOT".$decompteTask->getNumero().": ", "", "", "", "", "", "", "", $decompteTask->getMtPrevueMarche(), $decompteTask->getMtPrevueProjetExec(), $decompteTask->getMtCumulMoisPrec(), $decompteTask->getMtMois(), $decompteTask->getMtCumulMois(), $decompteTask->getPourcentRealisation() . "%");
+            }
+        }
+        /*Content of total general hors taxes */
+        $rows[] = array("", "TOTAL GENERAL HORS TAXES", "", "", "", "", "", "", "", $decompte->getMtPrevueMarche(), $decompte->getMtPrevueProjetExec(), $decompte->getMtCumulMoisPrec(), $decompte->getMtMois(), $decompte->getMtCumulMois(), "");
+        /*Content of tva */
+        $rows[] = array("", "TVA: 19.25%", "", "", "", "", "", "", "", $decompte->getMtPrevueMarcheTVA(), $decompte->getMtPrevueProjetExecTVA(), $decompte->getMtCumulMoisPrecTVA(), $decompte->getMtMoisTVA(), $decompte->getMtCumulMoisTVA(), "");
+        /*Content of IR */
+        $rows[] = array("", "IR: 2.2%", "", "", "", "", "", "", "", $decompte->getMtPrevueMarcheIR(), $decompte->getMtPrevueProjetExecIR(), $decompte->getMtCumulMoisPrecIR(), $decompte->getMtMoisIR(), $decompte->getMtCumulMoisIR(), "");
+        /*Content of net à percevoir */
+        $rows[] = array("", "NET A PERCEVOIR", "", "", "", "", "", "", "", $decompte->getMtPrevueMarcheNetAPercevoir(), $decompte->getMtPrevueProjetExecNetAPercevoir(), $decompte->getMtCumulMoisPrecNetAPercevoir(), $decompte->getMtMoisNetAPercevoir(), $decompte->getMtCumulMoisNetAPercevoir(), "");
+        /*Content of total TTC */
+        $rows[] = array("", "TOTAL TTC", "", "", "", "", "", "", "", $decompte->getMtPrevueMarcheTTC(), $decompte->getMtPrevueProjetExecTTC(), $decompte->getMtCumulMoisPrecTTC(), $decompte->getMtMoisTTC(), $decompte->getMtCumulMoisTTC(), "");
+    }
+
+    public function addDecompteTaskRow(DecompteTask $decompteTask, $rows) {
+        if ($decompteTask->getNumero() && $decompteTask->getUnite() && $decompteTask->getPrixUnitaire() && $decompteTask->getQtePrevueMarche() && $decompteTask->getQtePrevueProjetExec()) {
+            $rows[] = array($decompteTask->getNumero(), $decompteTask->getNom(), $decompteTask->getUnite(), $decompteTask->getPrixUnitaire(), $decompteTask->getQtePrevueMarche(), $decompteTask->getQtePrevueProjetExec(), $decompteTask->getQteCumulMoisPrec(), $decompteTask->getQteMois(), $decompteTask->getQteCumulMois(), $decompteTask->getMtPrevueMarche(), $decompteTask->getMtPrevueProjetExec(), $decompteTask->getMtCumulMoisPrec(), $decompteTask->getMtMois(), $decompteTask->getMtCumulMois(), $decompteTask->getPourcentRealisation() . "%");
+        } else {
+            $rows[] = array("LOT" . $decompteTask->getNumero() . ": " . $decompteTask->getNom(), "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+        }
+        $subDecompteTasks = $decompteTask->getSubDecompteTasks();
+        if ($subDecompteTasks && count($subDecompteTasks) > 0) {
+            foreach ($subDecompteTasks as $subDecompteTask) {
+                $this->addDecompteTaskRow($subDecompteTask, $rows);
+            }
+            $rows[] = array("", "SOUS TOTAL DU LOT".$decompteTask->getNumero(), "", "", "", "", "", "", "", $decompteTask->getMtPrevueMarche(), $decompteTask->getMtPrevueProjetExec(), $decompteTask->getMtCumulMoisPrec(), $decompteTask->getMtMois(), $decompteTask->getMtCumulMois(), $decompteTask->getPourcentRealisation() . "%");
+        }
+    }
+    
+    public function getExportExcelRootDir() {
+        return __DIR__ . '/../../../../web/exports/excel';
+    }
+
 }

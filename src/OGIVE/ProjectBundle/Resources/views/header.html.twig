@@ -3,22 +3,22 @@
         <div class="ui container">
             <div class="ui inverted secondary menu app_main_menu">
                 <div class="ui left inverted secondary menu">
+                    <a class="toc item mobile_item" style="display: none;"><i class="sidebar icon"></i></a>
                     <a class="active item" href="{{ path('ogive_project_homepage') }}">
-                        LOGO
+                        OGIVE-DC
                     </a>
-                    <a class="item">
+                    <a class="item desktop_item" href="{{ path('about_page_get') }}">
                         A propos
                     </a>
-                    <a class="item">
+                    <a class="item desktop_item" href="{{ path('how_it_works_page_get') }}">
                         Comment ça marche?
                     </a>
-                    <a class="item">
+                    <a class="item desktop_item" href="{{ path('help_page_get') }}">
                         Aide
                     </a>
                 </div>
                 <div class="ui right inverted secondary menu">
-
-                    <div class="item">
+                    <div class="item desktop_item">
                         <div class="ui icon input">
                             <input type="text" placeholder="Recherche...">
                             <i class="search icon"></i>
@@ -57,11 +57,17 @@
                             </div>
                         </div>
                     {% else %}
-                        <a class="ui item" href="{{path('fos_user_security_login')}}">
+                        <a class="ui item desktop_item" href="{{path('fos_user_security_login')}}">
                             Se connecter
                         </a>
-                        <a class="item" href="{{path("create_personal_account_get")}}"> 
+                        <a class="ui item mobile_item" href="{{path('fos_user_security_login')}}" style="display: none;">
+                            <i class="ui sign in alternate icon"></i>
+                        </a>
+                        <a class="item desktop_item" href="{{path("create_personal_account_get")}}"> 
                             S'inscrire
+                        </a>
+                        <a class="item mobile_item" href="{{path("create_personal_account_get")}}" style="display: none;"> 
+                            <i class='ui user plus icon'></i>
                         </a>
                     {% endif %}
                 </div>
