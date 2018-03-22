@@ -74,15 +74,6 @@ $(function () {
                                 prompt: 'The passwords you have entered do not match'
                             }
                         ]
-                    },
-                    termsConditions: {
-                        identifier: 'termsConditions',
-                        rules: [
-                            {
-                                type: 'checked',
-                                prompt: 'You must accept the terms and conditions'
-                            }
-                        ]
                     }
                 },
                 inline: true,

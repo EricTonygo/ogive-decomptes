@@ -36,16 +36,19 @@
                                 <label>Owner's name</label>
                                 {{ form_widget(form.lastname,{'attr':{'placeholder': "Enter your owner's name", 'data-validate': 'lastname'}})}}
                             </div>
-                            <div class="field">
+                            {#<div class="field">
                                 <div class="ui checkbox">
                                     <input type="checkbox" tabindex="0" data-validate="termsConditions" class="">
                                     <label>I agree to the Terms and Conditions</label>
                                 </div>
-                            </div>
+                            </div>#}
                              <div class="field">
                                 {{form_rest(form)}}
                             </div>
+                            <div class="field center aligned">
                             <button id="submit_register_form" class="ui fluid yellow button" type="submit">Sign up for OGIVE-DC</button>
+                            <span class="" style="font-size: 12px;">By clicking "Sign up for OGIVE-DC", you agree to our <a href="#">terms of service</a>. We’ll occasionally send you account related emails.</span>
+                            </div>
                         {{ form_end(form) }}
                     </div>
                 </div>

@@ -24,7 +24,7 @@
 .ui.inverted.segment .app_main_menu .ui.secondary.menu .dropdown.item > .menu .divider {
   margin: 0px;
 }
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 990px) {
   /* line 24, ../../sass/imports/header.scss */
   .ui.inverted.segment .app_main_menu .ui.secondary.menu .mobile_item {
     display: flex !important;
