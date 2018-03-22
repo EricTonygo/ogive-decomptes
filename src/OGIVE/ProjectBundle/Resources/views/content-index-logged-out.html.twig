@@ -16,39 +16,39 @@
                 <div class="ui fluid card">
                     <div class="content">
                         {{ form_start(form, {'method': 'POST', 'action': path('create_personal_account_post'), 'attr': {'class': 'ui form', 'id': 'register_form'} }) }}
-                            <div class="field">
-                                <label>Username</label>
-                                {{ form_widget(form.username,{'attr':{'placeholder':'Pick a username', 'data-validate': 'username'}})}}
+                        <div class="field">
+                            <label>Username</label>
+                            {{ form_widget(form.username,{'attr':{'placeholder':'Pick a username', 'data-validate': 'username'}})}}
+                        </div>
+                        <div class="field">
+                            <label>Email address</label>
+                            {{ form_widget(form.email,{'attr':{'placeholder':'you@example.com', 'data-validate': 'email'}})}}
+                        </div>
+                        <div class="field">
+                            <label>Password</label>
+                            {{ form_widget(form.plainPassword.first,{'attr':{'placeholder':'Create a password', 'data-validate': 'password'}})}}
+                        </div>
+                        <div class="field">
+                            <label>Confirm password</label>
+                            {{ form_widget(form.plainPassword.second,{'attr':{'placeholder':'Confirm a password', 'data-validate': 'passwordConfirm'}})}}
+                        </div>
+                        <div class="field">
+                            <label>Owner's name</label>
+                            {{ form_widget(form.lastname,{'attr':{'placeholder': "Enter your owner's name", 'data-validate': 'lastname'}})}}
+                        </div>
+                        {#<div class="field">
+                            <div class="ui checkbox">
+                                <input type="checkbox" tabindex="0" data-validate="termsConditions" class="">
+                                <label>I agree to the Terms and Conditions</label>
                             </div>
-                            <div class="field">
-                                <label>Email address</label>
-                                {{ form_widget(form.email,{'attr':{'placeholder':'you@example.com', 'data-validate': 'email'}})}}
-                            </div>
-                            <div class="field">
-                                <label>Password</label>
-                                {{ form_widget(form.plainPassword.first,{'attr':{'placeholder':'Create a password', 'data-validate': 'password'}})}}
-                            </div>
-                            <div class="field">
-                                <label>Confirm password</label>
-                                {{ form_widget(form.plainPassword.second,{'attr':{'placeholder':'Confirm a password', 'data-validate': 'passwordConfirm'}})}}
-                            </div>
-                            <div class="field">
-                                <label>Owner's name</label>
-                                {{ form_widget(form.lastname,{'attr':{'placeholder': "Enter your owner's name", 'data-validate': 'lastname'}})}}
-                            </div>
-                            {#<div class="field">
-                                <div class="ui checkbox">
-                                    <input type="checkbox" tabindex="0" data-validate="termsConditions" class="">
-                                    <label>I agree to the Terms and Conditions</label>
-                                </div>
-                            </div>#}
-                             <div class="field">
-                                {{form_rest(form)}}
-                            </div>
-                            <div class="field center aligned">
+                        </div>#}
+                        <div class="field">
+                            {{form_rest(form)}}
+                        </div>
+                        <div class="field center aligned">
                             <button id="submit_register_form" class="ui fluid yellow button" type="submit">Sign up for OGIVE-DC</button>
                             <span class="" style="font-size: 12px;">By clicking "Sign up for OGIVE-DC", you agree to our <a href="#">terms of service</a>. We’ll occasionally send you account related emails.</span>
-                            </div>
+                        </div>
                         {{ form_end(form) }}
                     </div>
                 </div>

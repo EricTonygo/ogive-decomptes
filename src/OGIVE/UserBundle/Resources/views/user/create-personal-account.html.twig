@@ -79,16 +79,22 @@
                                 <label>Confirm password</label>
                                 {{ form_widget(form.plainPassword.second,{'attr':{'placeholder':'Confirm a password', 'data-validate': 'passwordConfirm'}})}}
                             </div>
-                            <div class="field">
+                            {#<div class="field">
                                 <div class="ui checkbox">
                                     <input type="checkbox" tabindex="0" data-validate="termsConditions" class="">
                                     <label>I agree to the Terms and Conditions</label>
                                 </div>
-                            </div>
+                            </div>#}
                             <div class="field">
                                 {{form_rest(form)}}
                             </div>
-                            <button id="submit_register_form" class="ui yellow button" type="submit">Create an account</button>
+                            <div class="field">
+                                <span class="" style="font-size: 12px;">By clicking "Create an account", you agree to our <a href="#">terms of service</a>. We’ll occasionally send you account related emails.</span>
+                            </div>
+                            <div class="field">
+                                <button id="submit_register_form" class="ui yellow button" type="submit">Create an account</button>
+                            </div>
+                            
                             {{ form_end(form) }}
                         </div>
                         <div class="six wide column">
