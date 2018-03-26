@@ -17,7 +17,7 @@ class UserMailService {
         $this->templating = $templating;
     }
 
-    public function sendAccountActivationLink(\OGIVE\UserBundle\Entity\User $user) {
+    public function sendAccountActivationLink(\OGIVE\UserBundle\Entity\User $user = null) {
         if ($user && $user->getEmail() != "") {
             $message = \Swift_Message::newInstance()
                     ->setSubject("Account activation")

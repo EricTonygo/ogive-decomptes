@@ -223,7 +223,7 @@ class UserController extends Controller {
             }
             $savedUser = $userManager->updateUser($user);
             $session->remove('new_user');
-            $mail_service->sendAccountActivationLink($savedUser);
+            $mail_service->sendAccountActivationLink($user);
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         } else {
             $session->getFlashBag()->add('error', "Le formulaire a été soumis avec des données erronées");
