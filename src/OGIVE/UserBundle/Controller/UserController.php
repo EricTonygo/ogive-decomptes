@@ -104,7 +104,7 @@ class UserController extends Controller {
         $session = $request->getSession();
         $user = $userManager->findUserByUsername($username);
         if ($user) {
-            if (!$user->getEnabled()) {
+            if (!$user->isEnabled()) {
                 if ($user->getActivationHash() == $hash) {
                     $user->setEnabled(true);
                     $userManager->updateUser($user);
