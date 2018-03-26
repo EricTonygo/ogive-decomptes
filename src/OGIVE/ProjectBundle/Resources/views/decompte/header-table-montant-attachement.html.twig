@@ -8,9 +8,9 @@
         </tr>
     </tbody>
 </table>#}
-        {%set holder = project.holders[0] %}
-        {%set projectManager = project.projectManagers[0] %}
-        <table class="ui celled structured small fluid table table_header_decompte" style="font-weight: bold;">
+{%set holder = project.holders[0] %}
+{%set projectManager = project.projectManagers[0] %}
+<table class="ui celled structured small fluid table table_header_decompte" style="font-weight: bold;">
     <tbody>
         <tr>
             <td style="width: 45em; font-weight: bold;">OBJET: </td>
@@ -23,7 +23,7 @@
         </tr>
         <tr>
             <td >LOT N° {{decompte.project.numeroLot}}</td>
-            
+
             <td>Tel/fax: {{holder.phone}}/{{holder.faxNumber}}</td>
         </tr>
         <tr>

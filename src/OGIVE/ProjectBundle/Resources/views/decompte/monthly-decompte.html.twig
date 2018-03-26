@@ -7,7 +7,7 @@
     {% macro show_decompteTask_infos(decompteTask) %}
         {% import _self as forms %}
         {%if decompteTask.unite and  decompteTask.prixUnitaire and decompteTask.qtePrevueMarche  and decompteTask.qtePrevueProjetExec %}
-            <tr style="">
+            <tr>
                 <td>
                     {{decompteTask.numero}}
                 </td>
@@ -390,6 +390,8 @@
                                     <a class="item"> | </a>
                                     <a id="notify_decompte" class="item"> <i class="inverted yellow send icon"></i> Soumettre</a>
                                     <a class="item"> | </a>
+                                    <a id="vailidate_decompte" class="item"> <i class="inverted green check icon"></i> Valider</a>
+                                    <a class="item"> | </a>
                                     <a id="edit_decompte" class="item"> <i class="inverted blue write icon"></i> Modifier</a>
                                     <a class="item"> | </a>
                                     <div class="ui dropdown dropdown_actions item">
@@ -537,6 +539,9 @@
                                         </tbody>
                                     </table>
                                 </div>
+                            </div>
+                            <div class="content description od_decompte_content">
+                                {% include 'OGIVEProjectBundle:decompte:footer-table-decompte-signatures.html.twig' %}
                             </div>
                         </div>
 
