@@ -198,21 +198,23 @@ class UserController extends Controller {
         $mail_service = $this->get('app.user_mail_service');
         if ($form->isSubmitted() && $form->isValid()) {
             $new_user_array = array();
+            $user = new User();
             if ($session->get('new_user')) {
                 $new_user_array = $session->get('new_user');
                 $session->remove('new_user');
-            }
-            $new_user_array['confirmedInformations'] = 1;
-            $session->set('new_user', $new_user_array);
-            $user = $userManager->createUser();
 
-            $hash = sha1(uniqid(mt_rand(), true));
-            $user->setActivationHash($hash);
-            $user->setLastname($new_user_array['lastname']);
-            $user->setUsername($new_user_array['username']);
-            $user->setEmail($new_user_array['email']);
-            $user->setPlainPassword($new_user_array['plainPassword']);
-            $user->addRole("ROLE_ADMIN");
+                $new_user_array['confirmedInformations'] = 1;
+                $session->set('new_user', $new_user_array);
+                $user = $userManager->createUser();
+
+                $hash = sha1(uniqid(mt_rand(), true));
+                $user->setActivationHash($hash);
+                $user->setLastname($new_user_array['lastname']);
+                $user->setUsername($new_user_array['username']);
+                $user->setEmail($new_user_array['email']);
+                $user->setPlainPassword($new_user_array['plainPassword']);
+                $user->addRole("ROLE_ADMIN");
+            }
             if ($userManager->findUserByEmail($user->getEmail())) {
                 $session->getFlashBag()->add('error', "Un utilisateur avec cette adresse email existe dejà!");
                 return $this->redirect($this->generateUrl('create_personal_account_get'));
@@ -221,9 +223,10 @@ class UserController extends Controller {
                 $session->getFlashBag()->add('error', "Un utilisateur avec ce nom d'utilisateur existe dejà!");
                 return $this->redirect($this->generateUrl('create_personal_account_get'));
             }
-            $savedUser = $userManager->updateUser($user);
+            $userManager->updateUser($user);
             $session->remove('new_user');
             $mail_service->sendAccountActivationLink($user);
+            $session->getFlashBag()->add('success', "Votre compte a été créer avec succes. Veuillez activer votre compte en cliquant sur le lien envoyé à l'adresse mail de votre compte.");
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         } else {
             $session->getFlashBag()->add('error', "Le formulaire a été soumis avec des données erronées");
