@@ -63,6 +63,6 @@ services:
         arguments: ["@mailer", "@templating"]
         
     app.user_mail_service:
-        class: OGIVE\UserBundle\Services\MailService
+        class: OGIVE\UserBundle\Services\UserMailService
         public: true
         arguments: ["@mailer", "@templating"]
