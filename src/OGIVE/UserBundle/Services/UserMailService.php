@@ -1,6 +1,6 @@
 <?php
 
-namespace OGIVE\ProjectBundle\Services;
+namespace OGIVE\UserBundle\Services;
 
 /**
  * Description of UserMailService
