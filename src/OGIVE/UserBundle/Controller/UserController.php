@@ -195,7 +195,7 @@ class UserController extends Controller {
         $session = $request->getSession();
         /** @var $userManager UserManagerInterface */
         $userManager = $this->get('fos_user.user_manager');
-        $mail_service = $this->get('app.mail_service');
+        $mail_service = $this->get('app.user_mail_service');
         if ($form->isSubmitted() && $form->isValid()) {
             $new_user_array = array();
             if ($session->get('new_user')) {
