@@ -17,17 +17,61 @@ class CommonService {
         $this->em = $em;
     }
 
-   
+    public function setUserAttributesToContributor(\OGIVE\ProjectBundle\Entity\Contributor $contributor) {
+        if ($contributor->getUser()) {
+            $user_contributor = $contributor->getUser();
+            $contributor->setEmail($user_contributor->getEmail());
+            $contributor->setNom($user_contributor->getLastname());
+            $contributor->setPhone($user_contributor->getPhone());
+            $contributor->setCodePostal($user_contributor->getCodePostal());
+            $contributor->setFaxNumber($user_contributor->getFaxNumber());
+            $contributor->setRc($user_contributor->getRc());
+            $contributor->setNumeroContribuable($user_contributor->getNumeroContribuable());
+            $contributor->setNumeroCompteBancaire($user_contributor->getNumeroCompteBancaire());
+            $contributor->setNomBanque($user_contributor->getNomBanque());
+            $contributor->setIntitule($user_contributor->getIntituleBanque());
+        }
+    }
+
+    public function setUserAttributesToContributorIfNotExists(\OGIVE\ProjectBundle\Entity\Contributor $contributor) {
+        if ($contributor->getUser()) {
+            $user_contributor = $contributor->getUser();
+            $contributor->setEmail($user_contributor->getEmail());
+            $contributor->setNom($user_contributor->getLastname());
+            if (!$contributor->getPhone()) {
+                $contributor->setPhone($user_contributor->getPhone());
+            }
+            if (!$contributor->getCodePostal()) {
+                $contributor->setCodePostal($user_contributor->getCodePostal());
+            }
+            if (!$contributor->getFaxNumber()) {
+                $contributor->setFaxNumber($user_contributor->getFaxNumber());
+            }
+            if (!$contributor->getRc()) {
+                $contributor->setRc($user_contributor->getRc());
+            }
+            if (!$contributor->getNumeroContribuable()) {
+                $contributor->setNumeroContribuable($user_contributor->getNumeroContribuable());
+            }
+            if (!$contributor->getNumeroCompteBancaire()) {
+                $contributor->setNumeroCompteBancaire($user_contributor->getNumeroCompteBancaire());
+            }
+            if (!$contributor->getNomBanque()) {
+                $contributor->setNomBanque($user_contributor->getNomBanque());
+            }
+            if (!$contributor->getIntitule()) {
+                $contributor->setIntitule($user_contributor->getIntituleBanque());
+            }
+        }
+    }
 
     //get string date as dd/mm/yy
     public function getStringDateForSms($date) {
         return date("d", strtotime($date)) . "/" . date("m", strtotime($date)) . "/" . substr(date("Y", strtotime($date)), -2);
     }
 
-    
-    
-    public function getMonthNameByNumber($monthNumber){
-        switch ($monthNumber){
+    public function getMonthNameByNumber($monthNumber) {
+        switch ($monthNumber) {
             case 1 :
                 return "Janvier";
             case 2 :
@@ -56,8 +100,8 @@ class CommonService {
                 return "";
         }
     }
-    
-    public function getMonthList(){
+
+    public function getMonthList() {
         return array(
             array(
                 'number' => 1,

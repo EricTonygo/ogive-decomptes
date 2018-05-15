@@ -8,8 +8,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\CurrencyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use OGIVE\ProjectBundle\Form\ProjectOwnerType;
 
 class ProjectType extends AbstractType {
+
     /**
      * {@inheritdoc}
      */
@@ -18,7 +20,7 @@ class ProjectType extends AbstractType {
                 ->add('numeroMarche', null, array('required' => false))
                 ->add('subject', TextType::class, array('required' => false))
                 ->add('projectCost', null, array('required' => false))
-                ->add('projectCostCurrency', CurrencyType::class , array('placeholder' => 'Selectionner la dévise','required' => false))
+                ->add('projectCostCurrency', CurrencyType::class, array('placeholder' => 'Selectionner la dévise', 'required' => false))
                 ->add('numeroLot', null, array('required' => false))
                 ->add('lieuExecution', null, array('required' => false))
                 ->add('region', null, array('required' => false))
@@ -29,6 +31,10 @@ class ProjectType extends AbstractType {
                 ->add('notificationDate', TextType::class, array('required' => false))
                 ->add('avanceDemarrage', null, array('required' => false))
                 ->add('mtAvenant', null, array('required' => false))
+                ->add('owner', ProjectOwnerType::class)
+                ->add('delais', null, array('required' => false))
+                ->add('startDate', TextType::class, array('required' => false))
+                ->add('endDate', TextType::class, array('required' => false))
 //                ->add('tasks', CollectionType::class, array(
 //                    'entry_type' => TaskType::class,
 //                    'allow_add' => true,
@@ -41,30 +47,30 @@ class ProjectType extends AbstractType {
 //                    'by_reference' => false,
 //                    'allow_delete' => true
 //                ))
-//                ->add('projectManagers', CollectionType::class, array(
-//                    'entry_type' => ProjectManagerType::class,
-//                    'allow_add' => true,
-//                    'by_reference' => false,
-//                    'allow_delete' => true
-//                ))
-//                ->add('holders', CollectionType::class, array(
-//                    'entry_type' => HolderType::class,
-//                    'allow_add' => true,
-//                    'by_reference' => false,
-//                    'allow_delete' => true
-//                ))
-//                ->add('serviceProviders', CollectionType::class, array(
-//                    'entry_type' => ServiceProviderType::class,
-//                    'allow_add' => true,
-//                    'by_reference' => false,
-//                    'allow_delete' => true
-//                ))
-//                ->add('otherContributors', CollectionType::class, array(
-//                    'entry_type' => OtherContributorType::class,
-//                    'allow_add' => true,
-//                    'by_reference' => false,
-//                    'allow_delete' => true
-//                ))
+                ->add('projectManagers', CollectionType::class, array(
+                    'entry_type' => ProjectManagerType::class,
+                    'allow_add' => true,
+                    'by_reference' => false,
+                    'allow_delete' => true
+                ))
+                ->add('holders', CollectionType::class, array(
+                    'entry_type' => HolderType::class,
+                    'allow_add' => true,
+                    'by_reference' => false,
+                    'allow_delete' => true
+                ))
+                ->add('serviceProviders', CollectionType::class, array(
+                    'entry_type' => ServiceProviderType::class,
+                    'allow_add' => true,
+                    'by_reference' => false,
+                    'allow_delete' => true
+                ))
+                ->add('otherContributors', CollectionType::class, array(
+                    'entry_type' => OtherContributorType::class,
+                    'allow_add' => true,
+                    'by_reference' => false,
+                    'allow_delete' => true
+                ))
         ;
     }
 

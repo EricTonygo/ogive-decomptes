@@ -47,6 +47,10 @@ ogive_project_other_contributor:
     resource: "@OGIVEProjectBundle/Controller/OtherContributorController.php"
     type:     rest
     
+ogive_project_planning:    
+    resource: "@OGIVEProjectBundle/Controller/PlanningController.php"
+    type:     rest
+    
 ogive_project_user:    
     resource: "@OGIVEUserBundle/Controller/UserController.php"
     type:     rest

@@ -6,17 +6,44 @@
     <div class="ui basic fixed segment content">
         <div class='ui container'>
             {% include('OGIVEProjectBundle:project:top-content-project-page.html.twig') %}
-            <div class="ui two column stackable grid padded">
-                <div class="eleven wide column">
-                    <div class="ui top attached stackable tabular menu od_project_menu">
-                        {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
-                    </div>
-                    <div class="ui bottom attached segment od_project_menu_content">
+
+            <div class="ui top attached stackable tabular menu od_project_menu">
+                {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
+            </div>
+            <div class="ui bottom attached segment od_project_menu_content">
+                <div class="ui two column stackable grid padded">
+                    <div class="eleven wide column">
+                        <h4 class="ui dividing header">Maître d'ouvrage</h4>
+                        <table class="ui celled yellow small table">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Téléphone</th>
+                                    <th>Email</th>                                   
+                                </tr></thead>
+                                {%if owner %}
+                                <tbody>
+                                    <tr id="owner{{owner.id}}">
+                                        <td>
+                                            {{owner.nom}}
+                                        </td>
+                                        <td>
+                                            {{owner.phone}}                                               
+                                        </td>
+                                        <td>{{owner.email}}</td>
+                                    </tr>
+                                </tbody>
+                            {%else %}
+                                <tfoot><tr><th colspan="5">
+                                            <div class='center aligned'>No owner created at this moment</div>
+                                        </th></tr></tfoot>
+                                    {%endif %}
+                        </table>
 
                         <h4 class="ui dividing header">Mission de contrôle</h4>
                         <div class="ui fluid card od_card_top_table_action">
                             <div class="content">
-                                <a class="ui right floated yellow mini button" href="{{path('project_manager_add_get', {'id': project.id})}}"><i class="plus icon"></i> Ajouter un maître d'oeuvre</a>
+                                <a class="ui right floated yellow mini button" href="{{path('project_manager_add_get', {'id': project.id})}}"><i class="plus icon"></i> Ajouter une mission de contrôle</a>
                             </div>
                         </div>
                         <table class="ui celled yellow small table">
@@ -120,10 +147,10 @@
                                     {%endif %}
                         </table>
 
-                        <h4 class="ui dividing header">Prestataires</h4>
+                        <h4 class="ui dividing header">Sous traitance</h4>
                         <div class="ui fluid card od_card_top_table_action">
                             <div class="content">
-                                <a class="ui right floated yellow mini button" href="{{path('service_provider_add_get', {'id': project.id})}}"><i class="plus icon"></i> Ajouter un prestataire</a>
+                                <a class="ui right floated yellow mini button" href="{{path('service_provider_add_get', {'id': project.id})}}"><i class="plus icon"></i> Ajouter un sous traitant</a>
                             </div>
                         </div>
                         <table class="ui celled yellow small table">
@@ -168,13 +195,17 @@
 
                                 </tbody>
                             {%else %}
-                                <tfoot><tr><th colspan="5">
-                                            <div class='center aligned'>No service provider created at this moment</div>
-                                        </th></tr></tfoot>
-                                    {%endif %}
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="5">
+                                            <div class='center aligned'>Aucun sous traitant créer en ce moment</div>
+                                        </th>
+                                    </tr>
+                                </tfoot>
+                            {%endif %}
                         </table>
 
-                        <h4 class="ui dividing header">D'autres intervenants</h4>
+                        <h4 class="ui dividing header">Autres intervenants</h4>
                         <div class="ui fluid card od_card_top_table_action">
                             <div class="content">
                                 <a class="ui right floated yellow mini button" href="{{path('other_contributor_add_get', {'id': project.id})}}"><i class="plus icon"></i> Ajouter un intervenant</a>
@@ -184,7 +215,7 @@
                             <thead>
                                 <tr>
                                     <th>Nom</th>
-                                    <th>Type d'intervenant</th>
+                                    <th>Nom du poste</th>
                                     <th>Téléphone</th>
                                     <th>Email</th>                                   
                                     <th>Actions</th>
@@ -232,93 +263,92 @@
                                     {%endif %}
                         </table>
                     </div>
-                </div>
-                <div class="five wide column">
-                    {% include('OGIVEProjectBundle::right-aside-page.html.twig') %}
+                    <div class="five wide column">
+                        {% include('OGIVEProjectBundle::right-aside-page.html.twig') %}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    
 {% endblock %}
 {% block confirmation_modal %}
-        <div id="confirm_delete_project_manager" class="ui small modal">
-            <i class="close icon"></i>
-            <div class="header">
-                Confirmation de la suppression
+    <div id="confirm_delete_project_manager" class="ui small modal">
+        <i class="close icon"></i>
+        <div class="header">
+            Confirmation de la suppression
+        </div>
+        <div class="content">
+            <p>Vous êtes sur le point de supprimer ce maître d'oeuvre.</p>
+            <p>Voulez-vous vraiment réaliser cette action ?</p>
+        </div>
+        <div class="actions">
+            <div class="ui red deny button">
+                Non
             </div>
-            <div class="content">
-                <p>Vous êtes sur le point de supprimer ce maître d'oeuvre.</p>
-                <p>Voulez-vous vraiment réaliser cette action ?</p>
-            </div>
-            <div class="actions">
-                <div class="ui red deny button">
-                    Non
-                </div>
-                <div id="execute_delete_project_manager"  class="ui green right labeled icon button">
-                    Oui
-                    <i class="checkmark icon"></i>
-                </div>
+            <div id="execute_delete_project_manager"  class="ui green right labeled icon button">
+                Oui
+                <i class="checkmark icon"></i>
             </div>
         </div>
-        <div id="confirm_delete_holder" class="ui small modal">
-            <i class="close icon"></i>
-            <div class="header">
-                Confirmation de la suppression
+    </div>
+    <div id="confirm_delete_holder" class="ui small modal">
+        <i class="close icon"></i>
+        <div class="header">
+            Confirmation de la suppression
+        </div>
+        <div class="content">
+            <p>Vous êtes sur le point de supprimer ce titulaire.</p>
+            <p>Voulez-vous vraiment réaliser cette action ?</p>
+        </div>
+        <div class="actions">
+            <div class="ui red deny button">
+                Non
             </div>
-            <div class="content">
-                <p>Vous êtes sur le point de supprimer ce titulaire.</p>
-                <p>Voulez-vous vraiment réaliser cette action ?</p>
-            </div>
-            <div class="actions">
-                <div class="ui red deny button">
-                    Non
-                </div>
-                <div id="execute_delete_holder"  class="ui green right labeled icon button">
-                    Oui
-                    <i class="checkmark icon"></i>
-                </div>
+            <div id="execute_delete_holder"  class="ui green right labeled icon button">
+                Oui
+                <i class="checkmark icon"></i>
             </div>
         </div>
-        <div id="confirm_delete_service_provider" class="ui small modal">
-            <i class="close icon"></i>
-            <div class="header">
-                Confirmation de la suppression
+    </div>
+    <div id="confirm_delete_service_provider" class="ui small modal">
+        <i class="close icon"></i>
+        <div class="header">
+            Confirmation de la suppression
+        </div>
+        <div class="content">
+            <p>Vous êtes sur le point de supprimer ce prestataire.</p>
+            <p>Voulez-vous vraiment réaliser cette action ?</p>
+        </div>
+        <div class="actions">
+            <div class="ui red deny button">
+                Non
             </div>
-            <div class="content">
-                <p>Vous êtes sur le point de supprimer ce prestataire.</p>
-                <p>Voulez-vous vraiment réaliser cette action ?</p>
-            </div>
-            <div class="actions">
-                <div class="ui red deny button">
-                    Non
-                </div>
-                <div id="execute_delete_service_provider"  class="ui green right labeled icon button">
-                    Oui
-                    <i class="checkmark icon"></i>
-                </div>
+            <div id="execute_delete_service_provider"  class="ui green right labeled icon button">
+                Oui
+                <i class="checkmark icon"></i>
             </div>
         </div>
-        <div id="confirm_delete_other_contributor" class="ui small modal">
-            <i class="close icon"></i>
-            <div class="header">
-                Confirmation de la suppression
+    </div>
+    <div id="confirm_delete_other_contributor" class="ui small modal">
+        <i class="close icon"></i>
+        <div class="header">
+            Confirmation de la suppression
+        </div>
+        <div class="content">
+            <p>Vous êtes sur le point de supprimer cet intervenant.</p>
+            <p>Voulez-vous vraiment réaliser cette action ?</p>
+        </div>
+        <div class="actions">
+            <div class="ui red deny button">
+                Non
             </div>
-            <div class="content">
-                <p>Vous êtes sur le point de supprimer cet intervenant.</p>
-                <p>Voulez-vous vraiment réaliser cette action ?</p>
-            </div>
-            <div class="actions">
-                <div class="ui red deny button">
-                    Non
-                </div>
-                <div id="execute_delete_other_contributor"  class="ui green right labeled icon button">
-                    Oui
-                    <i class="checkmark icon"></i>
-                </div>
+            <div id="execute_delete_other_contributor"  class="ui green right labeled icon button">
+                Oui
+                <i class="checkmark icon"></i>
             </div>
         </div>
-    {% endblock %}
+    </div>
+{% endblock %}
 
 {% block javascripts %}
     {{ parent()}}

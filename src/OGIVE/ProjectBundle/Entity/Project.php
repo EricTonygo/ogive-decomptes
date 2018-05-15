@@ -12,6 +12,13 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  */
 class Project extends GeneralClass {
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="delais", type="integer", nullable=true)
+     */
+    private $delais;
 
     /**
      * @var string
@@ -28,9 +35,9 @@ class Project extends GeneralClass {
     private $subject;
     
     /**
-     * @var float
+     * @var double
      *
-     * @ORM\Column(name="project_cost", type="float", precision=20, scale=0, nullable=true)
+     * @ORM\Column(name="project_cost", type="decimal", precision=20, scale=0, nullable=true)
      */
     private $projectCost;
     
@@ -128,13 +135,6 @@ class Project extends GeneralClass {
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="\OGIVE\ProjectBundle\Entity\Owner", mappedBy="project", cascade={"remove", "persist"})
-     */
-    private $owners;
-    
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
      * @ORM\OneToMany(targetEntity="\OGIVE\ProjectBundle\Entity\ProjectManager", mappedBy="project", cascade={"remove", "persist"})
      */
     private $projectManagers;
@@ -173,6 +173,27 @@ class Project extends GeneralClass {
      * @ORM\JoinColumn(name="decompte_total", referencedColumnName="id")
      */
     private $decompteTotal;
+    
+    /**
+     * @var \OGIVE\ProjectBundle\Entity\Owner
+     * @ORM\OneToOne(targetEntity="\OGIVE\ProjectBundle\Entity\Owner",cascade={"persist"})
+     * @ORM\JoinColumn(name="owner", referencedColumnName="id")
+     */
+    private $owner;
+    
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="start_date", type="datetime", nullable=true)
+     */
+    private $startDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="end_date", type="datetime", nullable=true)
+     */
+    private $endDate;
 
     /**
      * Constructor
@@ -186,6 +207,28 @@ class Project extends GeneralClass {
         $this->tasks = new \Doctrine\Common\Collections\ArrayCollection();
         $this->otherContributors = new \Doctrine\Common\Collections\ArrayCollection();
         $this->decomptes = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Set delais
+     *
+     * @param integer $delais
+     *
+     * @return Project
+     */
+    public function setDelais($delais) {
+        $this->delais = $delais;
+
+        return $this;
+    }
+
+    /**
+     * Get delais
+     *
+     * @return integer
+     */
+    public function getDelais() {
+        return $this->delais;
     }
     
     /**
@@ -500,6 +543,52 @@ class Project extends GeneralClass {
     }
     
     /**
+     * Set startDate
+     *
+     * @param \DateTime $startDate
+     *
+     * @return Project
+     */
+    public function setStartDate($startDate) {
+        $this->startDate = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $startDate))));
+
+        return $this;
+    }
+
+    /**
+     * Get startDate
+     *
+     * @return \DateTime
+     */
+    public function getStartDate() {
+        return $this->startDate ? $this->startDate->format('d-m-Y'): $this->startDate;
+        
+    }
+    
+    /**
+     * Set endDate
+     *
+     * @param \DateTime $endDate
+     *
+     * @return Project
+     */
+    public function setEndDate($endDate) {
+        $this->endDate = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $endDate))));
+
+        return $this;
+    }
+
+    /**
+     * Get endDate
+     *
+     * @return \DateTime
+     */
+    public function getEndDate() {
+        return $this->endDate ? $this->endDate->format('d-m-Y'): $this->endDate;
+        
+    }
+    
+    /**
      * Add task
      *
      * @param \OGIVE\ProjectBundle\Entity\Task $task 
@@ -539,49 +628,6 @@ class Project extends GeneralClass {
      */
     public function removeTask(\OGIVE\ProjectBundle\Entity\Task $task) {
         $this->tasks->removeElement($task);
-        return $this;
-    }
-    
-    /**
-     * Add owner
-     *
-     * @param \OGIVE\ProjectBundle\Entity\Owner $owner 
-     * @return Project
-     */
-    public function addOwner(\OGIVE\ProjectBundle\Entity\Owner $owner) {
-        $this->owners[] = $owner;
-        return $this;
-    }
-
-    /**
-     * Get owners
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getOwners() {
-        return $this->owners;
-    }
-
-    /**
-     * Set owners
-     *
-     * @param \Doctrine\Common\Collections\Collection $owners
-     * @return Project
-     */
-    public function setOwners(\Doctrine\Common\Collections\Collection $owners = null) {
-        $this->owners = $owners;
-
-        return $this;
-    }
-
-    /**
-     * Remove owner
-     *
-     * @param \OGIVE\ProjectBundle\Entity\Owner $owner
-     * @return Project
-     */
-    public function removeOwner(\OGIVE\ProjectBundle\Entity\Owner $owner) {
-        $this->owners->removeElement($owner);
         return $this;
     }
     
@@ -823,7 +869,7 @@ class Project extends GeneralClass {
     }
     
     /**
-     * Set decompte
+     * Set decompteTotal
      *
      * @param \OGIVE\ProjectBundle\Entity\DecompteTotal $decompteTotal
      *
@@ -842,6 +888,28 @@ class Project extends GeneralClass {
      */
     public function getDecompteTotal() {
         return $this->decompteTotal;
+    }
+    
+    /**
+     * Set owner
+     *
+     * @param \OGIVE\ProjectBundle\Entity\Owner $owner
+     *
+     * @return Project
+     */
+    public function setOwner(\OGIVE\ProjectBundle\Entity\Owner $owner=null) {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * Get owner
+     *
+     * @return \OGIVE\ProjectBundle\Entity\Owner
+     */
+    public function getOwner() {
+        return $this->owner;
     }
 
     public function setSearchData() {

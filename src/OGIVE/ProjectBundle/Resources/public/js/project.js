@@ -8,6 +8,15 @@ $(document).ready(function () {
     $('#od_add_project_form.ui.form')
             .form({
                 fields: {
+                    owner: {
+                        identifier: 'owner',
+                        rules: [
+                            {
+                                type: 'empty',
+                                prompt: "Veuillez préciser le maitre d'ouvrage"
+                            }
+                        ]
+                    },
                     numero_marche: {
                         identifier: 'numeroMarche',
                         rules: [
@@ -90,6 +99,15 @@ $(document).ready(function () {
     $('#od_update_project_form.ui.form')
             .form({
                 fields: {
+                    owner: {
+                        identifier: 'owner',
+                        rules: [
+                            {
+                                type: 'empty',
+                                prompt: "Veuillez préciser le maitre d'ouvrage"
+                            }
+                        ]
+                    },
                     numero_marche: {
                         identifier: 'numeroMarche',
                         rules: [
@@ -164,6 +182,80 @@ $(document).ready(function () {
             }
             );
 });
+
+$('#od_update_start_advance_form.ui.form').form({
+    fields: {
+        avanceDemarrage: {
+            identifier: 'avanceDemarrage',
+            rule: [
+                {
+                    type: 'empty',
+                    prompt: 'Veuillez saisir une avance démarrage'
+                }
+            ]
+        }
+    },
+    inline: true,
+    on: 'submit'
+});
+
+function start_advance(id) {
+    $('#start_advance_modal.ui.small.modal')
+            .modal('show');
+    $('#execute_start_advance').click(function (e) {
+        e.preventDefault();
+        $('#message_error').hide();
+        $('#message_success').hide();
+        $.ajax({
+            type: 'PUT',
+            url: $('#od_update_start_advance_form.ui.form').attr('action'),
+            data: $('#od_update_start_advance_form.ui.form').serialize(),
+            dataType: 'json',
+            processData: false,
+            //contentType: false,
+            cache: false,
+            beforeSend: function () {
+                $('#execute_start_advance').addClass('disabled');
+                $('#execute_start_advance_cancel').addClass('disabled');
+                $('#od_update_start_advance_form.ui.form').addClass('loading');
+            },
+            statusCode: {
+                500: function (xhr) {
+                    $('#form_message_error span').html("Une erreur est survenue lors de la modification");
+                    $('#form_message_error').show();
+                },
+                400: function (response, textStatus, jqXHR) {
+                    var myerrors = response.responseJSON;
+                    if (myerrors.success === false) {
+                        $('#execute_start_advance').removeClass('disabled');
+                        $('#execute_start_advance_cancel').removeClass('disabled');
+                        $('#od_update_start_advance_form.ui.form').removeClass('loading');
+                        $('#form_message_error span').html(myerrors.message);
+                        $('#form_message_error').show();
+
+                    } else {
+                        $('#form_message_error span').html("Une erreur est survenue lors de la modification");
+                        $('#form_message_error').show();
+                    }
+
+                }
+            },
+            success: function (response, textStatus, jqXHR) {
+                $('#od_update_start_advance_form.ui.form').removeClass('loading');
+                $('#form_message_success span').html(response.message);
+                $('#form_message_success').show();
+                //var id_project = parseInt(response.id_project);
+                window.location.replace(Routing.generate('project_gen_infos_get', {id: id}));
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('#execute_start_advance').removeClass('disabled');
+                $('#execute_start_advance_cancel').removeClass('disabled');
+                $('#od_update_start_advance_form.ui.form').removeClass('loading');
+            }
+        });
+    });
+}
+
 
 function delete_project(id) {
     $('#confirm_delete_project.ui.small.modal')

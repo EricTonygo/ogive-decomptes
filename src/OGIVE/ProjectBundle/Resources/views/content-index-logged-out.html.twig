@@ -6,8 +6,8 @@
                     <div class="content">
                         <div class="header">Construit pour gérer des projets</div>
                         <div class="description">
-                            <p>OGIVE-DC est une plateforme en ligne qui vous permet de gérer les décomptes de vos projets(marchés publics) de façon automatique et de les soumettre par voix électronique aux responsables du projet.</p>
-                            <p>Finie la saisie manuelle des feuilles excels avec un risque élevé de commettre des erreurs! Enregistrer votre projet, ses tâches et ses intervenants, ensuite créez vos décomptes en un clic.</p>
+                            <p>Follow Up Contracts Software est une plateforme numerique de gestion des décomptes des marchés. Elle vous permet de dématérialiser le processus de soumission et de traitement des décomptes.</p>
+                            <p>Finie le traitement manuelle à l'aide des feuilles excels avec un risque élevé d'erreurs! Enregistrer votre marché, ses différentes tâches et ses intervenants, ensuite créez vos décomptes en un clic.</p>
                         </div>
                     </div>
                 </div>
@@ -17,24 +17,24 @@
                     <div class="content">
                         {{ form_start(form, {'method': 'POST', 'action': path('create_personal_account_post'), 'attr': {'class': 'ui form', 'id': 'register_form'} }) }}
                         <div class="field">
-                            <label>Username</label>
-                            {{ form_widget(form.username,{'attr':{'placeholder':'Pick a username', 'data-validate': 'username'}})}}
+                            <label>Nom d'utilisateur</label>
+                            {{ form_widget(form.username,{'attr':{'placeholder':"Votre nom d'utilisateur", 'data-validate': 'username'}})}}
                         </div>
                         <div class="field">
-                            <label>Email address</label>
+                            <label>Adresse e-mail</label>
                             {{ form_widget(form.email,{'attr':{'placeholder':'you@example.com', 'data-validate': 'email'}})}}
                         </div>
                         <div class="field">
-                            <label>Password</label>
-                            {{ form_widget(form.plainPassword.first,{'attr':{'placeholder':'Create a password', 'data-validate': 'password'}})}}
+                            <label>Mot de passe</label>
+                            {{ form_widget(form.plainPassword.first,{'attr':{'placeholder':'Saisissez votre mot de passe', 'data-validate': 'password'}})}}
                         </div>
                         <div class="field">
-                            <label>Confirm password</label>
-                            {{ form_widget(form.plainPassword.second,{'attr':{'placeholder':'Confirm a password', 'data-validate': 'passwordConfirm'}})}}
+                            <label>Confirmer mot de passe</label>
+                            {{ form_widget(form.plainPassword.second,{'attr':{'placeholder':'Confirmez votre mot de passe', 'data-validate': 'passwordConfirm'}})}}
                         </div>
                         <div class="field">
-                            <label>Owner's name</label>
-                            {{ form_widget(form.lastname,{'attr':{'placeholder': "Enter your owner's name", 'data-validate': 'lastname'}})}}
+                            <label>Nom de votre entreprise</label>
+                            {{ form_widget(form.lastname,{'attr':{'placeholder': "Saisissez le nom de votre entreprise", 'data-validate': 'lastname'}})}}
                         </div>
                         {#<div class="field">
                             <div class="ui checkbox">
@@ -46,8 +46,10 @@
                             {{form_rest(form)}}
                         </div>
                         <div class="field center aligned">
-                            <button id="submit_register_form" class="ui fluid yellow button" type="submit">Sign up for OGIVE-DC</button>
-                            <span class="" style="font-size: 12px;">By clicking "Sign up for OGIVE-DC", you agree to our <a href="#">terms of service</a>. We’ll occasionally send you account related emails.</span>
+                            <button id="submit_register_form" class="ui fluid yellow button" type="submit">S'inscrire</button>
+                            <span class="" style="font-size: 12px;">En cliquant sur "S'incrire",
+                                vous acceptez nos <a href="#">conditions d'utilisation</a>. Nous vous enverrons occasionnellement des e-mails liés au compte.
+                            </span>
                         </div>
                         {{ form_end(form) }}
                     </div>

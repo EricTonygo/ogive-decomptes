@@ -14,6 +14,8 @@
                             <div class="item" style="padding-left: 0; padding-right: 0;"><i class="small right chevron icon divider"></i></div>
                             <a class="item" href="{{path('ogive_project_homepage')}}">Mes projets</a>
                             <div class="item" style="padding-left: 0; padding-right: 0;"><i class="small right chevron icon divider"></i></div>
+                            <a class="item" href="{{path('project_gen_infos_get', {'id': project.id})}}">{{project.numeroMarche}}</a>
+                            <div class="item" style="padding-left: 0; padding-right: 0;"><i class="small right chevron icon divider"></i></div>
                             <div class="item">Mise à jour</div>
                         </div>
                     </div>
@@ -26,8 +28,11 @@
                             </div>
                             <div class="content description">
                                 {{ form_start(form, {'method': 'PUT', 'action': path('project_update', {'id': project.id}), 'attr': {'class': 'ui mini form', 'id': 'od_update_project_form', "autocomplete":"off"} }) }}
-                                <h4 class="ui dividing header">Project Information</h4>
-
+                                <h4 class="ui dividing header">Maître d'ouvrage</h4>
+                                <div id="field_aao_add" class="field">
+                                    {{ form_widget(form.owner.user,{'attr':{'data-validate': 'owner', 'class': 'ui search dropdown'}})}}
+                                </div>
+                                <h4 class="ui dividing header">Informations du projet</h4>
                                 <div class="fields">
                                     <div class="five wide field">
                                         {{ form_label(form.numeroMarche,"N° du marché") }}
@@ -42,27 +47,61 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="fields">
-                                    <div class="eleven wide field">
-                                        <label>Coût du projet</label>
-                                        <div class="ui fields">
-                                            <div class="five wide field">
-                                                {{ form_widget(form.projectCostCurrency,{'attr':{'data-validate': 'projectCostCurrency', 'class': 'ui search dropdown'}})}}
-                                            </div>
-                                            <div class="eleven wide field">
-                                                {{ form_widget(form.projectCost,{'attr':{'placeholder':"Amount", 'data-validate': 'project-cost-amount'}})}}
-                                            </div>
+                                <div class="field">
+                                    <label>Coût du marché</label>
+                                    <div class="ui fields">
+                                        <div class="five wide field">
+                                            {{ form_widget(form.projectCostCurrency,{'attr':{'data-validate': 'projectCostCurrency', 'class': 'ui search dropdown'}})}}
                                         </div>
-                                    </div>    
-                                    <div class="five wide field">
+                                        <div class="eleven wide field">
+                                            {{ form_widget(form.projectCost,{'attr':{'placeholder':"Amount", 'data-validate': 'project-cost-amount'}})}}
+                                        </div>
+                                    </div>
+                                    {#<div class="five wide field">
                                         <label>Avance démarrage(%)</label>
                                         <div class="field">
                                             {{ form_widget(form.avanceDemarrage,{'attr':{'placeholder':"Avance démarrage", 'data-validate': 'avance-demarrage'}})}}
                                         </div>
+                                    </div>#}
+                                    {#<div class="four wide field">
+                                        <label>Montant avenant</label>
+                                        <div class="field">
+                                            {{ form_widget(form.mtAvenant,{'attr':{'placeholder':"Montant de l'avenant", 'data-validate': 'region'}})}}
+                                        </div>
+                                    </div>#}
+                                </div>
+                                <div class="three fields">                                        
+                                    <div class="ui field">
+                                        <label>Delais (Jours)</label>
+                                        <div class="field">
+                                            {{ form_widget(form.delais,{'attr':{'placeholder':"Délais d'exécution", 'data-validate': 'delais'}})}}
+                                        </div>
+                                    </div>
+                                    <div class="ui field">
+                                        <label>Date de debut</label>
+                                        <div class="field">
+                                            <div class="ui calendar" >
+                                                <div class="ui input left icon">
+                                                    <i class="calendar icon"></i>
+                                                    {{ form_widget(form.startDate,{'attr':{'placeholder':"Date de debut", 'data-validate': 'start_date'}})}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui field">
+                                        <label>Date de fin</label>
+                                        <div class="field">
+                                            <div class="ui calendar">
+                                                <div class="ui input left icon">
+                                                    <i class="calendar icon"></i>
+                                                    {{ form_widget(form.endDate,{'attr':{'placeholder':"Date de fin", 'data-validate': 'end_date'}})}}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="fields">                                        
+                                <div class="two fields">                                        
                                     <div class="three wide field">
                                         <label>Lot (cas d'un marché alloti)<em>*</em></label>
                                         <div class="field"> 
@@ -84,7 +123,7 @@
                                         {{ form_widget(form.departement,{'attr':{'placeholder':"departement", 'data-validate': 'departement'}})}}
                                     </div>
                                 </div>
-                                
+
                                 <div class="three fields">                                        
                                     <div class="ui field">
                                         <label>Date de souscription</label>
@@ -120,14 +159,15 @@
                                         </div>
                                     </div>
                                 </div>
-                                {#<h4 class="ui dividing header">MISSION DE CONTRÔLE</h4>
+
+                                <h4 class="ui dividing header">MISSION DE CONTRÔLE</h4>
 
                                 <div class="ui field">
                                     <table class="ui very basic table">
                                         <thead>
-                                            <tr><th>Nom</th>
-                                                <th>Téléphone</th>
-                                                <th>Email</th>
+                                            <tr><th>Nom d'utilisateur</th>
+                                                    {#<th>Téléphone</th>
+                                                    <th>Email</th>#}
                                                 <th class="right aligned">Action</th>
                                             </tr>
                                         </thead>
@@ -140,9 +180,9 @@
                                             {% endfor %}
                                         </tbody>
                                         {% macro projectManager_prototype(childForm) %}
-                                            <td>{{ form_widget(childForm.nom,{'attr':{'data-validate': 'project_manager_name', 'placeholder': 'Nom'}}) }}</td>
-                                            <td>{{ form_widget(childForm.phone,{'attr':{'data-validate': 'project_manager_phone', 'placeholder': 'Téléphone'}}) }}</td>
-                                            <td>{{ form_widget(childForm.email,{'attr':{'data-validate': 'project_manager_email', 'placeholder': 'Email'}}) }}</td> 
+                                            <td><div class="wide field">{{ form_widget(childForm.user,{'attr':{'data-validate': 'projectManager_username', 'class': 'ui search dropdown'}})}}</div></td>
+                                            {#<td>{{ form_widget(childForm.phone,{'attr':{'data-validate': 'projectManager_phone', 'placeholder': 'Téléphone'}}) }}</td>
+                                            <td>{{ form_widget(childForm.email,{'attr':{'data-validate': 'projectManager_email', 'placeholder': 'Email'}}) }}</td>#} 
                                         {% endmacro %}
 
                                     </table>
@@ -154,9 +194,10 @@
                                 <div class="ui field">
                                     <table class="ui very basic table">
                                         <thead>
-                                            <tr><th>Nom</th>
-                                                <th>Téléphone</th>
-                                                <th>Email</th>
+                                            <tr><th>Nom d'utilisateur</th>
+                                                <th>Banque</th>
+                                                <th>Intitulé</th>
+                                                <th>N° de compte</th>
                                                 <th class="right aligned">Action</th>
                                             </tr>
                                         </thead>
@@ -168,21 +209,23 @@
                                             {% endfor %}
                                         </tbody>
                                         {% macro holder_prototype(childForm) %}
-                                            <td>{{ form_widget(childForm.nom,{'attr':{'data-validate': 'holder_name', 'placeholder': "Nom"}}) }}</td>
-                                            <td>{{ form_widget(childForm.phone,{'attr':{'data-validate': 'holder_phone', 'placeholder': 'Téléphone'}}) }}</td>
-                                            <td>{{ form_widget(childForm.email,{'attr':{'data-validate': 'holder_email', 'placeholder': 'Email'}}) }}</td> 
+                                            <td><div class="wide field">{{ form_widget(childForm.user,{'attr':{'data-validate': 'holder_username', 'class': 'ui search dropdown'}})}}</div></td>
+                                            <td>{{ form_widget(childForm.nomBanque,{'attr':{'data-validate': 'holder_bank_name', 'placeholder': 'Nom de la banque'}}) }}</td>
+                                            <td>{{ form_widget(childForm.intitule,{'attr':{'data-validate': 'holder_bank_entitle', 'placeholder': 'Intitutlé du compte'}}) }}</td>
+                                            <td>{{ form_widget(childForm.numeroCompteBancaire,{'attr':{'data-validate': 'holder_numero_compte', 'placeholder': 'Numéro du compte'}}) }}</td>
                                         {% endmacro %}
                                     </table>
                                 </div>
 
-                                <h4 class="ui dividing header">Prestatires</h4>
+                                <h4 class="ui dividing header">Sous traitants</h4>
 
                                 <div class="ui field">
                                     <table class="ui very basic table">
                                         <thead>
-                                            <tr><th>Nom</th>
-                                                <th>Téléphone</th>
-                                                <th>Email</th>
+                                            <tr><th>Nom d'utilisateur</th>
+                                                {#<th>Banque</th>
+                                                <th>Intitulé</th>
+                                                <th>N° de compte</th>#}
                                                 <th class="right aligned">Action</th>
                                             </tr>
                                         </thead>
@@ -194,9 +237,10 @@
                                             {% endfor %}
                                         </tbody>
                                         {% macro service_provider_prototype(childForm) %}
-                                            <td>{{ form_widget(childForm.nom,{'attr':{'data-validate': 'service_provider_name', 'placeholder': "Nom"}}) }}</td>
-                                            <td>{{ form_widget(childForm.phone,{'attr':{'data-validate': 'service_provider_phone', 'placeholder': 'Téléphone'}}) }}</td>
-                                            <td>{{ form_widget(childForm.email,{'attr':{'data-validate': 'service_provider_email', 'placeholder': 'Email'}}) }}</td> 
+                                            <td><div class="wide field">{{ form_widget(childForm.user,{'attr':{'data-validate': 'service_provider_username', 'class': 'ui search dropdown'}})}}</div></td>
+                                            {#<td>{{ form_widget(childForm.nomBanque,{'attr':{'data-validate': 'service_provider_bank_name', 'placeholder': 'Nom de la banque'}}) }}</td>
+                                            <td>{{ form_widget(childForm.intitule,{'attr':{'data-validate': 'service_provider_bank_entitle', 'placeholder': 'Intitutlé du compte'}}) }}</td>
+                                            <td>{{ form_widget(childForm.numeroCompteBancaire,{'attr':{'data-validate': 'service_provider_numero_compte', 'placeholder': 'Numéro du compte'}}) }}</td> #}
                                         {% endmacro %}
                                     </table>
                                 </div>
@@ -206,10 +250,9 @@
                                 <div class="ui field">
                                     <table class="ui very basic table">
                                         <thead>
-                                            <tr><th>Nom</th>
-                                                <th>Type d'intervenant</th>
-                                                <th>Téléphone</th>
-                                                <th>Email</th>
+                                            <tr><th>Nom d'utilisateur</th>
+                                                {#<th>Téléphone</th>
+                                                <th>Email</th>#}
                                                 <th class="right aligned">Action</th>
                                             </tr>
                                         </thead>
@@ -221,13 +264,13 @@
                                             {% endfor %}
                                         </tbody>
                                         {% macro other_contributor_prototype(childForm) %}
-                                            <td>{{ form_widget(childForm.nom,{'attr':{'data-validate': 'other_contributor_name', 'placeholder': "Nom"}}) }}</td>
-                                            <td>{{ form_widget(childForm.contributorType,{'attr':{'data-validate': 'other_contributorr_contributor_type', 'placeholder': "Type d'intervenant"}}) }}</td>
-                                            <td>{{ form_widget(childForm.phone,{'attr':{'data-validate': 'other_contributor_phone', 'placeholder': 'Téléphone'}}) }}</td>
-                                            <td>{{ form_widget(childForm.email,{'attr':{'data-validate': 'other_contributor_email', 'placeholder': 'Email'}}) }}</td> 
+                                            <td><div class="wide field">{{ form_widget(childForm.user,{'attr':{'data-validate': 'other_contributor_username', 'class': 'ui search dropdown'}})}}</div></td>
+                                            <td><div class="wide field">{{ form_widget(childForm.contributorType,{'attr':{'data-validate': 'other_contributor_type'}})}}</div></td>
+                                            {#<td>{{ form_widget(childForm.phone,{'attr':{'data-validate': 'holder_phone', 'placeholder': 'Téléphone'}}) }}</td>
+                                            <td>{{ form_widget(childForm.email,{'attr':{'data-validate': 'holder_email', 'placeholder': 'Email'}}) }}</td> #}
                                         {% endmacro %}
                                     </table>
-                                </div>#}
+                                </div>
 
                                 {#<h4 class="ui dividing header">Tâches</h4>
                                 <div class="ui field">
@@ -300,6 +343,9 @@
             // Display the form in the page in an li, before the "Add a projectManager" link li
             var $newFormTr = $('<tr></tr>').append($newForm);
             $newLinkTrProjectManager.before($newFormTr);
+            $('.ui.dropdown')
+                    .dropdown()
+                    ;
             addProjectManagerFormDeleteLink($newFormTr);
         }
 
@@ -332,6 +378,9 @@
             // Display the form in the page in an li, before the "Add a holder" link li
             var $newFormTr = $('<tr></tr>').append($newForm);
             $newLinkTrHolder.before($newFormTr);
+            $('.ui.dropdown')
+                    .dropdown()
+                    ;
             addHolderFormDeleteLink($newFormTr);
         }
 
@@ -364,6 +413,9 @@
             // Display the form in the page in an li, before the "Add a holder" link li
             var $newFormTr = $('<tr></tr>').append($newForm);
             $newLinkTrServiceProvider.before($newFormTr);
+            $('.ui.dropdown')
+                    .dropdown()
+                    ;
             addServiceProviderFormDeleteLink($newFormTr);
         }
 
@@ -382,20 +434,20 @@
         var $collectionServiceProvider;
 
         // setup an "add a holder" link
-        var $addServiceProviderLink = $('<button class="ui mini primary button"><i class="plus icon"></i> Ajouter un prestataire</button>');
+        var $addServiceProviderLink = $('<button class="ui mini primary button"><i class="plus icon"></i> Ajouter un sous traitant</button>');
         var $newLinkTrServiceProvider = $('<tr></tr>').append($addServiceProviderLink);
 
         var $collectionHolder;
 
         // setup an "add a holder" link
-        var $addHolderLink = $('<button class="ui mini primary button" ><i class="plus icon"></i> Ajouter le titulaire</button>');
+        var $addHolderLink = $('<button class="ui mini primary button" ><i class="plus icon"></i> Ajouter un titulaire</button>');
         var $newLinkTrHolder = $('<tr></tr>').append($addHolderLink);
 
 
         var $collectionProjectManager;
 
         // setup an "add a projectManager" link
-        var $addProjectManagerLink = $('<button class="ui mini primary button" ><i class="plus icon"></i> Ajouter la mission de contrôle</button>');
+        var $addProjectManagerLink = $('<button class="ui mini primary button" ><i class="plus icon"></i> Ajouter une mission de contrôle</button>');
         var $newLinkTrProjectManager = $('<tr></tr>').append($addProjectManagerLink);
 
         jQuery(document).ready(function () {
@@ -509,7 +561,9 @@
             // Display the form in the page in an li, before the "Add a projectManager" link li
             var $newFormTr = $('<tr></tr>').append($newForm);
             $newLinkTrOtherContributor.before($newFormTr);
-
+            $('.ui.dropdown')
+                    .dropdown()
+                    ;
             addOtherContributorFormDeleteLink($newFormTr);
         }
 

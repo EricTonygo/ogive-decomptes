@@ -16,3 +16,16 @@
         Décompte général et définitif
     </a>
 {%endif %}
+
+{% set tasks = project.tasks %}
+{% if tasks and tasks|length > 0  %}
+    <a href="{{path('project_work_schedule', {'id': project.id})}}" class="{% if tab == 7 %}active{% endif %} item">
+        Planning des travaux
+    </a>
+{%endif %}
+
+{% if tasks and tasks|length > 0  %}
+    <a href="{{path('project_financial_schedule', {'id': project.id})}}" class="{% if tab == 8 %}active{% endif %} item">
+        Planning financier
+    </a>
+{%endif %}

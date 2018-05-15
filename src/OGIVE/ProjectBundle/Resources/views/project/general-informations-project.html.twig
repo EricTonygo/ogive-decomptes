@@ -6,17 +6,18 @@
     <div class="ui basic fixed segment content">
         <div class='ui container'>
             {% include('OGIVEProjectBundle:project:top-content-project-page.html.twig') %}
-            <div class="ui two column stackable grid padded">               
-                <div class="eleven wide column">
-                    <div class="ui top attached stackable tabular menu od_project_menu">
-                        {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
-                    </div>
-                    <div class="ui bottom attached segment od_project_menu_content">
+            <div class="ui top attached stackable tabular menu od_project_menu">
+                {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
+            </div>
+            <div class="ui bottom attached segment od_project_menu_content">
+                <div class="ui two column stackable grid padded">               
+                    <div class="eleven wide column">
                         <div class="ui fluid card od_project_details_card">
                             <div class="content">
                                 <div class="ui text menu" style="margin: 0px;">                                    
                                     <div class="right menu">
-                                        <a class="item" data-tooltip="Modifier" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('project_update_get', {'id': project.id})}}"><i class="blue write icon"></i></a>
+                                        <a class="item" data-tooltip="Déclarer une avance démarrage" data-position="bottom center" data-inverted="" data-variation="mini" onclick="start_advance({{project.id}});"><i class="blue plus icon"></i> Avance démarrage</a>
+                                        <a class="item" data-tooltip="Modifier" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('project_update_get', {'id': project.id})}}"><i class="blue write icon"></i></a>                                        
                                         <div class="ui dropdown dropdown_actions item">
                                             <i class="large ellipsis horizontal icon"></i>
                                             <div class="menu">
@@ -34,6 +35,12 @@
                                             <tbody>
                                                 <tr>
                                                     <td>
+                                                        <label>MAITRE D'OUVRAGE</label>
+                                                    </td>
+                                                    <td>{% if project.owner%}{{project.owner.nom}}{% endif%}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
                                                         <label>N° DU MARCHE</label>
                                                     </td>
                                                     <td>{{project.numeroMarche}}</td>
@@ -44,6 +51,22 @@
                                                     </td>
                                                     <td>{{project.subject}}</td>
                                                 </tr>
+                                                {% if project.projectCost %}
+                                                    <tr>
+                                                        <td>
+                                                            <label>COÛT DU PROJET</label>
+                                                        </td>
+                                                        <td>{{project.projectCost}} {{project.projectCostCurrency}}</td>
+                                                    </tr>
+                                                {% endif %}
+                                                {% if project.avanceDemarrage %}
+                                                    <tr>
+                                                        <td>
+                                                            <label>AVANCE DE DEMARRAGE</label>
+                                                        </td>
+                                                        <td>{{project.avanceDemarrage}} {{project.projectCostCurrency}}</td>
+                                                    </tr>
+                                                {% endif %}
                                                 <tr>
                                                     <td>
                                                         <label>LOT</label>
@@ -103,12 +126,11 @@
                                     </div>
                                 </div>                                   
                             </div>
-
                         </div>
                     </div>
-                </div>
-                <div class="five wide column">
-                    {% include('OGIVEProjectBundle::right-aside-page.html.twig') %}
+                    <div class="five wide column">
+                        {% include('OGIVEProjectBundle::right-aside-page.html.twig') %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -125,12 +147,39 @@
             <p>Voulez-vous vraiment réaliser cette action ?</p>
         </div>
         <div class="actions">
-            <div class="ui red deny button">
+            <div class="ui red deny mini button">
                 Non
             </div>
-            <div id="execute_delete_project"  class="ui green right labeled icon button">
+            <div id="execute_delete_project"  class="ui green right labeled icon mini button">
                 Oui
                 <i class="checkmark icon"></i>
+            </div>
+        </div>
+    </div>
+    <div id="start_advance_modal" class="ui small modal">
+        <i class="close icon"></i>
+        <div class="header">
+            Déclarer une avance démarrage.
+        </div>
+        <div class="content">
+            {{ form_start(form, {'method': 'PUT', 'action': path('project_update_start_advance', {'id': project.id}), 'attr': {'class': 'ui mini form', 'id': 'od_update_start_advance_form', "autocomplete":"off"} }) }}
+            <div class="field">
+                <label>Montant avance démarrage [{{project.projectCostCurrency}}]</label>
+                <div class="field"> 
+                    {{ form_widget(form.avanceDemarrage,{'attr':{'placeholder':"Montant de l'avance de demarrage", 'data-validate': 'avanceDemarrage'}})}}
+                </div>
+            </div>
+            <div class="field">
+                {% include('OGIVEProjectBundle::form-message-success-error.html.twig') %}
+            </div>
+            {{form_end(form)}}
+        </div>
+        <div class="actions">
+            <div id="execute_start_advance_cancel" class="ui red deny mini button">
+                Annuler
+            </div>
+            <div id="execute_start_advance"  class="ui green mini button">
+                Sauvegarder
             </div>
         </div>
     </div>

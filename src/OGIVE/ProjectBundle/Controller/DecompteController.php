@@ -4,6 +4,7 @@ namespace OGIVE\ProjectBundle\Controller;
 
 use OGIVE\ProjectBundle\Entity\Project;
 use OGIVE\ProjectBundle\Entity\Decompte;
+use OGIVE\ProjectBundle\Entity\DecompteValidation;
 use OGIVE\ProjectBundle\Entity\DecompteTask;
 use OGIVE\ProjectBundle\Entity\Task;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -54,11 +55,13 @@ class DecompteController extends Controller {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
         if (empty($decompte)) {
-//            return $this->render('OGIVEProjectBundle:decompte:add.html.twig', array(
-//                        'project' => $project,
-//                        'form' => $form->createView(),
-//                        'tab' => 5
-//            ));
+            
+        }
+        $holder = $decompte->getProject()->getHolders()[0];
+        $currentUser = $this->getUser();
+        $can_subimit_decompte = false;
+        if ($holder->getUser()->getId() == $currentUser->getId()) {
+            $can_subimit_decompte = true;
         }
         $form = $this->createForm('OGIVE\ProjectBundle\Form\DecompteType', $decompte, array('method' => 'PUT'));
         return $this->render('OGIVEProjectBundle:decompte:update-monthly-decompte.html.twig', array(
@@ -66,10 +69,11 @@ class DecompteController extends Controller {
                     'decompteTasks' => $decompte->getDecompteTasks(),
                     'decompte' => $decompte,
                     'tab' => 5,
+                    'can_submit_decompte' => $can_subimit_decompte,
                     'form' => $form->createView()
         ));
     }
-    
+
     /**
      * @Rest\View()
      * @Rest\Get("/projects/{id}/decompte-total" , name="project_decompte_total_get", options={ "method_prefix" = false, "expose" = true })
@@ -107,6 +111,14 @@ class DecompteController extends Controller {
         $previousDecompte = $repositoryDecompte->getDecomptePrecByMonthAndProject($decompte->getMonthNumber(), $decompte->getProject()->getId());
         $nextDecompte = $repositoryDecompte->getDecompteNextByMonthAndProject($decompte->getMonthNumber(), $decompte->getProject()->getId());
         $form = $this->createForm('OGIVE\ProjectBundle\Form\DecompteType', $decompte, array('method' => 'PUT'));
+        $holder = $decompte->getProject()->getHolders()[0];
+        $currentUser = $this->getUser();
+        $can_subimit_decompte = false;
+        if ($holder->getUser()->getId() == $currentUser->getId()) {
+            $can_subimit_decompte = true;
+        }
+        $decompteValidation = new \OGIVE\ProjectBundle\Entity\DecompteValidation();
+        $formForValidation = $this->createForm('OGIVE\ProjectBundle\Form\DecompteValidationType', $decompteValidation, array('method' => 'POST'));
         return $this->render('OGIVEProjectBundle:decompte:monthly-decompte.html.twig', array(
                     'project' => $decompte->getProject(),
                     'allDecomptes' => $AllDecomptes,
@@ -116,8 +128,64 @@ class DecompteController extends Controller {
                     'decompte' => $decompte,
                     'tab' => 5,
                     'month' => $decompte->getMonthNumber(),
-                    'form' => $form->createView()
+                    'can_submit_decompte' => $can_subimit_decompte,
+                    'form' => $form->createView(),
+                    'formForValidation' => $formForValidation->createView()
         ));
+    }
+
+    /**
+     * @Rest\View(statusCode=Response::HTTP_OK)
+     * @Rest\Post("/projects/{idProject}/decomptes/{id}/validate", name="decompte_validation_post", options={ "method_prefix" = false, "expose" = true })
+     */
+    public function postDecompteValidationAction(Request $request, Decompte $decompte) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+        $decompteValidation = new DecompteValidation();
+        $form = $this->createForm('OGIVE\ProjectBundle\Form\DecompteValidationType', $decompteValidation, array('method' => 'POST'));
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $decompteValidation->setDecompte($decompte);
+            $decompteValidation->setCreatedUser($this->getUser());
+            
+            
+            $view = View::create(["message" => "Votre décompte a été soumis pour validation !"]);
+            $view->setFormat('json');
+            return $view;
+        } else {
+            return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas le droit de soumettre ce décompte !"], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    /**
+     * @Rest\View(statusCode=Response::HTTP_OK)
+     * @Rest\Post("/projects/{idProject}/decomptes/{id}/submit-for-validation", name="decompte_submit_for_validation_post", options={ "method_prefix" = false, "expose" = true })
+     */
+    public function postSubmitDecompteForValidationAction(Request $request, Decompte $decompte) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+        $holder = $decompte->getProject()->getHolders()[0];
+        $currentUser = $this->getUser();
+        $project_mail_service = $this->get("app.project_mail_service");
+        if ($holder->getUser()->getId() == $currentUser->getId()) {
+            $owner = $decompte->getProject()->getOwner();
+            $project_mail_service->sendSubmittedDecompteLink($decompte, $holder, $owner);
+            $projectManagers = $decompte->getProject()->getProjectManagers();
+            foreach ($projectManagers as $projectManager) {
+                $project_mail_service->sendSubmittedDecompteLink($decompte, $holder, $projectManager);
+            }
+            $othersContributors = $decompte->getProject()->getOtherContributors();
+            foreach ($othersContributors as $contributor) {
+                $project_mail_service->sendSubmittedDecompteLink($decompte, $holder, $contributor);
+            }
+            $view = View::create(["message" => "Votre décompte a été soumis pour validation !"]);
+            $view->setFormat('json');
+            return $view;
+        } else {
+            return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas le droit de soumettre ce décompte !"], Response::HTTP_BAD_REQUEST);
+        }
     }
 
     /**

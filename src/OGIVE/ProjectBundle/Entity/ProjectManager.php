@@ -13,6 +13,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ProjectManager extends Contributor {
 
+    /**
+     * @var \Project
+     *
+     * @ORM\ManyToOne(targetEntity="Project")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="project", referencedColumnName="id")
+     * })
+     */
+    private $project;
 
     /**
      * Constructor
@@ -21,6 +30,27 @@ class ProjectManager extends Contributor {
         parent::__construct();
     }
 
+    /**
+     * Set project
+     *
+     * @param \OGIVE\ProjectBundle\Entity\Project $project
+     *
+     * @return ProjectManager
+     */
+    public function setProject(\OGIVE\ProjectBundle\Entity\Project $project=null) {
+        $this->project = $project;
+
+        return $this;
+    }
+
+    /**
+     * Get project
+     *
+     * @return \OGIVE\ProjectBundle\Entity\Project
+     */
+    public function getProject() {
+        return $this->project;
+    }
 
     /**
      * @ORM\PrePersist() 

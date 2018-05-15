@@ -145,12 +145,14 @@ class ProjectController extends Controller {
         $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(0, 8, null, $user->getId());
         $projectManager = $project->getProjectManagers()[0];
         $holder = $project->getHolders()[0];
+        $form = $this->createForm('OGIVE\ProjectBundle\Form\AvanceDemarrageProjectType', $project, array('method' => 'PUT'));
         return $this->render('OGIVEProjectBundle:project:general-informations-project.html.twig', array(
                     'project' => $project,
                     'projects' => $projects,
                     'tab' => 1,
                     'projectManager' => $projectManager,
-                    'holder' => $holder
+                    'holder' => $holder,
+                    'form' => $form->createView()
         ));
     }
 
@@ -194,6 +196,7 @@ class ProjectController extends Controller {
         $total_pages = ceil($total_tasks / $maxResults);
         $tasks = $repositoryTask->findBy(array('parentTask' => null));
         $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(0, 8, null, $user->getId());
+        $form = $this->createForm('OGIVE\ProjectBundle\Form\TasksProjectType', $project);
         return $this->render('OGIVEProjectBundle:project:project-tasks.html.twig', array(
                     'project' => $project,
                     'projects' => $projects,
@@ -202,7 +205,8 @@ class ProjectController extends Controller {
                     'tab' => 3,
                     'total_pages' => $total_pages,
                     'total_tasks' => $total_tasks,
-                    'placeholder' => $placeholder
+                    'placeholder' => $placeholder,
+                    'form' => $form->createView()
         ));
     }
 
@@ -227,6 +231,7 @@ class ProjectController extends Controller {
                     'projects' => $projects,
                     'tasks' => $tasks,
                     'tab' => 4,
+                    'owner' => $project->getOwner(),
                     'projectManagers' => $projectManagers,
                     'holders' => $holders,
                     'serviceProviders' => $serviceProviders,
@@ -253,7 +258,6 @@ class ProjectController extends Controller {
                     'decomptes' => $decomptes
         ));
     }
-    
 
     /**
      * @Rest\View(statusCode=Response::HTTP_CREATED)
@@ -264,9 +268,8 @@ class ProjectController extends Controller {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
         $project = new Project();
-        $owner = new Owner();
         $repositoryProject = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Project');
-
+        $common_service = $this->get('app.common_service');
         $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectType', $project);
         $form->handleRequest($request);
 
@@ -277,37 +280,63 @@ class ProjectController extends Controller {
             if ($project->getSubject() == null || $project->getSubject() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vôtre projet est sans objet. Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
             }
+            if ($project->getDelais() == null) {
+                return new JsonResponse(["success" => false, 'message' => "Veuillez préciser les délais de votre projet."], Response::HTTP_BAD_REQUEST);
+            }
             if ($repositoryProject->findOneBy(array('numeroMarche' => $project->getNumeroMarche()))) {
-                return new JsonResponse(["success" => false, 'message' => 'Une tâche avec ce numéro existe déjà'], Response::HTTP_BAD_REQUEST);
+                return new JsonResponse(["success" => false, 'message' => 'Une tâche avec ce numéro existe déjà.'], Response::HTTP_BAD_REQUEST);
+            }
+            $startDate = $project->getStartDate();
+            $endDate = $project->getEndDate();
+            if($project->getDelais() && $startDate == null && $endDate == null){
+                $startDate = new \DateTime('now');
+                $project->setStartDate($startDate->format('Y-m-d'));
+                $startDateTime = strtotime(str_replace('/', '-', $project->getStartDate()));
+                $endDateTime = mktime(0, 0, 0, date("n", $startDateTime), date("j", $startDateTime) + $project->getDelais(), date("Y", $startDateTime));
+                $endDate = new \DateTime(date("Y-m-d", $endDateTime));
+                $project->setEndDate($endDate);
+            }elseif($project->getDelais() && $startDate != null && $endDate == null){
+                $startDateTime = strtotime(str_replace('/', '-', $project->getStartDate()));
+                $endDateTime = mktime(0, 0, 0, date("n", $startDateTime), date("j", $startDateTime) + $project->getDelais(), date("Y", $startDateTime));
+                $endDate = new \DateTime(date("Y-m-d", $endDateTime));
+                $project->setEndDate($endDate);
+            }elseif($project->getDelais() && $startDate == null && $endDate != null){
+                $endDateTime = strtotime(str_replace('/', '-', $project->getEndDate()));
+                $startDateTime = mktime(0, 0, 0, date("n", $endDateTime), date("j", $endDateTime) - $project->getDelais(), date("Y", $endDateTime));
+                $startDate = new \DateTime(date("Y-m-d", $startDateTime));
+                $project->setEndDate($endDate);
             }
             $user = $this->getUser();
             $project->setCreatedUser($user);
-            $owner->setNom($user->getLastName());
-            $owner->setEmail($user->getEmail());
-            $project->addOwner($owner);
-            $owner->setProject($project);
+            $owner = $project->getOwner();
+            $common_service->setUserAttributesToContributor($owner);
+            $project->setOwner($owner);
             //***************gestion des projectManagers du projet ************************** */
             $projectManagers = $project->getProjectManagers();
             foreach ($projectManagers as $projectManager) {
                 $projectManager->setProject($project);
+                $common_service->setUserAttributesToContributor($projectManager);
             }
 
             //***************gestion des titulaire du projet ************************** */
             $holders = $project->getHolders();
             foreach ($holders as $holder) {
                 $holder->setProject($project);
+                $common_service->setUserAttributesToContributor($holder);
             }
 
             //***************gestion des prestataire du projet ************************** */
             $servicesProviders = $project->getServiceProviders();
             foreach ($servicesProviders as $servicesProvider) {
                 $servicesProvider->setProject($project);
+                $common_service->setUserAttributesToContributor($servicesProvider);
             }
 
             //***************gestion des autres intervenant du projet ************************** */
             $otherContributors = $project->getOtherContributors();
             foreach ($otherContributors as $otherContributor) {
                 $otherContributor->setProject($project);
+                $common_service->setUserAttributesToContributor($otherContributor);
             }
 
             $numerMarcheTab = explode("/", $project->getNumeroMarche());
@@ -346,6 +375,36 @@ class ProjectController extends Controller {
 
     /**
      * @Rest\View()
+     * @Rest\Put("/projects/{id}/update/start-advance", name="project_update_start_advance", options={ "method_prefix" = false, "expose" = true })
+     * @param Request $request
+     */
+    public function updateStartAdvanceProjectAction(Request $request, Project $project) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+        $decompte_manager = $this->get('app.decompte_manager');
+        $form = $this->createForm('OGIVE\ProjectBundle\Form\AvanceDemarrageProjectType', $project, array('method' => 'PUT'));
+        $repositoryProject = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Project');
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($project->getAvanceDemarrage() == null || $project->getAvanceDemarrage() == "") {
+                return new JsonResponse(["success" => false, 'message' => "Vueillez le saisir le montant de l'avance démarrage."], Response::HTTP_BAD_REQUEST);
+            }
+            if (!is_numeric($project->getAvanceDemarrage())) {
+                return new JsonResponse(["success" => false, 'message' => "Vueillez le saisir un montant numerique."], Response::HTTP_BAD_REQUEST);
+            }
+            $project = $repositoryProject->updateProject($project);
+            $view = View::create(["message" => "Montant de l'avance démarrage déclarer avec succès", "id_project" => $project->getId()]);
+            $view->setFormat('json');
+            return $view;
+        } else {
+            return new JsonResponse(["success" => false, 'message' => 'Le formulaire a été soumis avec les données incorrectes'], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    /**
+     * @Rest\View()
      * @Rest\Put("/projects/{id}/update", name="project_update", options={ "method_prefix" = false, "expose" = true })
      * @param Request $request
      */
@@ -364,7 +423,7 @@ class ProjectController extends Controller {
         $repositoryHolder = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Holder');
         $repositoryServiceProvider = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:ServiceProvider');
         $repositoryOtherContributors = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:OtherContributor');
-
+        $common_service = $this->get('app.common_service');
         $originalProjectManagers = new \Doctrine\Common\Collections\ArrayCollection();
         $originalHolders = new \Doctrine\Common\Collections\ArrayCollection();
         $originalServiceProviders = new \Doctrine\Common\Collections\ArrayCollection();
@@ -394,10 +453,36 @@ class ProjectController extends Controller {
             if ($project->getSubject() == null || $project->getSubject() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vôtre projet est sans objet. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }
+            if ($project->getDelais() == null) {
+                return new JsonResponse(["success" => false, 'message' => "Veuillez préciser les délais de votre projet."], Response::HTTP_BAD_REQUEST);
+            }
             $projectEdit = $repositoryProject->findOneBy(array('numeroMarche' => $project->getNumeroMarche()));
-            if (!is_null($projectEdit) && $projectEdit->getId() != $project->getId()) {
+            if (!is_null($projectEdit) && $projectEdit->getId() != $project->getId()){
                 return new JsonResponse(["success" => false, 'message' => 'Un projet avec ce numero du marché existe déjà'], Response::HTTP_BAD_REQUEST);
             }
+            $startDate = $project->getStartDate();
+            $endDate = $project->getEndDate();
+            if($project->getDelais() && $startDate == null && $endDate == null){
+                $startDate = new \DateTime('now');
+                $project->setStartDate($startDate->format('Y-m-d'));
+                $startDateTime = strtotime(str_replace('/', '-', $project->getStartDate()));
+                $endDateTime = mktime(0, 0, 0, date("n", $startDateTime), date("j", $startDateTime) + $project->getDelais(), date("Y", $startDateTime));
+                $endDate = new \DateTime(date("Y-m-d", $endDateTime));
+                $project->setEndDate($endDate);
+            }elseif($project->getDelais() && $startDate != null && $endDate == null){
+                $startDateTime = strtotime(str_replace('/', '-', $project->getStartDate()));
+                $endDateTime = mktime(0, 0, 0, date("n", $startDateTime), date("j", $startDateTime) + $project->getDelais(), date("Y", $startDateTime));
+                $endDate = new \DateTime(date("Y-m-d", $endDateTime));
+                $project->setEndDate($endDate);
+            }elseif($project->getDelais() && $startDate == null && $endDate != null){
+                $endDateTime = strtotime(str_replace('/', '-', $project->getEndDate()));
+                $startDateTime = mktime(0, 0, 0, date("n", $endDateTime), date("j", $endDateTime) - $project->getDelais(), date("Y", $endDateTime));
+                $startDate = new \DateTime(date("Y-m-d", $startDateTime));
+                $project->setEndDate($endDate);
+            }
+            $owner = $project->getOwner();
+            $common_service->setUserAttributesToContributor($owner);
+            $project->setOwner($owner);
             //***************gestion des projectManagers du project ************************** */
             // remove the relationship between the project and the projectManagers
             foreach ($originalProjectManagers as $projectManager) {
@@ -417,6 +502,7 @@ class ProjectController extends Controller {
                 if ($projectManager->getProject() == null) {
                     $projectManager->setProject($project);
                 }
+                $common_service->setUserAttributesToContributor($projectManager);
             }
 
             //***************gestion des holders du project ************************** */
@@ -438,6 +524,7 @@ class ProjectController extends Controller {
                 if ($holder->getProject() == null) {
                     $holder->setProject($project);
                 }
+                $common_service->setUserAttributesToContributorIfNotExists($holder);
             }
 
             //***************gestion des prestataires du project ************************** */
@@ -457,6 +544,7 @@ class ProjectController extends Controller {
                 if ($serviceProvider->getProject() == null) {
                     $serviceProvider->setProject($project);
                 }
+                $common_service->setUserAttributesToContributor($serviceProvider);
             }
 
             //***************gestion des prestataires du project ************************** */
@@ -476,6 +564,7 @@ class ProjectController extends Controller {
                 if ($otherContributor->getProject() == null) {
                     $otherContributor->setProject($project);
                 }
+                $common_service->setUserAttributesToContributor($otherContributor);
             }
             $numerMarcheTab = explode("/", $project->getNumeroMarche());
             $anneeBudgetaire = $numerMarcheTab[count($numerMarcheTab) - 1];

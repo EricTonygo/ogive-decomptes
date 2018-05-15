@@ -21,7 +21,7 @@
                             <div class="content description">
                                 {{ form_start(form, {'method': 'POST', 'action': path('holder_add_post', {'id': project.id}), 'attr': {'class': 'ui mini form', 'id': 'od_add_holder_form', "autocomplete":"off"} }) }}
                                 <h4 class="ui dividing header">Information du titulaire</h4>
-                                <div class="two fields">
+                                {#<div class="two fields">
                                     <div class="field">
                                         <label>{{ form_label(form.nom,"Nom") }}</label>
                                         <div class="field"> 
@@ -34,6 +34,10 @@
                                             {{ form_widget(form.email,{'attr':{'placeholder':"Email", 'data-validate': 'email'}})}}
                                         </div>
                                     </div>
+                                </div>#}
+                                <div  class="field">
+                                    {{ form_label(form.user,"Nom d'utilisateur") }}
+                                    {{ form_widget(form.user,{'attr':{'data-validate': 'user-contributor', 'class': 'ui search dropdown'}})}}
                                 </div>
                                 <div class="two fields">
                                     <div class="field">

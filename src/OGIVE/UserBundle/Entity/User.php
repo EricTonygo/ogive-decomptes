@@ -71,6 +71,63 @@ class User extends BaseUser
     private $temp;
     
     /**
+     * @var string
+     *
+     * @ORM\Column(name="code_postal", type="string", length=255, nullable=true)
+     */
+    protected $codePostal;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="phone", type="string", length=255, nullable=true)
+     */
+    protected $phone;
+    
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="faxNumber", type="string", length=255, nullable=true)
+     */
+    protected $faxNumber;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="rc", type="string", length=255, nullable=true)
+     */
+    protected $rc;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="numero_contribuable", type="string", length=255, nullable=true)
+     */
+    protected $numeroContribuable;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="numero_compte_bancaire", type="string", length=255, nullable=true)
+     */
+    protected $numeroCompteBancaire;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nom_banque", type="string", length=255, nullable=true)
+     */
+    protected $nomBanque;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="intitule_banque", type="string", length=255, nullable=true)
+     */
+    protected $intituleBanque;
+    
+    /**
      * Constructor
      */
     public function __construct()
@@ -309,6 +366,185 @@ class User extends BaseUser
             $this->temp = null;
         }
         $this->file = null;
+    }
+    
+    /**
+     * Set codePostal
+     *
+     * @param string $codePostal
+     *
+     * @return User
+     */
+    public function setCodePostal($codePostal) {
+        $this->codePostal = $codePostal;
+
+        return $this;
+    }
+
+    /**
+     * Get codePostal
+     *
+     * @return string
+     */
+    public function getCodePostal() {
+        return $this->codePostal;
+    }
+    
+    /**
+     * Set phone
+     *
+     * @param string $phone
+     *
+     * @return User
+     */
+    public function setPhone($phone) {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * Get phone
+     *
+     * @return string
+     */
+    public function getPhone() {
+        return $this->phone;
+    }
+    
+    /**
+     * Set faxNumber
+     *
+     * @param string $faxNumber
+     *
+     * @return User
+     */
+    public function setFaxNumber($faxNumber) {
+        $this->faxNumber = $faxNumber;
+
+        return $this;
+    }
+
+    /**
+     * Get faxNumber
+     *
+     * @return string
+     */
+    public function getFaxNumber() {
+        return $this->faxNumber;
+    }
+
+
+    /**
+     * Set rc
+     *
+     * @param string $rc
+     *
+     * @return User
+     */
+    public function setRc($rc) {
+        $this->rc = $rc;
+
+        return $this;
+    }
+
+    /**
+     * Get rc
+     *
+     * @return string
+     */
+    public function getRc() {
+        return $this->rc;
+    }
+
+    /**
+     * Set numeroContribuable
+     *
+     * @param string $numeroContribuable
+     *
+     * @return User
+     */
+    public function setNumeroContribuable($numeroContribuable) {
+        $this->numeroContribuable = $numeroContribuable;
+
+        return $this;
+    }
+
+    /**
+     * Get numeroContribuable
+     *
+     * @return string
+     */
+    public function getNumeroContribuable() {
+        return $this->numeroContribuable;
+    }
+    
+    /**
+     * Set numeroCompteBancaire
+     *
+     * @param string $numeroCompteBancaire
+     *
+     * @return User
+     */
+    public function setNumeroCompteBancaire($numeroCompteBancaire) {
+        $this->numeroCompteBancaire = $numeroCompteBancaire;
+
+        return $this;
+    }
+
+    /**
+     * Get numeroCompteBancaire
+     *
+     * @return string
+     */
+    public function getNumeroCompteBancaire() {
+        return $this->numeroCompteBancaire;
+    }
+    
+    
+    /**
+     * Set nomBanque
+     *
+     * @param string $nomBanque
+     *
+     * @return User
+     */
+    public function setNomBanque($nomBanque) {
+        $this->nomBanque = $nomBanque;
+
+        return $this;
+    }
+
+    /**
+     * Get nomBanque
+     *
+     * @return string
+     */
+    public function getNomBanque() {
+        return $this->nomBanque;
+    }
+    
+    
+    /**
+     * Set intituleBanque
+     *
+     * @param string $intituleBanque
+     *
+     * @return User
+     */
+    public function setIntituleBanque($intituleBanque) {
+        $this->intituleBanque = $intituleBanque;
+
+        return $this;
+    }
+
+    /**
+     * Get intitule
+     *
+     * @return string
+     */
+    public function getIntituleBanque() {
+        return $this->intituleBanque;
     }
 }
 

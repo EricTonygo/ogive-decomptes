@@ -5,167 +5,167 @@
 
 {% block content %}
     <div class="ui basic fixed segment content">
-        <div class='ui container'>
-            {% include('OGIVEProjectBundle:project:top-content-project-page.html.twig') %}
-            <div class="ui one column stackable grid padded">
-                <div class="wide column">
-                    <div class="ui top attached stackable tabular menu od_project_menu">
-                        {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
-                    </div>
-                    <div class="ui bottom attached segment od_project_menu_content">
-                        <div class="ui fluid card od_add_project_card">
-                            <div class="content">
-                                <div class="header">
-                                    Mise à jour de la tâche N°: {{task.numero}}
+        {#        <div class='ui container'>#}
+        {% include('OGIVEProjectBundle:project:top-content-project-page.html.twig') %}
+        <div class="ui one column stackable grid padded">
+            <div class="wide column">
+                <div class="ui top attached stackable tabular menu od_project_menu">
+                    {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
+                </div>
+                <div class="ui bottom attached segment od_project_menu_content">
+                    <div class="ui fluid card od_add_project_card">
+                        <div class="content">
+                            <div class="header">
+                                Mise à jour de la tâche N°: {{task.numero}}
+                            </div>
+                        </div>
+                        <div class="content description">
+                            {{ form_start(form, {'method': 'PUT', 'action': path('task_update_post', {'idProject': task.projectTask.id, 'id': task.id}), 'attr': {'class': 'ui mini form', 'id': 'od_update_task_form', "autocomplete":"off"} }) }}
+                            <h4 class="ui dividing header">Information de la tâche</h4>
+                            <div class="fields">
+                                <div class="three wide field">
+                                    <label>{{ form_label(form.numero,"Numéro") }}</label>
+                                    <div class="field"> 
+                                        {{ form_widget(form.numero,{'attr':{'placeholder':"Numéro de la tâche", 'data-validate': 'numero'}})}}
+                                    </div>
+                                </div>
+                                <div class="thirteen wide field">
+                                    <label>{{ form_label(form.nom,"Désignation") }}</label>
+                                    <div class="field"> 
+                                        {{ form_widget(form.nom,{'attr':{'placeholder':"Désignation de l'ouvrage", 'data-validate': 'nom'}})}}
+                                    </div>
                                 </div>
                             </div>
-                            <div class="content description">
-                                {{ form_start(form, {'method': 'PUT', 'action': path('task_update_post', {'idProject': task.projectTask.id, 'id': task.id}), 'attr': {'class': 'ui mini form', 'id': 'od_update_task_form', "autocomplete":"off"} }) }}
-                                <h4 class="ui dividing header">Information de la tâche</h4>
-                                <div class="fields">
-                                    <div class="three wide field">
-                                        <label>{{ form_label(form.numero,"Numéro") }}</label>
-                                        <div class="field"> 
-                                            {{ form_widget(form.numero,{'attr':{'placeholder':"Numéro de la tâche", 'data-validate': 'numero'}})}}
-                                        </div>
-                                    </div>
-                                    <div class="thirteen wide field">
-                                        <label>{{ form_label(form.nom,"Désignation") }}</label>
-                                        <div class="field"> 
-                                            {{ form_widget(form.nom,{'attr':{'placeholder':"Désignation de l'ouvrage", 'data-validate': 'nom'}})}}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="four fields">                                        
-                                    <div class="ui field">
-                                        <label>{{ form_label(form.unite,"Unité") }}</label>
-                                        <div class="field">
-                                            <div class="field"> 
-                                                {{ form_widget(form.unite,{'attr':{'placeholder':"Unité de la tâche", 'data-validate': 'unite'}})}}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="ui field">
-                                        <label>{{ form_label(form.prixUnitaire,"Prix unitaire") }}</label>
-                                        <div class="field">
-                                            <div class="field"> 
-                                                {{ form_widget(form.prixUnitaire,{'attr':{'placeholder':"Prix unitaire de la tâche", 'data-validate': 'prixUnitaire'}})}}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="ui field">
-                                        <label>{{ form_label(form.qtePrevueMarche,"Qté marché") }}</label>
-                                        <div class="field">
-                                            <div class="field"> 
-                                                {{ form_widget(form.qtePrevueMarche,{'attr':{'placeholder':"Qté marché de la tâche", 'data-validate': 'prixUnitaire'}})}}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="ui field">
-                                        <label>{{ form_label(form.qtePrevueProjetExec,"Qté projet exécution") }}</label>
-                                        <div class="field">
-                                            <div class="field"> 
-                                                {{ form_widget(form.qtePrevueProjetExec,{'attr':{'placeholder':"Qté projet execution", 'data-validate': 'prixUnitaire'}})}}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                {#<div class="two fields">                                        
-                                    <div class="ui field">
-                                        <label>Start date<em>*</em></label>
-                                        <div class="field">
-                                            <div class="ui calendar" >
-                                                <div class="ui input left icon">
-                                                    <i class="calendar icon"></i>
-                                                    <input type="text" name="start-date" placeholder="Start date" >
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="ui field">
-                                        <label>End date<em>*</em></label>
-                                        <div class="field">
-                                            <div class="ui calendar" >
-                                                <div class="ui input left icon">
-                                                    <i class="calendar icon"></i>
-                                                    <input type="text" name="end-date" placeholder="End date" >
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>#}
-
-                                <h4 class="ui dividing header">Sous tâches</h4>
-
+                            <div class="four fields">                                        
                                 <div class="ui field">
-                                    <table class="ui very basic table">
-                                        <thead>
-                                            <tr><th>Numero</th>
-                                                <th>Désignation des ouvrages</th>
-                                                <th>Unité</th>
-                                                <th>Prix Unitaire</th>
-                                                <th>Qté Marché</th>
-                                                <th>Qté projet Exec</th>
-                                                    {#<th>start date</th>
-                                                    <th>end date</th>#}
-                                                <th class="right aligned">Action</th>
+                                    <label>{{ form_label(form.unite,"Unité") }}</label>
+                                    <div class="field">
+                                        <div class="field"> 
+                                            {{ form_widget(form.unite,{'attr':{'placeholder':"Unité de la tâche", 'data-validate': 'unite'}})}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui field">
+                                    <label>{{ form_label(form.prixUnitaire,"Prix unitaire") }}</label>
+                                    <div class="field">
+                                        <div class="field"> 
+                                            {{ form_widget(form.prixUnitaire,{'attr':{'placeholder':"Prix unitaire de la tâche", 'data-validate': 'prixUnitaire'}})}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui field">
+                                    <label>{{ form_label(form.qtePrevueMarche,"Qté marché") }}</label>
+                                    <div class="field">
+                                        <div class="field"> 
+                                            {{ form_widget(form.qtePrevueMarche,{'attr':{'placeholder':"Qté marché de la tâche", 'data-validate': 'prixUnitaire'}})}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui field">
+                                    <label>{{ form_label(form.qtePrevueProjetExec,"Qté projet exécution") }}</label>
+                                    <div class="field">
+                                        <div class="field"> 
+                                            {{ form_widget(form.qtePrevueProjetExec,{'attr':{'placeholder':"Qté projet execution", 'data-validate': 'prixUnitaire'}})}}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="two fields">                                        
+                                <div class="ui field">
+                                    <label>Début des travaux</label>
+                                    <div class="field">
+                                        <div class="ui calendar" >
+                                            <div class="ui input left icon">
+                                                <i class="calendar icon"></i>
+                                                {{ form_widget(form.startDate,{'attr':{'placeholder':"Date de debut", 'data-validate': 'start_date'}})}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui field">
+                                    <label>Fin des travaux</label>
+                                    <div class="field">
+                                        <div class="ui calendar" >
+                                            <div class="ui input left icon">
+                                                <i class="calendar icon"></i>
+                                                {{ form_widget(form.endDate,{'attr':{'placeholder':"Date de fin", 'data-validate': 'end_date'}})}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h4 class="ui dividing header">Sous tâches</h4>
+
+                            <div class="ui field">
+                                <table class="ui very basic table">
+                                    <thead>
+                                        <tr><th>Numero</th>
+                                            <th>Désignation des ouvrages</th>
+                                            <th>Unité</th>
+                                            <th>Prix Unitaire</th>
+                                            <th>Qté Marché</th>
+                                            <th>Qté projet Exec</th>
+                                            <th>start date</th>
+                                            <th>end date</th>
+                                            <th class="right aligned">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="tasks" data-prototype="{{ forms.task_prototype(form.subTasks.vars.prototype)|e }}">
+                                        {% for subTask in form.subTasks %}
+                                            <tr>
+                                                {{ forms.task_prototype(subTask) }}
                                             </tr>
-                                        </thead>
-                                        <tbody class="tasks" data-prototype="{{ forms.task_prototype(form.subTasks.vars.prototype)|e }}">
-                                            {% for subTask in form.subTasks %}
-                                                <tr>
-                                                    {{ forms.task_prototype(subTask) }}
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                        {% macro task_prototype(childForm) %}
-                                            <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'task_name', 'placeholder': 'Numero de la tâche'}}) }}</td>
-                                            <td style="width: 35%">{{ form_widget(childForm.nom,{'attr':{'data-validate': 'task_number', 'placeholder':"Désignation de l'ouvrage"}}) }}</td>
-                                            <td>{{ form_widget(childForm.unite,{'attr':{'data-validate': 'task_unite', 'placeholder': 'Unité'}}) }}</td>
-                                            <td>{{ form_widget(childForm.prixUnitaire,{'attr':{'data-validate': 'task_prixUnitaire', 'placeholder': 'Prix unitaire'}}) }}</td>
-                                            <td>{{ form_widget(childForm.qtePrevueMarche,{'attr':{'data-validate': 'task_qtePrevueMarche', 'placeholder': 'Qté prevue marché'}}) }}</td>
-                                            <td>{{ form_widget(childForm.qtePrevueProjetExec,{'attr':{'data-validate': 'task_qtePrevueProjetExec', 'placeholder': "Qté projet d'exécution"}}) }}</td>
-                                            {#<td>
-                                                <div class="field">
-                                                    <div class="ui calendar" >
-                                                        <div class="ui input left icon">
-                                                            <i class="calendar icon"></i>
-                                                            {{ form_widget(childForm.startDate,{'attr':{'id': 'start-date', 'data-validate': 'task_startDate'}}) }}
-                                                        </div>
+                                        {% endfor %}
+                                    </tbody>
+                                    {% macro task_prototype(childForm) %}
+                                        <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'task_name', 'placeholder': 'Numero de la tâche'}}) }}</td>
+                                        <td style="width: 35%">{{ form_widget(childForm.nom,{'attr':{'data-validate': 'task_number', 'placeholder':"Désignation de l'ouvrage"}}) }}</td>
+                                        <td>{{ form_widget(childForm.unite,{'attr':{'data-validate': 'task_unite', 'placeholder': 'Unité'}}) }}</td>
+                                        <td>{{ form_widget(childForm.prixUnitaire,{'attr':{'data-validate': 'task_prixUnitaire', 'placeholder': 'Prix unitaire'}}) }}</td>
+                                        <td>{{ form_widget(childForm.qtePrevueMarche,{'attr':{'data-validate': 'task_qtePrevueMarche', 'placeholder': 'Qté prevue marché'}}) }}</td>
+                                        <td>{{ form_widget(childForm.qtePrevueProjetExec,{'attr':{'data-validate': 'task_qtePrevueProjetExec', 'placeholder': "Qté projet d'exécution"}}) }}</td>
+                                        <td>
+                                            <div class="field">
+                                                <div class="ui calendar" >
+                                                    <div class="ui input left icon">
+                                                        <i class="calendar icon"></i>
+                                                        {{ form_widget(childForm.startDate,{'attr':{'data-validate': 'start_date'}}) }}
                                                     </div>
                                                 </div>
-                                            </td> 
-                                            <td>
-                                                <div class="field">
-                                                    <div class="ui calendar" >
-                                                        <div class="ui input left icon">
-                                                            <i class="calendar icon"></i>
-                                                            {{ form_widget(childForm.endDate,{'attr':{'id': 'end-date', 'data-validate': 'task_endDate'}}) }}
-                                                        </div>
+                                            </div>
+                                        </td> 
+                                        <td>
+                                            <div class="field">
+                                                <div class="ui calendar" >
+                                                    <div class="ui input left icon">
+                                                        <i class="calendar icon"></i>
+                                                        {{ form_widget(childForm.endDate,{'attr':{'data-validate': 'start_date'}}) }}
                                                     </div>
-                                                </div>                                                
-                                            </td>#}
-                                        {% endmacro %}
-                                    </table>
-                                </div>
-                                {{form_widget(form._token)}}
-                                <div class="field">
-                                    {% include('OGIVEProjectBundle::form-message-success-error.html.twig') %}
-                                </div>
-                                <div class="field right aligned">
-                                    <button id="od_update_task_submit_btn"  class="ui mini yellow button" type="submit">Sauvegarder</button>
-                                    <a id="od_update_task_cancel_btn" class="ui mini red button"  href="{{path('project_tasks_get', {'id': task.projectTask.id})}}">Annuler</a>
-                                </div>
-                                </form>
+                                                </div>
+                                            </div>                                                
+                                        </td>
+                                    {% endmacro %}
+                                </table>
                             </div>
+                            {{form_widget(form._token)}}
+                            <div class="field">
+                                {% include('OGIVEProjectBundle::form-message-success-error.html.twig') %}
+                            </div>
+                            <div class="field right aligned">
+                                <a id="od_update_task_cancel_btn" class="ui mini red button"  href="{{path('project_tasks_get', {'id': task.projectTask.id})}}">Annuler</a>
+                                <button id="od_update_task_submit_btn"  class="ui mini yellow button" type="submit">Sauvegarder</button>               
+                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
-
             </div>
+
         </div>
+        {#        </div>#}
     </div>
 {% endblock %}
 {% block javascripts %}
@@ -189,14 +189,14 @@
             // Display the form in the page in an li, before the "Add a projectManager" link li
             var $newFormTr = $('<tr></tr>').append($newForm);
             $newLinkTrTask.before($newFormTr);
-            $('input[data-validate="task_startDate"]').datetimepicker({
+            $('input[data-validate="start_date"]').datetimepicker({
                 timepicker: false,
                 //minDate: '0',
                 format: 'd-m-Y',
                 lang: 'fr',
                 scrollInput: false
             });
-            $('input[data-validate="task_endDate"]').datetimepicker({
+            $('input[data-validate="end_date"]').datetimepicker({
                 timepicker: false,
                 //minDate: '0',
                 format: 'd-m-Y',

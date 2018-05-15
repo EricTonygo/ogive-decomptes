@@ -67,11 +67,13 @@ class ProjectManagerController extends Controller {
         }
         $project_manager = new ProjectManager();
         $repositoryProjectManager = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:ProjectManager');
+        $common_service = $this->get('app.common_service');
 
         $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectManagerType', $project_manager);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $common_service->setUserAttributesToContributorIfNotExists($project_manager);
             if ($project_manager->getNom() == null || $project_manager->getNom() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le nom du maître d'oeuvre. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }
@@ -135,9 +137,11 @@ class ProjectManagerController extends Controller {
     public function updateProjectManagerAction(Request $request, ProjectManager $project_manager) {
         $repositoryProjectManager = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:ProjectManager');
         $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectManagerType', $project_manager, array('method' => 'PUT'));
+        $common_service = $this->get('app.common_service');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $common_service->setUserAttributesToContributorIfNotExists($project_manager);
             if ($project_manager->getNom() == null || $project_manager->getNom() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le nom du maître d'oeuvre. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }

@@ -21,6 +21,7 @@ class DecompteType extends AbstractType {
                 ->add('endDate', TextType::class, array('required' => false))
 //                ->add('mtAvenant', null, array('required' => false))
                 ->add('mtPenalite', null, array('required' => false))
+                ->add('mtRemboursementAvance', null, array('required' => false))
                 ->add('decompteTasks', CollectionType::class, array(
                     'entry_type' => DecompteTaskType::class,
                     'allow_add' => true,

@@ -21,7 +21,7 @@
                             <div class="content description">
                                 {{ form_start(form, {'method': 'PUT', 'action': path('other_contributor_update_post', {'idProject': project.id, 'id': otherContributor.id}), 'attr': {'class': 'ui mini form', 'id': 'od_update_other_contributor_form', "autocomplete":"off"} }) }}
                                 <h4 class="ui dividing header">Information de l' intervenant</h4>
-                                <div class="two fields">
+                                {#<div class="two fields">
                                     <div class="field">
                                         <label>{{ form_label(form.contributorType,"Type d'intervenant") }}</label>
                                         <div class="field"> 
@@ -35,6 +35,10 @@
                                         </div>
                                     </div>
                                     
+                                </div>#}
+                                <div class="field">
+                                    {{ form_label(form.user,"Nom d'utilisateur") }}
+                                    {{ form_widget(form.user,{'attr':{'data-validate': 'user-contributor', 'class': 'ui search dropdown'}})}}
                                 </div>
                                 <div class="three fields">
                                     <div class="field">

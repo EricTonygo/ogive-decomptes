@@ -5,21 +5,17 @@ namespace OGIVE\ProjectBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use OGIVE\UserBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
-class ProjectManagerType extends AbstractType {
+class ProjectOwnerType extends AbstractType {
 
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-//                ->add('nom', TextType::class, array('required' => false))
-//                ->add('email', TextType::class, array('required' => false))
                 ->add('user', EntityType::class, array(
                     'class' => User::class,
                     'choice_label' => 'username',
@@ -33,14 +29,6 @@ class ProjectManagerType extends AbstractType {
 //                                ->setParameter('enabled', true);
                     }
                 ))
-                ->add('phone', TextType::class, array('required' => false))
-                ->add('codePostal', TextType::class, array('required' => false))
-                ->add('faxNumber', TextType::class, array('required' => false))
-                ->add('rc', TextType::class, array('required' => false))
-                ->add('numeroContribuable', TextType::class, array('required' => false))
-                ->add('numeroCompteBancaire', TextType::class, array('required' => false))
-                ->add('nomBanque', TextType::class, array('required' => false))
-                ->add('intitule', TextType::class, array('required' => false))
         ;
     }
 
@@ -49,7 +37,7 @@ class ProjectManagerType extends AbstractType {
      */
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
-            'data_class' => 'OGIVE\ProjectBundle\Entity\ProjectManager'
+            'data_class' => 'OGIVE\ProjectBundle\Entity\Owner'
         ));
     }
 
@@ -57,7 +45,7 @@ class ProjectManagerType extends AbstractType {
      * {@inheritdoc}
      */
     public function getBlockPrefix() {
-        return 'ogive_projectbundle_projectManager';
+        return 'ogive_projectbundle_project_owner';
     }
 
 }

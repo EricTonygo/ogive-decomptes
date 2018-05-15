@@ -6,12 +6,12 @@
     <div class="ui basic fixed segment content">
         <div class='ui container'>
             {% include('OGIVEProjectBundle:project:top-content-project-page.html.twig') %}
-            <div class="ui two column stackable grid padded">
-                <div class="eleven wide column">
-                    <div class="ui top attached stackable tabular menu od_project_menu">
-                        {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
-                    </div>
-                    <div class="ui bottom attached segment od_project_menu_content">
+            <div class="ui top attached stackable tabular menu od_project_menu">
+                {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
+            </div>
+            <div class="ui bottom attached segment od_project_menu_content">
+                <div class="ui two column stackable grid padded">
+                    <div class="eleven wide column">
                         <div class="ui fluid card od_card_top_table_action">
                             <div class="content">
                                 <a class="ui right floated yellow mini button" href="{{path('decompte_add_get', {'id': project.id})}}"><i class="plus icon"></i> Créer un décompte</a>
@@ -70,11 +70,12 @@
                                     {%endif %}
                         </table>
                     </div>
-                </div>
-                <div class="five wide column">
-                    {% include('OGIVEProjectBundle::right-aside-page.html.twig') %}
+                    <div class="five wide column">
+                        {% include('OGIVEProjectBundle::right-aside-page.html.twig') %}
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 {% endblock %}

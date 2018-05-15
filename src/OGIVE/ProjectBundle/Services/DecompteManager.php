@@ -400,31 +400,15 @@ class DecompteManager {
     public function updateRemboursementAvance(Decompte $decompte, Decompte $decomptePrec = null) {
         if (!is_null($decomptePrec)) {
             $decompte->setMtRemboursementAvancePrec($decomptePrec->getMtRemboursementAvance());
+            $decompte->setMtCumulRemboursementAvance($decomptePrec->getMtCumulRemboursementAvance());
         } else {
             $decompte->setMtRemboursementAvancePrec(0);
+            $decompte->setMtCumulRemboursementAvance(0);
         }
+        $decompte->setMtCumulRemboursementAvance($decompte->getMtCumulRemboursementAvance() + $decompte->getMtRemboursementAvance());
         if (is_null($decompte->getMtRemboursementAvance())) {
             $decompte->setMtRemboursementAvance(0);
         }
-//        if ($decompte->getProject()->getAvanceDemarrage()) {
-//            $avanceDemarrage = $decompte->getProject()->getAvanceDemarrage();
-//            $mtAvanceDemarrage = $decompte->getMtPrevueMarche() * $avanceDemarrage;
-//            $decompte->setMtAvanceDemarrage($mtAvanceDemarrage);
-//            if ($decompte->getPourcentRealisation() > 40 && $decompte->getPourcentRealisation() < 80) {
-//                if ($decomptePrec && $decomptePrec->getMtRemboursementAvance() > 0) {
-//                    $decompte->setMtRemboursementAvance($mtAvanceDemarrage - $decomptePrec->getMtRemboursementAvance());
-//                    $decompte->setMtRemboursementAvance(ceil($decompte->getMtAvanceDemarrage() * 0.5));
-//                }else{
-//                    $decompte->setMtRemboursementAvance(ceil($decompte->getMtAvanceDemarrage() * 0.5));
-//                }
-//            } elseif ($decompte->getPourcentRealisation() >= 80) {
-//                if ($decomptePrec && $decomptePrec->getMtRemboursementAvance() >= 0) {
-//                    $decompte->setMtRemboursementAvance($mtAvanceDemarrage - $decomptePrec->getMtAvanceDemarrage());
-//                }else{
-//                    $decompte->setMtRemboursementAvance($mtAvanceDemarrage);
-//                }
-//            }
-//        }
         if (is_numeric($decompte->getMtRemboursementAvance()) && is_numeric($decompte->getMtRemboursementAvancePrec())) {
             $decompte->setMtRemboursementAvanceACD($decompte->getMtRemboursementAvance() - $decompte->getMtRemboursementAvancePrec());
         } else {

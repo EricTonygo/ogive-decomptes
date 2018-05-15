@@ -359,7 +359,6 @@
                     <div class="ui bottom attached segment od_project_menu_content">
                         {%if allDecomptes > 1 %}
                             <div class="ui right floated pagination menu mini form" style="margin-bottom: 1em; border-radius: 0px;">
-                                {#                                <span style="font-weight: bold;">Parcourir les décomptes</span>#}
                                 {%if previousDecompte %}
                                     <a href="{{path('decompte_show_get', {'idProject': previousDecompte.project.id, 'id': previousDecompte.id})}}" class="yellow icon item">
                                         <i class="left chevron icon"></i>
@@ -384,13 +383,13 @@
                                 </div>
 
                                 <div class="right floated meta">
-                                    <a id="excel_export_decompte" class="item" href="exports/excel/decompe_mensuel_N°{{decompte.monthNumber}}.xlsx"> <i class="green file excel icon"></i> Exporter en excel</a>
+                                    <a id="excel_export_decompte" class="item" href="/exports/excel/decompe_mensuel_N°{{decompte.monthNumber}}.xlsx"> <i class="green file excel icon"></i> Exporter en excel</a>
                                     <a class="item"> | </a>
                                     <a id="pdf_export_decompte" class="item" > <i class="red file pdf icon"></i> Exporter en PDF</a>
                                     <a class="item"> | </a>
-                                    <a id="notify_decompte" class="item"> <i class="inverted yellow send icon"></i> Soumettre</a>
+                                    <a id="submit_decompte" class="item" onclick="submit_decompte_for_validation({{decompte.project.id}}, {{decompte.id}})"> <i class="inverted yellow send icon"></i> Soumettre</a>
                                     <a class="item"> | </a>
-                                    <a id="vailidate_decompte" class="item"> <i class="inverted green check icon"></i> Valider</a>
+                                    <a id="vailidate_decompte" class="item" onclick="validate_decompte({{decompte.project.id}}, {{decompte.id}});"> <i class="inverted green check icon"></i> Valider</a>
                                     <a class="item"> | </a>
                                     <a id="edit_decompte" class="item"> <i class="inverted blue write icon"></i> Modifier</a>
                                     <a class="item"> | </a>
@@ -409,6 +408,7 @@
                                     <a class="item" data-tab="third">DECOMPTE TVA</a>
                                     <a class="item" data-tab="fourth">DECOMPTE AIR</a>
                                     <a class="item" data-tab="fifth">RETENUE DE GARANTIE</a>
+                                    <a class="item" data-tab="sixth">ATTACHEMENT AVANCE DEMARRAGE</a>
                                 </div>
                                 <div class="ui tab segment active" data-tab="first">
                                     {% include 'OGIVEProjectBundle:decompte:header-table-montant-attachement.html.twig' %}
@@ -539,6 +539,46 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <div class="ui tab segment" data-tab="sixth">
+                                    {% include 'OGIVEProjectBundle:decompte:header-table-montant-attachement.html.twig' %}
+                                    <table class="ui celled structured yellow small fluid table">
+                                        <tbody>
+                                            <tr>
+                                                <td style="width: 45em; font-weight: bold;">Montant du marché: </td>
+                                                <td style="width: 33em; font-weight: bold;">{{project.projectCost}} {{project.projectCostCurrency}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td >Montant de l'avance démarrage:</td>
+                                                <td>{{project.avanceDemarrage}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td >Montant cumulé des travaux éxécutés</td>
+                                                <td>{{decompte.mtCumulMoisTTC}}</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td >Montant précedent des travaux éxécutés</td>
+                                                <td>{{decompte.mtCumulMoisPrecTTC}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td >Montant mensuel des travaux</td>
+                                                <td>{{decompte.mtMoisTTC}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Remboursement cumulé de l'avance de démarrage</td>
+                                                <td>{{decompte.mtRemboursementAvance}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Remboursement cumulé de l'avance de démarrage</td>
+                                                <td>{{decompte.mtCumulRemboursementAvance}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Remboursement du mois</td>
+                                                <td>{{decompte.mtRemboursementAvance}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                             <div class="content description od_decompte_content">
                                 {% include 'OGIVEProjectBundle:decompte:footer-table-decompte-signatures.html.twig' %}
@@ -556,7 +596,7 @@
                             </div>
                             <div class="content description">
                                 {{ form_start(form, {'method': 'PUT', 'action': path('decompte_update_post', {'idProject': project.id, 'id': decompte.id}), 'attr': {'class': 'ui mini form', 'id': 'od_update_decompte_form', "autocomplete":"off"} }) }}
-                                <div class="four fields">
+                                <div class="three fields">
                                     {{ form_widget(form.monthNumber,{'attr':{'placeholder':"Numero du decompte", 'data-validate': 'monthNumber'}})}}
                                     <div class="ui field">
                                         <label>{{ form_label(form.monthName,"Mois") }}</label>
@@ -564,12 +604,7 @@
                                             {{ form_widget(form.monthName,{'attr':{'placeholder':"Nom(s) de(s) mois ", 'data-validate': 'monthName'}})}}
                                         </div>
                                     </div>
-                                    <div class="ui field">
-                                        <label>{{ form_label(form.mtPenalite,"Montant pénalités") }}</label>
-                                        <div class="field"> 
-                                            {{ form_widget(form.mtPenalite,{'attr':{'placeholder':"Montant des pénalités", 'data-validate': 'mt_penalité'}})}}
-                                        </div>
-                                    </div>
+
                                     <div class="ui field">
                                         <label>Date de debut</label>
                                         <div class="field">
@@ -590,6 +625,20 @@
                                                     {{ form_widget(form.endDate,{'attr':{'placeholder':"Date de fin", 'data-validate': 'end_date'}})}}
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="two fields">
+                                    <div class="ui field">
+                                        <label>{{ form_label(form.mtRemboursementAvance,"Remboursement de l'avance") }}</label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.mtRemboursementAvance,{'attr':{'placeholder':"Remboursement de l'avance demarrage", 'data-validate': 'mt_remboursement_avance'}})}}
+                                        </div>
+                                    </div>
+                                    <div class="ui field">
+                                        <label>{{ form_label(form.mtPenalite,"Montant pénalités") }}</label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.mtPenalite,{'attr':{'placeholder':"Montant des pénalités", 'data-validate': 'mt_penalite'}})}}
                                         </div>
                                     </div>
                                 </div>
@@ -635,9 +684,7 @@
                                                         <td colspan="15">{{ form_widget(childForm.nom,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.nom.vars.value}}</td>
                                                         {%for subDecompteTask in childForm.subDecompteTasks %}
                                                             {{ forms.decompteTask_prototype(subDecompteTask) }}
-
                                                         {%endfor %}
-
                                                     {% elseif childForm.unite.vars.value and childForm.prixUnitaire.vars.value and childForm.qtePrevueMarche.vars.value and  childForm.qtePrevueProjetExec.vars.value %}
                                                         <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'decompteTask_number', 'class': 'ui mini disabled input'}}) }}{{childForm.numero.vars.value}}</td>
                                                         <td>{{ form_widget(childForm.nom,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.nom.vars.value}}</td>
@@ -665,10 +712,14 @@
                                                 </tr>
                                             {% endmacro %}
                                         {%else %}
-                                            <tfoot><tr><th colspan="5">
+                                            <tfoot>
+                                                <tr>
+                                                    <th colspan="5">
                                                         <div class='center aligned'>No task created at this moment</div>
-                                                    </th></tr></tfoot>
-                                                {%endif %}
+                                                    </th>
+                                                </tr>
+                                            </tfoot>
+                                        {%endif %}
                                     </table>
                                 </div>
                                 {{form_widget(form._token)}}
@@ -676,8 +727,8 @@
                                     {% include('OGIVEProjectBundle::form-message-success-error.html.twig') %}
                                 </div>
                                 <div class="field right aligned">
-                                    <button id="od_update_decompte_submit_btn" class="ui mini yellow button" type="submit">Sauvegarder</button>
                                     <a id="od_update_decompte_cancel_btn" class="ui mini red button cancel_edit_decompte" href="{{path('decompte_show_get', {'idProject': decompte.project.id, 'id': decompte.id})}}">Annuler</a>
+                                    <button id="od_update_decompte_submit_btn" class="ui mini yellow button" type="submit">Sauvegarder</button>                                    
                                 </div>
                                 </form>
                             </div>
@@ -705,6 +756,61 @@
             </div>
             <div id="execute_delete_decompte"  class="ui green right labeled icon button">
                 Oui
+                <i class="checkmark icon"></i>
+            </div>
+        </div>
+    </div>
+    <div id="validate_decompte" class="ui small modal">
+        <i class="close icon"></i>
+        <div class="header">
+            Validation du décompte N°{{decompte.monthNumber}}
+        </div>
+        <div class="content">
+            <form class="ui mini form">
+                <div class="ui field">
+                    <label>Lieu de validation</label>
+                    <div class="field">
+                        {{ form_widget(formForValidation.validationPlace,{'attr':{'placeholder':"Lieu de validation", 'data-validate': 'validation_place'}})}}
+                    </div>
+                </div>
+                <div class="ui field">
+                    <label>Date de validation</label>
+                    <div class="field">
+                        <div class="ui calendar" >
+                            <div class="ui input left icon">
+                                <i class="calendar icon"></i>
+                                {{ form_widget(formForValidation.validationDate,{'attr':{'placeholder':"Date de validation", 'data-validate': 'validation_date'}})}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="actions">
+            <div class="ui red deny mini button">
+                Fermer
+            </div>
+            <div id="execute_validate_decompte"  class="ui green right labeled icon mini button">
+                Valider
+                <i class="checkmark icon"></i>
+            </div>
+        </div>
+    </div>
+    <div id="confirm_submission_decompte" class="ui small modal">
+        <i class="close icon"></i>
+        <div class="header">
+            Confirmation la soumission du décompte N°{{decompte.monthNumber}}
+        </div>
+        <div class="content">
+            <p>Vous êtes sur le point de soumettre ce décompte pour validation.</p>
+            <p>Voulez-vous vraiment réaliser cette action ?</p>
+        </div>
+        <div class="actions">
+            <div class="ui red deny mini button">
+                Annuler
+            </div>
+            <div id="execute_submission_decompte"  class="ui green right labeled icon mini button">
+                Confirmer
                 <i class="checkmark icon"></i>
             </div>
         </div>

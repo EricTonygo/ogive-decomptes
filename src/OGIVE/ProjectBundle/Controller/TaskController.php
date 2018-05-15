@@ -92,13 +92,46 @@ class TaskController extends Controller {
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($task->getNumero() == null || $task->getNumero() == "") {
-                return new JsonResponse(["success" => false, 'message' => "Vôtre tâche est sans numéro. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
+                return new JsonResponse(["success" => false, 'message' => "Vôtre tâche est sans numéro. Vueillez le remplir."], Response::HTTP_BAD_REQUEST);
             }
             if ($task->getNom() == null || $task->getNom() == "") {
-                return new JsonResponse(["success" => false, 'message' => "Vôtre tâche est sans désignation. Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
+                return new JsonResponse(["success" => false, 'message' => "Vôtre tâche est sans désignation. Vueillez la remplir."], Response::HTTP_BAD_REQUEST);
+            }
+            if ($task->getStartDate() && ($task->getEndDate() == null || $task->getEndDate() == "")) {
+                return new JsonResponse(["success" => false, 'message' => "Vueillez renseigner la date de fin"], Response::HTTP_BAD_REQUEST);
+            }
+            if ($task->getEndDate() && ($task->getStartDate() == null || $task->getStartDate() == "")) {
+                return new JsonResponse(["success" => false, 'message' => "Vueillez renseigner la date de début"], Response::HTTP_BAD_REQUEST);
             }
             if ($repositoryTask->findOneBy(array('numero' => $task->getNumero(), "parentTask" => null, "project" => $project))) {
                 return new JsonResponse(["success" => false, 'message' => 'Une tâche avec ce numéro existe déjà'], Response::HTTP_BAD_REQUEST);
+            }
+            if ($task->getStartDate() && $task->getEndDate()) {
+                if ($project->getStartDate() == null || $project->getStartDate() == "") {
+                    return new JsonResponse(["success" => false, 'message' => "Vueillez renseigner la date de début du projet"], Response::HTTP_BAD_REQUEST);
+                } elseif ($project->getEndDate() == null || $project->getEndDate() == "") {
+                    return new JsonResponse(["success" => false, 'message' => "Vueillez renseigner la date de fin du projet"], Response::HTTP_BAD_REQUEST);
+                } else {
+                    $startDateTask = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $task->getStartDate()))));
+                    $endDateTask = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $task->getEndDate()))));
+                    $startDateProject = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $project->getStartDate()))));
+                    $endDateProject = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $project->getEndDate()))));
+                    if ($startDateProject == null) {
+                        return new JsonResponse(["success" => false, 'message' => "Vueillez renseigner la date de début du projet"], Response::HTTP_BAD_REQUEST);
+                    } elseif ($endDateProject == null) {
+                        return new JsonResponse(["success" => false, 'message' => "Vueillez renseigner la date de fin du projet"], Response::HTTP_BAD_REQUEST);
+                    } else {
+                        if ($startDateTask < $startDateProject) {
+                            return new JsonResponse(["success" => false, 'message' => "La date de début de cette tâche ne peut pas être inférieur à la date de début du projet " . $project->getStartDate()], Response::HTTP_BAD_REQUEST);
+                        } elseif ($startDateTask > $endDateProject) {
+                            return new JsonResponse(["success" => false, 'message' => "La date de début de cette tâche ne peut pas être supérieur à la date de fin du projet " . $project->getEndDate()], Response::HTTP_BAD_REQUEST);
+                        } elseif ($endDateTask < $startDateProject) {
+                            return new JsonResponse(["success" => false, 'message' => "La date de fin de cette tâche ne peut pas être inférieur à la date de début du projet " . $project->getStartDate()], Response::HTTP_BAD_REQUEST);
+                        } elseif ($endDateTask > $endDateProject) {
+                            return new JsonResponse(["success" => false, 'message' => "La date de fin de cette tâche ne peut pas être supérieur à la date de fin du projet " . $project->getEndDate()], Response::HTTP_BAD_REQUEST);
+                        }
+                    }
+                }
             }
             $user = $this->getUser();
             $task->setProject($project);
@@ -111,9 +144,9 @@ class TaskController extends Controller {
                 if ($subTask->getNumero() == null || $subTask->getNumero() == "") {
                     return new JsonResponse(["success" => false, 'message' => "Vous avez des sous tache sans numéros. Vueillez les remplir. "], Response::HTTP_BAD_REQUEST);
                 } else {
-                    if ($repositoryTask->findOneBy(array('numero' => $subTask->getNumero()))) {
-                        return new JsonResponse(["success" => false, 'message' => 'Une sous-tâche avec ce numéro existe déjà'], Response::HTTP_BAD_REQUEST);
-                    }
+//                    if ($repositoryTask->findOneBy(array('numero' => $subTask->getNumero()))) {
+//                        return new JsonResponse(["success" => false, 'message' => 'Une sous-tâche avec ce numéro existe déjà'], Response::HTTP_BAD_REQUEST);
+//                    } #Il faudra recherche les tâches de même numero dans la liste des sous-tâche $subTasks
                     if ($subTask->getNom() == null || $subTask->getNom() == "") {
                         return new JsonResponse(["success" => false, 'message' => "La sous tache de numéro " . $subTask->getNumero() . " n'a pas de désignation" . "Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
                     }
@@ -158,8 +191,42 @@ class TaskController extends Controller {
             if ($task->getNom() == null || $task->getNom() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vôtre tâche est sans désignation. Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
             }
-            if ($repositoryTask->findOneBy(array('numero' => $task->getNumero(), 'parentTask'=> $parentTask))) {
+            if ($task->getStartDate() && ($task->getEndDate() == null || $task->getEndDate() == "")) {
+                return new JsonResponse(["success" => false, 'message' => "Vueillez renseigner la date de fin"], Response::HTTP_BAD_REQUEST);
+            }
+            if ($task->getEndDate() && ($task->getStartDate() == null || $task->getStartDate() == "")) {
+                return new JsonResponse(["success" => false, 'message' => "Vueillez renseigner la date de début"], Response::HTTP_BAD_REQUEST);
+            }
+            if ($repositoryTask->findOneBy(array('numero' => $task->getNumero(), 'parentTask' => $parentTask))) {
                 return new JsonResponse(["success" => false, 'message' => 'Une tâche avec ce numéro existe déjà'], Response::HTTP_BAD_REQUEST);
+            }
+            if ($task->getStartDate() && $task->getEndDate()) {
+                $project = $task->getProjectTask();
+                if ($project->getStartDate() == null || $project->getStartDate() == "") {
+                    return new JsonResponse(["success" => false, 'message' => "Vueillez renseigner la date de début du projet"], Response::HTTP_BAD_REQUEST);
+                } elseif ($project->getEndDate() == null || $project->getEndDate() == "") {
+                    return new JsonResponse(["success" => false, 'message' => "Vueillez renseigner la date de fin du projet"], Response::HTTP_BAD_REQUEST);
+                } else {
+                    $startDateTask = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $task->getStartDate()))));
+                    $endDateTask = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $task->getEndDate()))));
+                    $startDateProject = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $project->getStartDate()))));
+                    $endDateProject = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $project->getEndDate()))));
+                    if ($startDateProject == null) {
+                        return new JsonResponse(["success" => false, 'message' => "Vueillez renseigner la date de début du projet"], Response::HTTP_BAD_REQUEST);
+                    } elseif ($endDateProject == null) {
+                        return new JsonResponse(["success" => false, 'message' => "Vueillez renseigner la date de fin du projet"], Response::HTTP_BAD_REQUEST);
+                    } else {
+                        if ($startDateTask < $startDateProject) {
+                            return new JsonResponse(["success" => false, 'message' => "La date de début de cette tâche ne peut pas être inférieur à la date de début du projet " . $project->getStartDate()], Response::HTTP_BAD_REQUEST);
+                        } elseif ($startDateTask > $endDateProject) {
+                            return new JsonResponse(["success" => false, 'message' => "La date de début de cette tâche ne peut pas être supérieur à la date de fin du projet " . $project->getEndDate()], Response::HTTP_BAD_REQUEST);
+                        } elseif ($endDateTask < $startDateProject) {
+                            return new JsonResponse(["success" => false, 'message' => "La date de fin de cette tâche ne peut pas être inférieur à la date de début du projet " . $project->getStartDate()], Response::HTTP_BAD_REQUEST);
+                        } elseif ($endDateTask > $endDateProject) {
+                            return new JsonResponse(["success" => false, 'message' => "La date de fin de cette tâche ne peut pas être supérieur à la date de fin du projet " . $project->getEndDate()], Response::HTTP_BAD_REQUEST);
+                        }
+                    }
+                }
             }
             $user = $this->getUser();
             $task->setProject(null);
@@ -174,7 +241,7 @@ class TaskController extends Controller {
                 } else {
 //                    if ($repositoryTask->findOneBy(array('numero' => $subTask->getNumero()))) {
 //                        return new JsonResponse(["success" => false, 'message' => 'Une sous-tâche avec ce numéro existe déjà'], Response::HTTP_BAD_REQUEST);
-//                    }
+//                    } #Il faudra recherche les tâches de même numero dans la liste des sous-tâche $subTasks
                     if ($subTask->getNom() == null || $subTask->getNom() == "") {
                         return new JsonResponse(["success" => false, 'message' => "La sous-tâche de numéro " . $subTask->getNumero() . " n'a pas de désignation" . "Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
                     }
@@ -235,7 +302,6 @@ class TaskController extends Controller {
         $decompte_manager = $this->get('app.decompte_manager');
         $originalSubTasks = new \Doctrine\Common\Collections\ArrayCollection();
 
-
         foreach ($task->getSubTasks() as $subTask) {
             $originalSubTasks->add($subTask);
         }
@@ -243,10 +309,47 @@ class TaskController extends Controller {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $taskEdit = $repositoryTask->findOneBy(array('numero' => $task->getNumero(), 'parentTask'=> $task->getParentTask()));
+            if ($task->getNumero() == null || $task->getNumero() == "") {
+                return new JsonResponse(["success" => false, 'message' => "Vôtre tâche est sans numéro. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
+            }
+            if ($task->getNom() == null || $task->getNom() == "") {
+                return new JsonResponse(["success" => false, 'message' => "Vôtre tâche est sans désignation. Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
+            }
+            if ($task->getStartDate() && ($task->getEndDate() == null || $task->getEndDate() == "")) {
+                return new JsonResponse(["success" => false, 'message' => "Vueillez renseigner la date de fin"], Response::HTTP_BAD_REQUEST);
+            }
+            if ($task->getEndDate() && ($task->getStartDate() == null || $task->getStartDate() == "")) {
+                return new JsonResponse(["success" => false, 'message' => "Vueillez renseigner la date de début"], Response::HTTP_BAD_REQUEST);
+            }
+            $taskEdit = $repositoryTask->findOneBy(array('numero' => $task->getNumero(), 'parentTask' => $task->getParentTask()));
             if ($taskEdit && $taskEdit->getId() != $task->getId()) {
                 return new JsonResponse(["success" => false, 'message' => 'Une tâche avec ce numéro existe déjà'], Response::HTTP_BAD_REQUEST);
             }
+            if ($task->getStartDate() && $task->getEndDate()) {
+                $project = $task->getProjectTask();
+                if ($project) {
+                    $startDateTask = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $task->getStartDate()))));
+                    $endDateTask = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $task->getEndDate()))));
+                    $startDateProject = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $project->getStartDate()))));
+                    $endDateProject = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $project->getEndDate()))));
+                    if ($startDateProject == null) {
+                        return new JsonResponse(["success" => false, 'message' => "Vueillez renseigner la date de début du projet"], Response::HTTP_BAD_REQUEST);
+                    } elseif ($endDateProject == null) {
+                        return new JsonResponse(["success" => false, 'message' => "Vueillez renseigner la date de fin du projet"], Response::HTTP_BAD_REQUEST);
+                    } else {
+                        if ($startDateTask < $startDateProject) {
+                            return new JsonResponse(["success" => false, 'message' => "La date de début de cette tâche ne peut pas être inférieur à la date de début du projet " . $project->getStartDate()], Response::HTTP_BAD_REQUEST);
+                        } elseif ($startDateTask > $endDateProject) {
+                            return new JsonResponse(["success" => false, 'message' => "La date de début de cette tâche ne peut pas être supérieur à la date de fin du projet " . $project->getEndDate()], Response::HTTP_BAD_REQUEST);
+                        } elseif ($endDateTask < $startDateProject) {
+                            return new JsonResponse(["success" => false, 'message' => "La date de fin de cette tâche ne peut pas être inférieur à la date de début du projet " . $project->getStartDate()], Response::HTTP_BAD_REQUEST);
+                        } elseif ($endDateTask > $endDateProject) {
+                            return new JsonResponse(["success" => false, 'message' => "La date de fin de cette tâche ne peut pas être supérieur à la date de fin du projet " . $project->getEndDate()], Response::HTTP_BAD_REQUEST);
+                        }
+                    }
+                }
+            }
+
             $user = $this->getUser();
             $task->setUpdatedUser($user);
 
@@ -270,7 +373,7 @@ class TaskController extends Controller {
                     $subTaskEdit = $repositoryTask->findOneBy(array('numero' => $subTask->getNumero(), 'parentTask' => $task));
                     if ($subTaskEdit && $subTaskEdit->getId() != $subTask->getId()) {
                         return new JsonResponse(["success" => false, 'message' => 'Une sous-tâche avec ce numéro existe déjà'], Response::HTTP_BAD_REQUEST);
-                    }
+                    }//#Il faudra recherche les tâches de même numero dans la liste des sous-tâche $subTasks
                     if ($subTask->getNom() == null || $subTask->getNom() == "") {
                         return new JsonResponse(["success" => false, 'message' => "La sous tache de numéro " . $subTask->getNumero() . " n'a pas de désignation" . "Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
                     }

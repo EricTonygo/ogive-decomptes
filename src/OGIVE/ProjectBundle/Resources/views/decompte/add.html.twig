@@ -21,7 +21,7 @@
                             <div class="content description">
                                 {{ form_start(form, {'method': 'POST', 'action': path('decompte_add_get', {'id': project.id}), 'attr': {'class': 'ui mini form', 'id': 'od_add_decompte_form', "autocomplete":"off"} }) }}
                                 
-                                <div class="four fields">
+                                <div class="three fields">
                                     {{ form_widget(form.monthNumber,{'attr':{'placeholder':"Numero du decompte", 'data-validate': 'monthNumber'}})}}
                                     <div class="ui field">
                                         <label>{{ form_label(form.monthName,"Mois") }}</label>
@@ -29,12 +29,7 @@
                                             {{ form_widget(form.monthName,{'attr':{'placeholder':"Nom(s) de(s) mois ", 'data-validate': 'monthName'}})}}
                                         </div>
                                     </div>
-                                    <div class="ui field">
-                                        <label>{{ form_label(form.mtPenalite,"Montant pénalités") }}</label>
-                                        <div class="field"> 
-                                            {{ form_widget(form.mtPenalite,{'attr':{'placeholder':"Montant des pénalités", 'data-validate': 'mt_penalité'}})}}
-                                        </div>
-                                    </div>
+                                    
                                     <div class="ui field">
                                         <label>Date de debut</label>
                                         <div class="field">
@@ -58,13 +53,27 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="two fields">
+                                    <div class="ui field">
+                                        <label>{{ form_label(form.mtRemboursementAvance,"Remboursement de l'avance") }}</label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.mtRemboursementAvance,{'attr':{'placeholder':"Remboursement de l'avance demarrage", 'data-validate': 'mt_remboursement_avance'}})}}
+                                        </div>
+                                    </div>
+                                    <div class="ui field">
+                                        <label>{{ form_label(form.mtPenalite,"Montant pénalités") }}</label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.mtPenalite,{'attr':{'placeholder':"Montant des pénalités", 'data-validate': 'mt_penalite'}})}}
+                                        </div>
+                                    </div>
+                                </div>               
                                 {{form_widget(form._token)}}
                                 <div class="field">
                                     {% include('OGIVEProjectBundle::form-message-success-error.html.twig') %}
                                 </div>
                                 <div class="field right aligned">
-                                    <button id="od_add_decompte_submit_btn"  class="ui mini yellow button" type="submit">Créer</button>
                                     <a id="od_add_decompte_cancel_btn" class="ui mini red button"  href="{{path('project_decomptes_get', {'id': project.id})}}">Annuler</a>
+                                    <button id="od_add_decompte_submit_btn"  class="ui mini yellow button" type="submit">Créer</button>
                                 </div>
                                 </form>
                             </div>

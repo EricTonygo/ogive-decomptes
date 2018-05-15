@@ -284,6 +284,13 @@ class Decompte extends GeneralClass {
     /**
      * @var float
      *
+     * @ORM\Column(name="mt_cumul_remboursement_avance", type="float", precision=20, scale=0, nullable=true)
+     */
+    private $mtCumulRemboursementAvance;
+    
+    /**
+     * @var float
+     *
      * @ORM\Column(name="mt_penalite", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtPenalite;
@@ -455,7 +462,7 @@ class Decompte extends GeneralClass {
     private $project;
     
     /**
-     * @var \Decompte
+     * @var \DecompteTotal
      *
      * @ORM\ManyToOne(targetEntity="DecompteTotal")
      * @ORM\JoinColumns({
@@ -471,6 +478,13 @@ class Decompte extends GeneralClass {
      * @ORM\OneToMany(targetEntity="\OGIVE\ProjectBundle\Entity\DecompteTask", mappedBy="decompte", cascade={"remove", "persist"})
     */
     private $decompteTasks;
+    
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="\OGIVE\ProjectBundle\Entity\DecompteValidation", mappedBy="decompte", cascade={"remove", "persist"})
+    */
+    private $decompteValidations;
     
 
     /**
@@ -1280,13 +1294,13 @@ class Decompte extends GeneralClass {
     }
     
     /**
-     * Set decompte
+     * Set decompteTotal
      *
      * @param \OGIVE\ProjectBundle\Entity\DecompteTotal $decompteTotal
      *
      * @return Decompte
      */
-    public function setDecompteTotal(\OGIVE\ProjectBundle\Entity\Decompte $decompteTotal=null) {
+    public function setDecompteTotal(\OGIVE\ProjectBundle\Entity\DecompteTotal $decompteTotal=null) {
         $this->decompteTotal = $decompteTotal;
 
         return $this;
@@ -1321,6 +1335,49 @@ class Decompte extends GeneralClass {
      */
     public function getDecompteState() {
         return $this->decompteState;
+    }
+    
+    /**
+     * Add decompteValidation
+     *
+     * @param \OGIVE\ProjectBundle\Entity\DecompteTask $decompteValidation 
+     * @return Decompte
+     */
+    public function addDecompteValidation(\OGIVE\ProjectBundle\Entity\DecompteTask $decompteValidation) {
+        $this->decompteValidations[] = $decompteValidation;
+        return $this;
+    }
+
+    /**
+     * Get decompteValidations
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDecompteValidations() {
+        return $this->decompteValidations;
+    }
+
+    /**
+     * Set decompteValidations
+     *
+     * @param \Doctrine\Common\Collections\Collection $decompteValidations
+     * @return Decompte
+     */
+    public function setDecompteValidations(\Doctrine\Common\Collections\Collection $decompteValidations = null) {
+        $this->decompteValidations = $decompteValidations;
+
+        return $this;
+    }
+
+    /**
+     * Remove decompteValidation
+     *
+     * @param \OGIVE\ProjectBundle\Entity\DecompteValidation $decompteValidation
+     * @return Decompte
+     */
+    public function removeDecompteValidation(\OGIVE\ProjectBundle\Entity\DecompteValidation $decompteValidation) {
+        $this->decompteValidations->removeElement($decompteValidation);
+        return $this;
     }
     
     /**
@@ -1613,5 +1670,11 @@ class Decompte extends GeneralClass {
         $this->mtPrestationsWithAirACD = $mtPrestationsWithAirACD;
     }
 
+    function getMtCumulRemboursementAvance() {
+        return $this->mtCumulRemboursementAvance;
+    }
 
+    function setMtCumulRemboursementAvance($mtCumulRemboursementAvance) {
+        $this->mtCumulRemboursementAvance = $mtCumulRemboursementAvance;
+    }
 }

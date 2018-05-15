@@ -1,0 +1,90 @@
+{% import _self as forms %}
+{% extends "OGIVEProjectBundle::layout.html.twig" %}
+{% trans_default_domain 'OGIVEProjectBundle' %}
+{% block title %}Planning des travaux{% endblock %}
+
+{% block content %}
+    {% macro show_work_schedule_task_infos(task, day_project_list) %}
+        {% import _self as forms %}
+        <tr id="task{{task.id}}">
+            <td>
+                {{task.numero}}
+            </td>
+            {#<td style="max-width: 25em;">
+                {{task.nom}}                                               
+            </td>#}
+            {%if task.sub_task_length == 0 %}
+                {% set task_planning = task.task_planning %}
+                {%if task_planning %}
+                    {%for day_task in task_planning %}
+                        <td {%if day_task == 1 %} style="background-color: {{task.color}};"{%endif %}>
+
+                        </td>
+                    {%endfor %}
+                {%endif %}
+            {% else %}
+                <td colspan="{{day_project_list|length}}">
+                        
+                    </td>
+            {%endif %}
+        </tr>
+        {#{%if task.subTasks %}
+            {%for task in task.subTasks %}
+                {{forms.show_work_schedule_task_infos(task, day_project_list)}}
+            {%endfor %}
+        {% endif %}#}
+    {% endmacro %}
+    <div class="ui basic fixed segment content">
+        {#        <div class='ui container'>#}
+        {% include('OGIVEProjectBundle:project:top-content-project-page.html.twig') %}
+        <div class="ui one column stackable grid padded">
+            <div class="wide column">
+                <div class="ui top attached stackable tabular menu od_project_menu">
+                    {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
+                </div>
+                <div class="ui bottom attached segment od_project_menu_content" style="overflow-x: auto;">
+
+                    <table class="ui celled structured yellow small table">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" class='center aligned'>N°</th>
+{#                                <th rowspan="2" class='center aligned'>Désignation des ouvrages</th>#}
+                                {%for month, days_project in day_project_list_with_month %}
+                                <th colspan="{{days_project|length}}" class='center aligned'>{{month}}</th>
+                                {%endfor %}                            
+                            </tr>
+                            <tr>
+                                {%for month, days_project in day_project_list_with_month %}
+                                    {%for day_project in days_project %}
+                                        <th  class='center aligned'>{{day_project}}</th>
+                                    {%endfor %}
+                                {%endfor %}
+                            </tr>
+                        </thead>
+                        {%if tasks_list %}
+                            <tbody>
+                                {%for task in tasks_list %}
+                                    {{forms.show_work_schedule_task_infos(task, day_project_list)}}
+                                {%endfor %}
+                            </tbody>
+                        {%else %}
+                            <tfoot><tr><th colspan="6">
+                                        <div class='center aligned'>No task created at this moment</div>
+                                    </th></tr></tfoot>
+                                {%endif %}
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+        {#        </div>#}
+    </div>
+{% endblock %}
+{% block confirmation_modal %}
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent()}}
+    <script type="text/javascript" src="{{ asset('bundles/ogiveproject/js/task.js')}}"></script>
+{% endblock javascripts %}

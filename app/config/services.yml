@@ -28,7 +28,13 @@ services:
         resource: '../../src/AppBundle/Controller'
         public: true
         tags: ['controller.service_arguments']
-        
+    
+    #Service pour les filtres Twig
+    app.twig_extension:
+        class: OGIVE\ProjectBundle\Twig\AppExtension
+        public: false
+        tags:
+            - { name: twig.extension }
         
     # controllers are imported separately to make sure they're public
     # and have a tag that allows actions to type-hint services

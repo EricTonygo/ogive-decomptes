@@ -67,11 +67,13 @@ class OtherContributorController extends Controller {
         }
         $other_contributor = new OtherContributor();
         $repositoryOtherContributor = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:OtherContributor');
+        $common_service = $this->get('app.common_service');
 
         $form = $this->createForm('OGIVE\ProjectBundle\Form\OtherContributorType', $other_contributor);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $common_service->setUserAttributesToContributorIfNotExists($other_contributor);
             if ($other_contributor->getNom() == null || $other_contributor->getNom() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le nom du prestataire. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }
@@ -135,11 +137,12 @@ class OtherContributorController extends Controller {
     public function updateOtherContributorAction(Request $request, OtherContributor $other_contributor) {
         $repositoryOtherContributor = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:OtherContributor');
 
-
+        $common_service = $this->get('app.common_service');
         $form = $this->createForm('OGIVE\ProjectBundle\Form\OtherContributorType', $other_contributor, array('method' => 'PUT'));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $common_service->setUserAttributesToContributorIfNotExists($other_contributor);
             if ($other_contributor->getNom() == null || $other_contributor->getNom() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le nom du prestataire. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }

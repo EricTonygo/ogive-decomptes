@@ -7,8 +7,8 @@
         <div class='ui container signup_page_container'>
             <div class="ui centered card page_title">
                 <div class="content">
-                    <h2>Rejoindre OGIVE-DC</h2>
-                    <span class="description_app">Le meilleur moyen de piloter l'exécution de votre projet, avec la gestion des décomptes</span>
+                    <h2>Rejoindre Follow Up Contracts</h2>
+                    <span class="description_app">Le meilleur moyen de piloter l'exécution de votre marché, avec une gestion numerique des décomptes</span>
                 </div>
             </div>
             <div class="ui centered card page_title">
@@ -18,21 +18,21 @@
                             <i class="yellow user icon"></i>
                             <div class="content">
                                 <div class="title">Step 1:</div>
-                                <div class="description">Create personal account</div>
+                                <div class="description">Informations personnelles</div>
                             </div>
                         </div>
                         <div class="disabled step">
                             <i class="dollar icon"></i>
                             <div class="content">
                                 <div class="title">Step 2:</div>
-                                <div class="description">Choose your plan</div>
+                                <div class="description">Choisissez votre forfait</div>
                             </div>
                         </div>
                         <div class="disabled step">
                             <i class="info circle icon"></i>
                             <div class="content">
                                 <div class="title">Step 3:</div>
-                                <div class="description">Confirm informations</div>
+                                <div class="description">Confirmez vos informations</div>
                             </div>
                         </div>
                     </div>
@@ -59,25 +59,25 @@
                             {{ form_start(form, {'method': 'POST', 'action': path('create_personal_account_post'), 'attr': {'class': 'ui form', 'id': 'register_form'} }) }}
 
                             <div class="field">
-                                <label>Owner's name</label>
-                                {{ form_widget(form.lastname,{'attr':{'placeholder': "Enter your owner's name", 'data-validate': 'lastname'}})}}
+                                <label>Nom de votre entreprise</label>
+                                {{ form_widget(form.lastname,{'attr':{'placeholder': "Nom de votre entreprise", 'data-validate': 'lastname'}})}}
                             </div>
                             <div class="field">
-                                <label>Username</label>
-                                {{ form_widget(form.username,{'attr':{'placeholder':'Pick a username', 'data-validate': 'username'}})}}
+                                <label>Nom d'utilisateur</label>
+                                {{ form_widget(form.username,{'attr':{'placeholder':"Choisissez votre nom d'utilisateur", 'data-validate': 'username'}})}}
                             </div>
                             <div class="field">
-                                <label>Email address</label>
+                                <label>Adresse e-mail</label>
                                 {{ form_widget(form.email,{'attr':{'placeholder':'you@example.com', 'data-validate': 'email'}})}}
                             </div>
                             <div class="field">
-                                <label>Password</label>
-                                {{ form_widget(form.plainPassword.first,{'attr':{'placeholder':'Create a password', 'data-validate': 'password'}})}}
+                                <label>Mot de passe</label>
+                                {{ form_widget(form.plainPassword.first,{'attr':{'placeholder':'Saisissez votre mot de passe', 'data-validate': 'password'}})}}
                             </div>
 
                             <div class="field">
-                                <label>Confirm password</label>
-                                {{ form_widget(form.plainPassword.second,{'attr':{'placeholder':'Confirm a password', 'data-validate': 'passwordConfirm'}})}}
+                                <label>Confirmez mot de passe</label>
+                                {{ form_widget(form.plainPassword.second,{'attr':{'placeholder':'Confirmez votre mot de passe', 'data-validate': 'passwordConfirm'}})}}
                             </div>
                             {#<div class="field">
                                 <div class="ui checkbox">
@@ -89,25 +89,27 @@
                                 {{form_rest(form)}}
                             </div>
                             <div class="field">
-                                <span class="" style="font-size: 12px;">By clicking "Create an account", you agree to our <a href="#">terms of service</a>. We’ll occasionally send you account related emails.</span>
+                                <span class="" style="font-size: 12px;">En cliquant sur "Créez votre compte",
+                                    vous acceptez nos <a href="#">conditions d'utilisation</a>. Nous vous enverrons occasionnellement des e-mails liés au compte.
+                                </span>
                             </div>
                             <div class="field">
-                                <button id="submit_register_form" class="ui yellow button" type="submit">Create an account</button>
+                                <button id="submit_register_form" class="ui yellow button" type="submit">Créez votre compte</button>
                             </div>
-                            
+
                             {{ form_end(form) }}
                         </div>
                         <div class="six wide column">
                             <div class="ui card">
                                 <div class="content">
-                                    <h2 class='header'>Vous allez adorer OGIVE-DC</h2>
+                                    <h2 class='header'>Vous allez adorer Follow Up Contracts</h2>
                                 </div>
                                 <div class="content">
                                     <div class="ui list">
                                         <div class="item">
                                             <i class="green checkmark icon"></i>
                                             <div class="content">
-                                                Management des projets
+                                                Management de vos marchés
                                             </div>
                                         </div>
                                         <div class="item">

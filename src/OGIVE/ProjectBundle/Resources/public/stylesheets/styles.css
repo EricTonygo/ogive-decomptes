@@ -48,128 +48,139 @@ body, a, p, h1, div, h2, h3, h4, h5, h6, button {
   border-radius: 0px;
 }
 
-/* line 12, ../sass/imports/app_content.scss */
+/* line 13, ../sass/imports/app_content.scss */
+.ui.modal, .ui.small.modal {
+  border-radius: 0px !important;
+}
+/* line 15, ../sass/imports/app_content.scss */
+.ui.modal .header, .ui.small.modal .header {
+  font-size: 14px;
+}
+/* line 19, ../sass/imports/app_content.scss */
+.ui.modal .content p, .ui.small.modal .content p {
+  font-size: 12px;
+}
+
+/* line 25, ../sass/imports/app_content.scss */
+.ui.small.modal > .header {
+  font-size: 14px !important;
+}
+
+/* line 33, ../sass/imports/app_content.scss */
+.ui.small.modal .content .ui.mini.form .field label {
+  font-size: 12px;
+}
+
+/* line 41, ../sass/imports/app_content.scss */
 .pusher.od_app_content {
   /*overflow-x: visible;*/
   border: none;
   min-height: 40em;
 }
-/* line 16, ../sass/imports/app_content.scss */
-.pusher.od_app_content .ui.modal {
-  border-radius: 0px !important;
-}
-/* line 18, ../sass/imports/app_content.scss */
-.pusher.od_app_content .ui.modal .header {
-  font-size: 14px;
-}
-/* line 22, ../sass/imports/app_content.scss */
-.pusher.od_app_content .ui.modal .content p {
-  font-size: 12px;
-}
-/* line 27, ../sass/imports/app_content.scss */
+/* line 46, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.segment.basic.content {
   margin: 0px;
   min-height: 39.2em;
 }
-/* line 31, ../sass/imports/app_content.scss */
+/* line 50, ../sass/imports/app_content.scss */
 .pusher.od_app_content .od_project_menu_content.bottom.attached.segment {
   border: none;
   /*background-color: #f9f9f9;*/
   margin: 0px !important;
 }
-/* line 37, ../sass/imports/app_content.scss */
+/* line 56, ../sass/imports/app_content.scss */
 .pusher.od_app_content .right_mini_card_project_second_content .ui.tab.segment {
   border: none;
   box-shadow: none !important;
 }
-/* line 42, ../sass/imports/app_content.scss */
+/* line 61, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.dropdown.dropdown_actions .menu {
   left: -55px;
 }
-/* line 46, ../sass/imports/app_content.scss */
+/* line 65, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.dividing.header {
   font-size: 14px;
 }
-/* line 52, ../sass/imports/app_content.scss */
+/* line 71, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.table.table_header_decompte tr td {
   padding: .2em;
 }
-/* line 57, ../sass/imports/app_content.scss */
+/* line 76, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_project_details_card {
   border-radius: 0;
   box-shadow: none;
   border: none;
 }
-/* line 62, ../sass/imports/app_content.scss */
+/* line 81, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_project_details_card .content .header {
   text-transform: uppercase;
   font-weight: 700;
   font-size: 12px;
   color: #515151;
 }
-/* line 72, ../sass/imports/app_content.scss */
+/* line 91, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_project_details_card .content.description .ui.stackable.grid .column .ui.dividing.header {
   text-transform: uppercase;
   font-weight: normal;
   font-size: 12px;
   color: #515151;
 }
-/* line 80, ../sass/imports/app_content.scss */
+/* line 99, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_project_details_card .content.description .ui.stackable.grid .column .ui.form .field .description {
   font-size: 14px;
 }
-/* line 86, ../sass/imports/app_content.scss */
+/* line 105, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_project_details_card .content.description .ui.stackable.grid .column table.od_project_details_table {
   border: none;
 }
-/* line 90, ../sass/imports/app_content.scss */
+/* line 109, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_project_details_card .content.description .ui.stackable.grid .column table.od_project_details_table tbody tr td {
   border-top: none;
   font-size: 12px;
   min-width: 12em;
 }
-/* line 94, ../sass/imports/app_content.scss */
+/* line 113, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_project_details_card .content.description .ui.stackable.grid .column table.od_project_details_table tbody tr td label {
   font-weight: 700;
   font-size: 12px;
 }
-/* line 107, ../sass/imports/app_content.scss */
+/* line 126, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.small.table {
   font-size: 12px;
 }
-/* line 112, ../sass/imports/app_content.scss */
+/* line 131, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.small.table tr td .ui.image.header .content {
   font-size: 14px;
 }
-/* line 114, ../sass/imports/app_content.scss */
+/* line 133, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.small.table tr td .ui.image.header .content .sub.header {
   font-size: 12px;
 }
-/* line 122, ../sass/imports/app_content.scss */
+/* line 141, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_card_top_table_action {
   box-shadow: none;
 }
-/* line 125, ../sass/imports/app_content.scss */
+/* line 144, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.mini.form {
   font-size: 12px;
 }
-/* line 129, ../sass/imports/app_content.scss */
+/* line 148, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_add_project_card {
   border-radius: 0;
 }
-/* line 132, ../sass/imports/app_content.scss */
+/* line 151, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_add_project_card .content .header {
   text-transform: uppercase;
   font-weight: 700;
   font-size: 12px;
   color: #515151;
 }
-/* line 140, ../sass/imports/app_content.scss */
+/* line 159, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_add_project_card .content.description.od_decompte_content .ui.tab.segment {
   box-shadow: none;
   border: none;
 }
-/* line 147, ../sass/imports/app_content.scss */
+/* line 166, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_add_project_card .content.description .ui.mini.form .ui.dividing.header {
   text-transform: uppercase;
   font-weight: normal;
@@ -177,32 +188,32 @@ body, a, p, h1, div, h2, h3, h4, h5, h6, button {
   color: #515151;
   margin-top: 0px;
 }
-/* line 154, ../sass/imports/app_content.scss */
+/* line 173, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_add_project_card .content.description .ui.mini.form .field > label {
   color: #515151;
   font-size: 12px;
   font-weight: 700;
 }
-/* line 164, ../sass/imports/app_content.scss */
+/* line 183, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_add_project_card .content.description .ui.mini.form table tbody tr td input.qtemois {
   border: 2px solid #fbbd08 !important;
 }
-/* line 173, ../sass/imports/app_content.scss */
+/* line 192, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.bottom.attached.segment.od_project_menu_content .ui.fluid.card.od_add_project_card .content.description .ui.mini.form table thead tr th.qtemois {
   background: #fbbd08 !important;
 }
-/* line 187, ../sass/imports/app_content.scss */
+/* line 206, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.container .ui.fluid.card.od_add_project_card {
   border-radius: 0;
 }
-/* line 190, ../sass/imports/app_content.scss */
+/* line 209, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.container .ui.fluid.card.od_add_project_card .content .header {
   text-transform: uppercase;
   font-weight: 700;
   font-size: 12px;
   color: #515151;
 }
-/* line 199, ../sass/imports/app_content.scss */
+/* line 218, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.container .ui.fluid.card.od_add_project_card .content.description .ui.mini.form .ui.dividing.header {
   text-transform: uppercase;
   font-weight: normal;
@@ -210,39 +221,39 @@ body, a, p, h1, div, h2, h3, h4, h5, h6, button {
   color: #515151;
   margin-top: 0px;
 }
-/* line 206, ../sass/imports/app_content.scss */
+/* line 225, ../sass/imports/app_content.scss */
 .pusher.od_app_content .ui.container .ui.fluid.card.od_add_project_card .content.description .ui.mini.form .field > label {
   color: #515151;
   font-size: 12px;
   font-weight: 700;
 }
-/* line 217, ../sass/imports/app_content.scss */
+/* line 236, ../sass/imports/app_content.scss */
 .pusher.od_app_content #od_nav_menu.ui.tiny.menu {
   /*border: none;*/
   box-shadow: none;
   /*border-radius: 0px;*/
 }
-/* line 221, ../sass/imports/app_content.scss */
+/* line 240, ../sass/imports/app_content.scss */
 .pusher.od_app_content #od_nav_menu.ui.tiny.menu a.item {
   color: #f4b80a;
 }
-/* line 224, ../sass/imports/app_content.scss */
+/* line 243, ../sass/imports/app_content.scss */
 .pusher.od_app_content #od_nav_menu.ui.tiny.menu div.item {
   color: #565657;
 }
-/* line 227, ../sass/imports/app_content.scss */
+/* line 246, ../sass/imports/app_content.scss */
 .pusher.od_app_content #od_nav_menu.ui.tiny.menu .item {
   font-weight: 700;
 }
-/* line 229, ../sass/imports/app_content.scss */
+/* line 248, ../sass/imports/app_content.scss */
 .pusher.od_app_content #od_nav_menu.ui.tiny.menu .item:hover {
   background: none;
 }
-/* line 232, ../sass/imports/app_content.scss */
+/* line 251, ../sass/imports/app_content.scss */
 .pusher.od_app_content #od_nav_menu.ui.tiny.menu .item:before {
   background: none;
 }
-/* line 237, ../sass/imports/app_content.scss */
+/* line 256, ../sass/imports/app_content.scss */
 .pusher.od_app_content .segment.header_static_page {
   height: 180px;
   /*background-color: #14a6c773;*/
@@ -251,7 +262,7 @@ body, a, p, h1, div, h2, h3, h4, h5, h6, button {
   background-size: cover;
   margin: 0px;
 }
-/* line 244, ../sass/imports/app_content.scss */
+/* line 263, ../sass/imports/app_content.scss */
 .pusher.od_app_content .segment.header_static_page .left.floated.segment {
   margin-top: 4%;
   background: transparent;
@@ -259,11 +270,11 @@ body, a, p, h1, div, h2, h3, h4, h5, h6, button {
   border: none;
   color: white;
 }
-/* line 250, ../sass/imports/app_content.scss */
+/* line 269, ../sass/imports/app_content.scss */
 .pusher.od_app_content .segment.header_static_page .left.floated.segment h2.header {
   font-size: 30px;
 }
-/* line 255, ../sass/imports/app_content.scss */
+/* line 274, ../sass/imports/app_content.scss */
 .pusher.od_app_content .segment.content_static_page {
   min-height: 24.5em;
 }
@@ -271,51 +282,51 @@ body, a, p, h1, div, h2, h3, h4, h5, h6, button {
 /*body, html{
     height: auto;
 }*/
-/* line 264, ../sass/imports/app_content.scss */
+/* line 283, ../sass/imports/app_content.scss */
 #od_footer_menu.ui.menu {
   margin: 0;
   background-color: #313133;
   border-radius: 0px;
   box-shadow: none;
 }
-/* line 270, ../sass/imports/app_content.scss */
+/* line 289, ../sass/imports/app_content.scss */
 #od_footer_menu.ui.menu .ui.container .item {
   color: white;
   font-weight: 300;
 }
-/* line 273, ../sass/imports/app_content.scss */
+/* line 292, ../sass/imports/app_content.scss */
 #od_footer_menu.ui.menu .ui.container .item a.link_website {
   color: #fbbd08;
 }
-/* line 275, ../sass/imports/app_content.scss */
+/* line 294, ../sass/imports/app_content.scss */
 #od_footer_menu.ui.menu .ui.container .item a.link_website:hover {
   color: #b5cc18;
 }
-/* line 278, ../sass/imports/app_content.scss */
+/* line 297, ../sass/imports/app_content.scss */
 #od_footer_menu.ui.menu .ui.container .item a.link_website:focus {
   color: #b5cc18;
 }
-/* line 284, ../sass/imports/app_content.scss */
+/* line 303, ../sass/imports/app_content.scss */
 #od_footer_menu.ui.menu .ui.container .right.secondary.menu .item {
   font-size: 12px;
 }
-/* line 287, ../sass/imports/app_content.scss */
+/* line 306, ../sass/imports/app_content.scss */
 #od_footer_menu.ui.menu .ui.container .right.secondary.menu .item.separator {
   margin-left: 0px;
   margin-right: 0px;
 }
 
-/* line 295, ../sass/imports/app_content.scss */
+/* line 314, ../sass/imports/app_content.scss */
 .ui.modal > .close {
   color: #1b1c1d;
 }
 
-/* line 299, ../sass/imports/app_content.scss */
+/* line 318, ../sass/imports/app_content.scss */
 .ui.dimmer {
   background-color: rgba(255, 255, 255, 0.75);
 }
 
-/* line 303, ../sass/imports/app_content.scss */
+/* line 322, ../sass/imports/app_content.scss */
 .ui.modal > .close {
   top: 0.2rem;
   right: 0.2rem;

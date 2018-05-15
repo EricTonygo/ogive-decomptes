@@ -22,6 +22,12 @@ $(document).ready(function () {
 //        if($(this).sidebar("isvisible"))
 //        $('.ui.sidebar').sidebar("show");
 //    });
+    $('input[data-validate="validation_date"]').datetimepicker({
+        timepicker: false,
+        format: 'd-m-Y',
+        lang: 'fr',
+        scrollInput: false
+    });
     $('input[data-validate="start_date"]').datetimepicker({
         timepicker: false,
         //minDate: '0',

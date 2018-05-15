@@ -196,6 +196,62 @@ function delete_decompte(idProject, id) {
                     $('#message_error span').html(response.responseJSON.message);
                     $('#message_error').show();
 
+                },
+                400: function (response, textStatus, jqXHR) {
+                    $('#message_error span').html(response.responseJSON.message);
+                    $('#message_error').show();
+                }
+            },
+            success: function (response, textStatus, jqXHR) {
+                $('tr#decompte' + id).remove();
+                $('#message_loading').hide();
+                $('#message_success span').html(response.message);
+                $('#message_success').show();
+                setTimeout(function () {
+                    $('#message_success').hide();
+                }, 4000);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $("#delete_decompte_btn" + id).removeClass("loading");
+            }
+        });
+    });
+
+
+}
+
+
+function validate_decompte(idProject, id) {
+    $('#validate_decompte.ui.small.modal')
+            .modal('show');
+
+    $('#execute_validate_decompte').click(function (e) {
+        e.preventDefault();
+        $('#validate_decompte.ui.small.modal')
+                .modal('hide');
+        $('#message_error').hide();
+        $('#message_success').hide();
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('decompte_validate', {idProject: idProject, id: id}),
+            dataType: 'json',
+            beforeSend: function () {
+                $("#delete_decompte_btn" + id).addClass("loading");
+            },
+            statusCode: {
+                500: function (xhr) {
+                    $('#message_error span').html("Erreur s'est produite au niveau du serveur");
+                    $('#message_error').show();
+
+                },
+                404: function (response, textStatus, jqXHR) {
+                    $('#message_error span').html(response.responseJSON.message);
+                    $('#message_error').show();
+
+                },
+                400: function (response, textStatus, jqXHR) {
+                    $('#message_error span').html(response.responseJSON.message);
+                    $('#message_error').show();
                 }
             },
             success: function (response, textStatus, jqXHR) {
@@ -210,6 +266,56 @@ function delete_decompte(idProject, id) {
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 $("#delete_decompte_btn" + id).removeClass("loading");
+            }
+        });
+    });
+
+
+}
+
+
+function submit_decompte_for_validation(idProject, id) {
+    $('#confirm_submission_decompte.ui.small.modal')
+            .modal('show');
+
+    $('#execute_submission_decompte').click(function (e) {
+        e.preventDefault();
+        $('#confirm_submission_decompte.ui.small.modal')
+                .modal('hide');
+        $('#message_error').hide();
+        $('#message_success').hide();
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('decompte_submit_for_validation_post', {idProject: idProject, id: id}),
+            dataType: 'json',
+            beforeSend: function () {
+                $("#submit_decompte").addClass("loading");
+            },
+            statusCode: {
+                500: function (xhr) {
+                    $('#message_error span').html("Erreur s'est produite au niveau du serveur");
+                    $('#message_error').show();
+
+                },
+                404: function (response, textStatus, jqXHR) {
+                    $('#message_error span').html(response.responseJSON.message);
+                    $('#message_error').show();
+                },
+                400: function (response, textStatus, jqXHR) {
+                    $('#message_error span').html(response.responseJSON.message);
+                    $('#message_error').show();
+                }
+            },
+            success: function (response, textStatus, jqXHR) {
+                $("#submit_decompte").removeClass("loading");
+                $('#message_success span').html(response.message);
+                $('#message_success').show();
+                setTimeout(function () {
+                    $('#message_success').hide();
+                }, 4000);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $("#submit_decompte").removeClass("loading");
             }
         });
     });

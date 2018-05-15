@@ -90,15 +90,16 @@ class Contributor  extends GeneralClass{
     protected $intitule;
     
     /**
-     * @var \Project
+     * @var \OGIVE\UserBundle\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Project")
+     * @ORM\ManyToOne(targetEntity="\OGIVE\UserBundle\Entity\User")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="project", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="user", referencedColumnName="id")
      * })
      */
-    private $project;
-
+    private $user;
+   
+    
     public function __construct() {
         parent::__construct();
     }
@@ -347,26 +348,27 @@ class Contributor  extends GeneralClass{
         return $this->intitule;
     }
     
+    
     /**
-     * Set project
+     * Set user
      *
-     * @param \OGIVE\ProjectBundle\Entity\Project $project
+     * @param \OGIVE\UserBundle\Entity\User $user
      *
      * @return Contributor
      */
-    public function setProject(\OGIVE\ProjectBundle\Entity\Project $project=null) {
-        $this->project = $project;
+    public function setUser(\OGIVE\UserBundle\Entity\User $user = null) {
+        $this->user = $user;
 
         return $this;
     }
 
     /**
-     * Get project
+     * Get user
      *
-     * @return \OGIVE\ProjectBundle\Entity\Project
+     * @return \OGIVE\UserBundle\Entity\User
      */
-    public function getProject() {
-        return $this->project;
+    public function getUser() {
+        return $this->user;
     }
 
     public function setSearchData() {

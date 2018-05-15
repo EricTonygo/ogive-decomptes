@@ -68,11 +68,13 @@ class ServiceProviderController extends Controller {
         }
         $service_provider = new ServiceProvider();
         $repositoryServiceProvider = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:ServiceProvider');
+        $common_service = $this->get('app.common_service');
 
         $form = $this->createForm('OGIVE\ProjectBundle\Form\ServiceProviderType', $service_provider);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $common_service->setUserAttributesToContributorIfNotExists($service_provider);
             if ($service_provider->getNom() == null || $service_provider->getNom() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le nom du prestataire. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }
@@ -92,7 +94,6 @@ class ServiceProviderController extends Controller {
             $user = $this->getUser();
             $service_provider->setCreatedUser($user);
             $service_provider = $repositoryServiceProvider->saveServiceProvider($service_provider);
-            //return $this->redirect($this->generateUrl('project_contributors_get', array('id' => $service_provider->getProject()->getId())));
             $view = View::create(["message" => "Le prestataire a été ajouté avec succès. Vous serez redirigé dans bientôt !", 'id_project' => $project->getId()]);
             $view->setFormat('json');
             return $view;
@@ -136,11 +137,12 @@ class ServiceProviderController extends Controller {
     public function updateServiceProviderAction(Request $request, ServiceProvider $service_provider) {
         $repositoryServiceProvider = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:ServiceProvider');
 
-        
+        $common_service = $this->get('app.common_service');
         $form = $this->createForm('OGIVE\ProjectBundle\Form\ServiceProviderType', $service_provider, array('method' => 'PUT'));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $common_service->setUserAttributesToContributorIfNotExists($service_provider);
             if ($service_provider->getNom() == null || $service_provider->getNom() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le nom du prestataire. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }

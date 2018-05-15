@@ -67,11 +67,12 @@ class HolderController extends Controller {
         }
         $holder = new Holder();
         $repositoryHolder = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Holder');
-
+        $common_service = $this->get('app.common_service');
         $form = $this->createForm('OGIVE\ProjectBundle\Form\HolderType', $holder);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $common_service->setUserAttributesToContributorIfNotExists($holder);
             if ($holder->getNom() == null || $holder->getNom() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le nom du titulaire. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }
@@ -134,12 +135,13 @@ class HolderController extends Controller {
 
     public function updateHolderAction(Request $request, Holder $holder) {
         $repositoryHolder = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Holder');
-
+        $common_service = $this->get('app.common_service');
 
         $form = $this->createForm('OGIVE\ProjectBundle\Form\HolderType', $holder, array('method' => 'PUT'));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $common_service->setUserAttributesToContributorIfNotExists($holder);
             if ($holder->getNom() == null || $holder->getNom() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le nom du titulaire. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }

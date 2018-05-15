@@ -25,6 +25,12 @@
             <td>
                 {{task.qtePrevueProjetExec}}                                               
             </td>
+            <td>
+                {%if task.startDate %}{{task.startDate|date('d/m/Y')}} {%endif %}
+            </td>
+            <td>
+                {%if task.startDate %}{{task.endDate|date('d/m/Y')}}{%endif %}                                              
+            </td>
             <td style="text-align: center; padding: 0px;">
                 <div class="ui text menu" style="margin: 0px;">
                     <div class="left menu">
@@ -67,6 +73,7 @@
                                 <a class="ui right floated yellow mini button" href="{{path('task_add_get', {'id': project.id})}}"><i class="plus icon"></i> Ajouter une tâche</a>
                             </div>
                         </div>
+{#                        {{ form_start(form, {'method': 'PUT', 'action': '', 'attr': {'class': '', 'id': 'od_create_task_form', "autocomplete":"off"} }) }}#}
                         <table class="ui celled structured yellow small table">
                             <thead>
                                 <tr>
@@ -75,6 +82,8 @@
                                     <th rowspan="2" class='center aligned'>U</th>
                                     <th rowspan="2" class='center aligned'>P.U</th>                                   
                                     <th colspan="2" class='center aligned'>Quantité</th>
+                                    <th rowspan="2" class='center aligned'>Date début</th>
+                                    <th rowspan="2" class='center aligned'>Date fin</th> 
                                     <th rowspan="2" class='center aligned'>Actions</th>
                                 </tr>
                                 <tr>
@@ -84,33 +93,35 @@
                                 </tr>
                             </thead>
                             {%if tasks %}
-                                <tbody>
-                                    {%for task in tasks %}
-                                        {{forms.show_task_infos(task)}}
-                                    {%endfor %}
-                                </tbody>
-                                {%if total_pages>1 and total_pages >= page %}
-                                    <tfoot>
-                                        <tr><th colspan="7">
-                                                <div class="ui right floated mini pagination menu">
-                                                    {%if page > 1 %}
-                                                        <a href="{{path(app.request.attributes.get('_route'), route_param_search_query|merge({page: page-1}))}}" class="icon item">
-                                                            <i class="left chevron icon"></i>
-                                                        </a>
-                                                    {% endif %}
-                                                    {% for i in 1..total_pages %}
-                                                        <a href='{{path(app.request.attributes.get('_route'), route_param_search_query|merge({page: i}))}}' class="{% if i== page %}active{% endif %} item">{{i}}</a>
-                                                    {% endfor %}
-                                                    {%if page <= total_pages-1 %}
-                                                        <a href="{{path(app.request.attributes.get('_route'), route_param_search_query|merge({page: page+1}))}}" class="icon item">
-                                                            <i class="right chevron icon"></i>
-                                                        </a>
-                                                    {% endif %}
-                                                </div>
-                                            </th>
-                                        </tr>
-                                    </tfoot>
-                                {% endif %}
+                            <tbody>
+                                {%for task in tasks %}
+                                    {{forms.show_task_infos(task)}}
+                                {%endfor %}
+                            </tbody>
+
+                            
+                            {%if total_pages>1 and total_pages >= page %}
+                                <tfoot>
+                                    <tr><th colspan="7">
+                                            <div class="ui right floated mini pagination menu">
+                                                {%if page > 1 %}
+                                                    <a href="{{path(app.request.attributes.get('_route'), route_param_search_query|merge({page: page-1}))}}" class="icon item">
+                                                        <i class="left chevron icon"></i>
+                                                    </a>
+                                                {% endif %}
+                                                {% for i in 1..total_pages %}
+                                                    <a href='{{path(app.request.attributes.get('_route'), route_param_search_query|merge({page: i}))}}' class="{% if i== page %}active{% endif %} item">{{i}}</a>
+                                                {% endfor %}
+                                                {%if page <= total_pages-1 %}
+                                                    <a href="{{path(app.request.attributes.get('_route'), route_param_search_query|merge({page: page+1}))}}" class="icon item">
+                                                        <i class="right chevron icon"></i>
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </tfoot>
+                            {% endif %}
                             {%else %}
                                 <tfoot><tr><th colspan="6">
                                             <div class='center aligned'>No task created at this moment</div>
@@ -118,6 +129,8 @@
                                     {%endif %}
 
                         </table>
+                        {#{{form_widget(form._token)}}
+                        </form>#}
                     </div>
                 </div>
 

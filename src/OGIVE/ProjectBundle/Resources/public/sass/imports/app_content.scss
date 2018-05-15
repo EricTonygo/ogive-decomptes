@@ -9,21 +9,40 @@ body, a, p, h1, div, h2, h3, h4, h5, h6, button {
 .ui.message{
     border-radius: 0px;
 }
+
+.ui.modal, .ui.small.modal {
+    border-radius: 0px!important;
+    .header{
+        font-size: 14px;
+    }
+    .content{
+        p{
+            font-size: 12px;
+        }
+    }
+}
+
+.ui.small.modal>.header{
+    font-size: 14px!important;
+}
+
+.ui.small.modal{
+    .content{
+        .ui.mini.form{
+            .field{
+                label{
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+}
+
 .pusher.od_app_content{
     /*overflow-x: visible;*/
     border: none;
     min-height: 40em;
-    .ui.modal {
-        border-radius: 0px!important;
-        .header{
-            font-size: 14px;
-        }
-        .content{
-            p{
-                font-size: 12px;
-            }
-        }
-    }
+
     .ui.segment.basic.content{
         margin: 0px;
         min-height: 39.2em;
