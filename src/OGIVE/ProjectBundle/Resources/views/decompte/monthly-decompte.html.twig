@@ -6,7 +6,7 @@
 {% block content %}
     {% macro show_decompteTask_infos(decompteTask) %}
         {% import _self as forms %}
-        {%if decompteTask.unite is not null and  decompteTask.prixUnitaire is not null and decompteTask.qtePrevueMarche is not null  and decompteTask.qtePrevueProjetExec is not null %}
+        {%if decompteTask.unite and  decompteTask.prixUnitaire is not null and (decompteTask.qtePrevueMarche or decompteTask.qtePrevueMarche == 0) and (decompteTask.qtePrevueProjetExec or decompteTask.qtePrevueProjetExec == 0) %}
             <tr>
                 <td>
                     {{decompteTask.numero}}
@@ -685,7 +685,7 @@
                                                         {%for subDecompteTask in childForm.subDecompteTasks %}
                                                             {{ forms.decompteTask_prototype(subDecompteTask) }}
                                                         {%endfor %}
-                                                    {% elseif  childForm.unite.vars.value is not null and childForm.prixUnitaire.vars.value is not null and childForm.qtePrevueMarche.vars.value is not null and  childForm.qtePrevueProjetExec.vars.value is not null %}
+                                                    {% elseif  childForm.unite.vars.value  and childForm.prixUnitaire.vars.value  and (childForm.qtePrevueMarche.vars.value or childForm.qtePrevueMarche.vars.value == 0) and  (childForm.qtePrevueProjetExec.vars.value or childForm.qtePrevueProjetExec.vars.value == 0) %}
                                                         <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'decompteTask_number', 'class': 'ui mini disabled input'}}) }}{{childForm.numero.vars.value}}</td>
                                                         <td>{{ form_widget(childForm.nom,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.nom.vars.value}}</td>
                                                         <td>{{ form_widget(childForm.unite,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.unite.vars.value}}</td>
