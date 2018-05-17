@@ -17,6 +17,10 @@
                     <div class="content">
                         {{ form_start(form, {'method': 'POST', 'action': path('create_personal_account_post'), 'attr': {'class': 'ui form', 'id': 'register_form'} }) }}
                         <div class="field">
+                            <label>Nom de votre entreprise</label>
+                            {{ form_widget(form.lastname,{'attr':{'placeholder': "Saisissez le nom de votre entreprise", 'data-validate': 'lastname'}})}}
+                        </div>
+                        <div class="field">
                             <label>Nom d'utilisateur</label>
                             {{ form_widget(form.username,{'attr':{'placeholder':"Votre nom d'utilisateur", 'data-validate': 'username'}})}}
                         </div>
@@ -32,10 +36,7 @@
                             <label>Confirmer mot de passe</label>
                             {{ form_widget(form.plainPassword.second,{'attr':{'placeholder':'Confirmez votre mot de passe', 'data-validate': 'passwordConfirm'}})}}
                         </div>
-                        <div class="field">
-                            <label>Nom de votre entreprise</label>
-                            {{ form_widget(form.lastname,{'attr':{'placeholder': "Saisissez le nom de votre entreprise", 'data-validate': 'lastname'}})}}
-                        </div>
+                        
                         {#<div class="field">
                             <div class="ui checkbox">
                                 <input type="checkbox" tabindex="0" data-validate="termsConditions" class="">
