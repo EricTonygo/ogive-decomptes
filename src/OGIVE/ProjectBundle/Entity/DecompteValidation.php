@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Decompte
  *
- * @ORM\Table(name="decompte")
+ * @ORM\Table(name="decompte_validation")
  * @ORM\Entity(repositoryClass="\OGIVE\ProjectBundle\Repository\DecompteValidationRepository")
  * @ORM\HasLifecycleCallbacks
  */
