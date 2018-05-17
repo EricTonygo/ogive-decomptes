@@ -51,6 +51,18 @@
                                                     </td>
                                                     <td>{{project.subject}}</td>
                                                 </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>DELAIS</label>
+                                                    </td>
+                                                    <td>{{project.delais}} jour(s)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>PERIODE D'EXECUTION</label>
+                                                    </td>
+                                                    <td>{{project.startDate|date('d/m/Y')}} - {{project.endDate|date('d/m/Y')}}</td>
+                                                </tr>
                                                 {% if project.projectCost %}
                                                     <tr>
                                                         <td>
@@ -67,12 +79,14 @@
                                                         <td>{{project.avanceDemarrage}} {{project.projectCostCurrency}}</td>
                                                     </tr>
                                                 {% endif %}
+                                                {% if project.numeroLot %}
                                                 <tr>
                                                     <td>
-                                                        <label>LOT</label>
+                                                        <label>N° DE LOT</label>
                                                     </td>
                                                     <td>{{project.numeroLot}}</td>
                                                 </tr>
+                                                {% endif %}
                                                 <tr>
                                                     <td>
                                                         <label>LIEU D'EXECUTION</label>
