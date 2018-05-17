@@ -115,7 +115,7 @@
                                                             {{ forms.decompteTask_prototype(subDecompteTask) }}
                                                         {%endfor %}
 
-                                                    {% elseif childForm.unite.vars.value and childForm.prixUnitaire.vars.value and childForm.qtePrevueMarche.vars.value and  childForm.qtePrevueProjetExec.vars.value %}
+                                                    {% elseif childForm.unite.vars.value is not null and childForm.prixUnitaire.vars.value is not null and childForm.qtePrevueMarche.vars.value is not null and  childForm.qtePrevueProjetExec.vars.value is not null %}
                                                         <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'decompteTask_number', 'class': 'ui mini disabled input'}}) }}{{childForm.numero.vars.value}}</td>
                                                         <td>{{ form_widget(childForm.nom,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.nom.vars.value}}</td>
                                                         <td>{{ form_widget(childForm.unite,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.unite.vars.value}}</td>
