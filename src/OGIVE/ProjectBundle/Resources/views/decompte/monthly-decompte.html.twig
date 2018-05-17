@@ -54,7 +54,7 @@
                     {%if decompteTask.pourcentRealisation >= 0 %}{{decompteTask.pourcentRealisation}}% {%endif %}                                              
                 </td>
             </tr>
-        {%elseif decompteTask.subDecompteTasks is defined and decompteTask.subDecompteTasks|length >= 0 %}
+        {%elseif decompteTask.subDecompteTasks is defined and decompteTask.subDecompteTasks|length > 0 %}
             <tr>
                 <td colspan="15" style="font-weight: bold;">
                     LOT{{ decompteTask.numero }} : {{ decompteTask.nom }}                                              
