@@ -21,7 +21,7 @@ class UserMailService {
         if ($user && $user->getEmail() != "") {
             $message = \Swift_Message::newInstance()
                     ->setSubject("Account activation")
-                    ->setFrom(array('infos@siogive.com' => "OGIVE DECOMPTE"))
+                    ->setFrom(array('infos@siogive.com' => "Follow Up Contracts"))
                     ->setTo($user->getEmail())
                     ->setBody(
                     $this->templating->render('OGIVEUserBundle:send-mail:template-activation-account.html.twig', array('user' => $user)), 'text/html'
