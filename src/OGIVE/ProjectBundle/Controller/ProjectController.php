@@ -322,7 +322,7 @@ class ProjectController extends Controller {
             $holders = $project->getHolders();
             foreach ($holders as $holder) {
                 $holder->setProject($project);
-                $common_service->setUserAttributesToContributor($holder);
+                $common_service->setUserAttributesToContributorIfNotExists($holder);
             }
 
             //***************gestion des prestataire du projet ************************** */

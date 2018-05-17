@@ -151,7 +151,7 @@ class TaskController extends Controller {
                         return new JsonResponse(["success" => false, 'message' => "La sous tache de numéro " . $subTask->getNumero() . " n'a pas de désignation" . "Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
                     }
                 }
-                $task->setProject(null);
+                $subTask->setProject(null);
                 $subTask->setProjectTask($project);
                 $subTask->setParentTask($task);
                 $task->setCreatedUser($user);
@@ -246,7 +246,7 @@ class TaskController extends Controller {
                         return new JsonResponse(["success" => false, 'message' => "La sous-tâche de numéro " . $subTask->getNumero() . " n'a pas de désignation" . "Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
                     }
                 }
-                $task->setProject(null);
+                $subTask->setProject(null);
                 $subTask->setProjectTask($task->getProjectTask());
                 $subTask->setParentTask($task);
                 $subTask->setCreatedUser($user);

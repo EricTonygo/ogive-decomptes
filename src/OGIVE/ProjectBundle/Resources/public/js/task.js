@@ -66,7 +66,7 @@ $(document).ready(function () {
                         success: function (response, textStatus, jqXHR) {
                             $('#od_add_task_form.ui.form').removeClass('loading');
                             $('#form_message_success span').html(response.message);
-                            $('#form_message_sucess').show();
+                            $('#form_message_success').show();
                             var id_project = parseInt(response.id_project);
                             window.location.replace(Routing.generate('project_tasks_get', {id: id_project}));
                         },
