@@ -704,10 +704,10 @@
                                                     {%else %}
                                                         <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'decompteTask_number', 'class': 'ui mini disabled input'}}) }}{{childForm.numero.vars.value}}</td>
                                                         <td colspan="15">{{ form_widget(childForm.nom,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.nom.vars.value}}</td>
-                                                        {%for subDecompteTask in childForm.subDecompteTasks %}
+                                                       {# {%for subDecompteTask in childForm.subDecompteTasks %}
                                                             {{ forms.decompteTask_prototype(subDecompteTask) }}
 
-                                                        {%endfor %}
+                                                        {%endfor %}#}
                                                     {% endif %}
                                                 </tr>
                                             {% endmacro %}
