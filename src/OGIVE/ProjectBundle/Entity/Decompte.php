@@ -759,7 +759,7 @@ class Decompte extends GeneralClass {
      * @return float
      */
     public function getMtPrevueProjetExecTVA() {
-        return $this->mtPrevueProjetExec;
+        return $this->mtPrevueProjetExecTVA;
     }
     
     /**
@@ -1091,7 +1091,7 @@ class Decompte extends GeneralClass {
      * @return float
      */
     public function getMtMoisTTC() {
-        return $this->mtMois;
+        return $this->mtMoisTTC;
     }
     
     /**
