@@ -347,7 +347,7 @@ class DecompteManager {
         if (is_numeric($decompte->getMtCumulMois()) && is_numeric($decompte->getMtCumulMoisTVA())) {
             $decompte->setMtCumulMoisTTC($decompte->getMtCumulMois() + $decompte->getMtCumulMoisTVA());
         }
-        if (is_numeric($decompte->getMtCumulMoisPrec()) && is_numeric($decompte->getMtCumulMoisPrecTTC())) {
+        if (is_numeric($decompte->getMtCumulMoisPrec()) && is_numeric($decompte->getMtCumulMoisPrecTVA())) {
             $decompte->setMtCumulMoisPrecTTC($decompte->getMtCumulMoisPrec() + $decompte->getMtCumulMoisPrecTVA());
         }
     }
