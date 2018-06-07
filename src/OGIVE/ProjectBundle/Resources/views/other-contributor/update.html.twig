@@ -36,9 +36,17 @@
                                     </div>
                                     
                                 </div>#}
-                                <div class="field">
-                                    {{ form_label(form.user,"Nom d'utilisateur") }}
-                                    {{ form_widget(form.user,{'attr':{'data-validate': 'user-contributor', 'class': 'ui search dropdown'}})}}
+                                <div class="two fields">
+                                    <div  class="field">
+                                        {{ form_label(form.user,"Nom d'utilisateur") }}
+                                        {{ form_widget(form.user,{'attr':{'data-validate': 'user-contributor', 'class': 'ui search dropdown'}})}}
+                                    </div>
+                                    <div class="field">
+                                        <label>{{ form_label(form.ordrePriorite,"Numéro d'ordre de signature") }}</label>
+                                        <div class="field"> 
+                                            {{ form_widget(form.ordrePriorite,{'attr':{'placeholder':"Numéro d'ordre de signature", 'data-validate': 'ordre_priorite'}})}}
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="three fields">
                                     <div class="field">
