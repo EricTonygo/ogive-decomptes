@@ -221,7 +221,7 @@ function delete_decompte(idProject, id) {
 }
 
 
-function validate_decompte(idProject, id) {
+function validate_decompte(id) {
     $('#validate_decompte.ui.small.modal')
             .modal('show');
 
@@ -232,11 +232,12 @@ function validate_decompte(idProject, id) {
         $('#message_error').hide();
         $('#message_success').hide();
         $.ajax({
-            type: 'POST',
-            url: Routing.generate('decompte_validate', {idProject: idProject, id: id}),
+            type: 'PUT',
+            data: $('#validate_decompte_form.ui.form').serialize(),
+            url: Routing.generate('decompte_validation_post', {id: id}),
             dataType: 'json',
             beforeSend: function () {
-                $("#delete_decompte_btn" + id).addClass("loading");
+                //$("#delete_decompte_btn" + id).addClass("loading");
             },
             statusCode: {
                 500: function (xhr) {
@@ -255,17 +256,10 @@ function validate_decompte(idProject, id) {
                 }
             },
             success: function (response, textStatus, jqXHR) {
-                $('tr#decompte' + id).remove();
-                $('#message_loading').hide();
-                $('#message_success span').html(response.message);
-                $('#message_success').show();
-                //window.location.replace(Routing.generate('call_offer_index'));
-                setTimeout(function () {
-                    $('#message_success').hide();
-                }, 4000);
+                window.location.reload();
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                $("#delete_decompte_btn" + id).removeClass("loading");
+                //$("#delete_decompte_btn" + id).removeClass("loading");
             }
         });
     });

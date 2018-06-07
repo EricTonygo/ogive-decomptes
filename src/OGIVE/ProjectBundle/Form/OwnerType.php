@@ -40,6 +40,7 @@ class OwnerType extends AbstractType {
                 ->add('numeroCompteBancaire', TextType::class, array('required' => false))
                 ->add('nomBanque', TextType::class, array('required' => false))
                 ->add('intitule', TextType::class, array('required' => false))
+                ->add('ordrePriorite', null, array('required' => false))
         ;
     }
 

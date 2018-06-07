@@ -20,7 +20,7 @@ class Contributor  extends GeneralClass{
     protected $nom;
     
     /**
-     * @var integer
+     * @var string
      *
      * @ORM\Column(name="CONTRIBUTOR_TYPE", type="string", length=255, nullable=true)
      */
@@ -99,6 +99,13 @@ class Contributor  extends GeneralClass{
      */
     private $user;
    
+    
+     /**
+     * @var integer
+     *
+     * @ORM\Column(name="ordre_priorite", type="integer", nullable=true)
+     */
+    private $ordrePriorite;
     
     public function __construct() {
         parent::__construct();
@@ -360,6 +367,28 @@ class Contributor  extends GeneralClass{
         $this->user = $user;
 
         return $this;
+    }
+    
+    /**
+     * Set ordrePriorite
+     *
+     * @param integer $ordrePriorite
+     *
+     * @return Contributor
+     */
+    public function setOrdrePriorite($ordrePriorite) {
+        $this->ordrePriorite = $ordrePriorite;
+
+        return $this;
+    }
+
+    /**
+     * Get ordrePriorite
+     *
+     * @return integer
+     */
+    public function getOrdrePriorite() {
+        return $this->ordrePriorite;
     }
 
     /**

@@ -31,16 +31,16 @@ class ProjectController extends Controller {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
         $em = $this->getDoctrine()->getManager();
+        $decompte_manager = $this->get('app.decompte_manager');
         $project = new Project();
         $page = 1;
-        $maxResults = 6;
         $route_param_page = array();
         $route_param_search_query = array();
         $search_query = null;
         $start_date = null;
         $end_date = null;
         $owner = null;
-        $domain = null;
+        $projects = null;
         $placeholder = "Rechercher un appel d'offre...";
         if ($request->get('page')) {
             $page = intval(htmlspecialchars(trim($request->get('page'))));
@@ -62,25 +62,18 @@ class ProjectController extends Controller {
             $owner = htmlspecialchars(trim($request->get('owner')));
             $route_param_search_query['owner'] = $owner;
         }
-        if ($request->get('domain')) {
-            $domain = htmlspecialchars(trim($request->get('domain')));
-            $route_param_search_query['domain'] = $domain;
-        }
-        $start_from = ($page - 1) * $maxResults >= 0 ? ($page - 1) * $maxResults : 0;
-        $total_procedures = count($em->getRepository('OGIVEProjectBundle:Project')->getAllByQueriedParameters($search_query, $start_date, $end_date, $owner, $domain));
-        $total_pages = ceil($total_procedures / $maxResults);
+
         $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectType', $project);
-        $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll($start_from, $maxResults, $search_query, $start_date, $end_date, $owner, $domain);
-        $owners = $em->getRepository('OGIVEProjectBundle:Owner')->findBy(array("state" => 1, "status" => 1));
-        $domains = $em->getRepository('OGIVEProjectBundle:Domain')->findBy(array("state" => 1, "status" => 1));
-        if ($start_date && $end_date) {
-            //$this->get('common_service')->getStatisticsOfProceduresByOwner($start_date, $end_date);
-            $this->get('common_service')->getStatisticsOfProceduresByMonth($start_date, $end_date);
+
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+            $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(null, null, $search_query, $this->getUser()->getId());
+        } elseif ($this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+            $projects = $decompte_manager->getUserProjects($this->getUser());
         }
+        $owners = $em->getRepository('OGIVEProjectBundle:Owner')->findBy(array("state" => 1, "status" => 1));
+
         return $this->render('OGIVEProjectBundle:project:index.html.twig', array(
                     'projects' => $projects,
-                    'total_procedures' => $total_procedures,
-                    'total_pages' => $total_pages,
                     'page' => $page,
                     'form' => $form->createView(),
                     'route_param_page' => $route_param_page,
@@ -88,11 +81,9 @@ class ProjectController extends Controller {
                     'search_query' => $search_query,
                     'placeholder' => $placeholder,
                     'owners' => $owners,
-                    'domains' => $domains,
                     'start_date' => $start_date,
                     'end_date' => $end_date,
-                    'queried_owner' => $owner,
-                    'queried_domain' => $domain,
+                    'queried_owner' => $owner
         ));
     }
 
@@ -134,6 +125,44 @@ class ProjectController extends Controller {
 
     /**
      * @Rest\View()
+     * @Rest\Get("/projects/{id}/update/parameters" , name="project_parameters_update_get", options={ "method_prefix" = false, "expose" = true })
+     */
+    public function getUpdateProjectParametersByIdAction(Project $project) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+        if (empty($project)) {
+            return new JsonResponse(['message' => "Appel d'offre introuvable"], Response::HTTP_NOT_FOUND);
+        }
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $decompte_manager = $this->get('app.decompte_manager');
+        $repositoryProject = $em->getRepository('OGIVEProjectBundle:Project');
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+            $projects = $repositoryProject->getAll(null, null, null, $user->getId());
+        } elseif ($this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+            $projects = $decompte_manager->getUserProjects($this->getUser());
+        }
+        if (!$project->getPercentIR()) {
+            $project->setPercentIR(2.2);
+        }
+        if (!$project->getPercentTVA()) {
+            $project->setPercentTVA(19.5);
+        }
+        if (!$project->getRemboursementAvanceOption()) {
+            $project->setRemboursementAvanceOption(1);
+        }
+        $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectParametersType', $project, array('method' => 'PUT'));
+        return $this->render('OGIVEProjectBundle:project:update-parameters.html.twig', array(
+                    'project' => $project,
+                    'tab' => 1,
+                    'projects' => $projects,
+                    'form' => $form->createView()
+        ));
+    }
+
+    /**
+     * @Rest\View()
      * @Rest\Get("/projects/{id}/general-informations" , name="project_gen_infos_get", options={ "method_prefix" = false, "expose" = true })
      */
     public function getProjectGenInfosByIdAction(Project $project) {
@@ -142,13 +171,22 @@ class ProjectController extends Controller {
         }
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(0, 8, null, $user->getId());
+        $projects = null;
+        $decompte_manager = $this->get('app.decompte_manager');
+        $repositoryProject = $em->getRepository('OGIVEProjectBundle:Project');
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+            $projects = $repositoryProject->getAll(null, null, null, $user->getId());
+        } elseif ($this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+            $projects = $decompte_manager->getUserProjects($this->getUser());
+        }
+        $decomptes = $em->getRepository('OGIVEProjectBundle:Decompte')->getAll(null, null, null, $project->getId());
         $projectManager = $project->getProjectManagers()[0];
         $holder = $project->getHolders()[0];
         $form = $this->createForm('OGIVE\ProjectBundle\Form\AvanceDemarrageProjectType', $project, array('method' => 'PUT'));
         return $this->render('OGIVEProjectBundle:project:general-informations-project.html.twig', array(
                     'project' => $project,
                     'projects' => $projects,
+                    'lastDecompte' => $decomptes[count($decomptes) - 1],
                     'tab' => 1,
                     'projectManager' => $projectManager,
                     'holder' => $holder,
@@ -247,15 +285,22 @@ class ProjectController extends Controller {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
+        $decompte_manager = $this->get('app.decompte_manager');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
+        $can_create_decompte = $decompte_manager->user_can_create_decompte($user, $project);
         $decomptes = $em->getRepository('OGIVEProjectBundle:Decompte')->getAll(null, null, null, $project->getId());
-        $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(0, 8, null, $user->getId());
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+            $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(null, null, null, $this->getUser()->getId());
+        } elseif ($this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+            $projects = $decompte_manager->getUserProjects($this->getUser());
+        }
         return $this->render('OGIVEProjectBundle:project:project-decomptes.html.twig', array(
                     'project' => $project,
                     'projects' => $projects,
                     'tab' => 5,
-                    'decomptes' => $decomptes
+                    'decomptes' => $decomptes,
+                    'can_create_decompte' => $can_create_decompte
         ));
     }
 
@@ -286,21 +331,24 @@ class ProjectController extends Controller {
             if ($repositoryProject->findOneBy(array('numeroMarche' => $project->getNumeroMarche()))) {
                 return new JsonResponse(["success" => false, 'message' => 'Une tâche avec ce numéro existe déjà.'], Response::HTTP_BAD_REQUEST);
             }
+            if($request->get("priority-order-owner")){
+                $project->getOwner()->setOrdrePriorite(intval($request->get("priority-order-owner")));
+            }
             $startDate = $project->getStartDate();
             $endDate = $project->getEndDate();
-            if($project->getDelais() && $startDate == null && $endDate == null){
+            if ($project->getDelais() && $startDate == null && $endDate == null) {
                 $startDate = new \DateTime('now');
                 $project->setStartDate($startDate->format('Y-m-d'));
                 $startDateTime = strtotime(str_replace('/', '-', $project->getStartDate()));
                 $endDateTime = mktime(0, 0, 0, date("n", $startDateTime), date("j", $startDateTime) + $project->getDelais(), date("Y", $startDateTime));
                 $endDate = new \DateTime(date("Y-m-d", $endDateTime));
                 $project->setEndDate($endDate);
-            }elseif($project->getDelais() && $startDate != null && $endDate == null){
+            } elseif ($project->getDelais() && $startDate != null && $endDate == null) {
                 $startDateTime = strtotime(str_replace('/', '-', $project->getStartDate()));
                 $endDateTime = mktime(0, 0, 0, date("n", $startDateTime), date("j", $startDateTime) + $project->getDelais(), date("Y", $startDateTime));
                 $endDate = new \DateTime(date("Y-m-d", $endDateTime));
                 $project->setEndDate($endDate);
-            }elseif($project->getDelais() && $startDate == null && $endDate != null){
+            } elseif ($project->getDelais() && $startDate == null && $endDate != null) {
                 $endDateTime = strtotime(str_replace('/', '-', $project->getEndDate()));
                 $startDateTime = mktime(0, 0, 0, date("n", $endDateTime), date("j", $endDateTime) - $project->getDelais(), date("Y", $endDateTime));
                 $startDate = new \DateTime(date("Y-m-d", $startDateTime));
@@ -344,6 +392,10 @@ class ProjectController extends Controller {
             $project->setAnneeBudgetaire($anneeBudgetaire);
 //            $decompteTotal = new DecompteTotal();
 //            $project->setDecompteTotal($decompteTotal);
+            if($project->getAvanceDemarrage() == null){
+                $project->setAvanceDemarrage(0);
+                $project->setMtAvanceDemarrage(0);
+            }
             $project = $repositoryProject->saveProject($project);
             //return $this->redirect($this->generateUrl('project_gen_infos_get', array('id' => $project->getId())));
             $view = View::create(["message" => 'Projet créé avec succès. Vous serez redirigé dans bientôt!', "id_project" => $project->getId()]);
@@ -405,6 +457,59 @@ class ProjectController extends Controller {
 
     /**
      * @Rest\View()
+     * @Rest\Put("/projects/{id}/update/parameters", name="project_parameters_update_post", options={ "method_prefix" = false, "expose" = true })
+     * @param Request $request
+     */
+    public function updateProjectParametersAction(Request $request, Project $project) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+        $decompte_manager = $this->get('app.decompte_manager');
+        $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectParametersType', $project, array('method' => 'PUT'));
+        $repositoryProject = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Project');
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $avanceDemarrageContracted = $request->get('avance_demarrage_contracted');
+            $remboursementAvanceOption = intval($request->get('repayment_advance_option'));
+            if ($avanceDemarrageContracted == "yes") {
+                if ($project->getAvanceDemarrage() == null || $project->getAvanceDemarrage() == "") {
+                    return new JsonResponse(["success" => false, 'message' => "Vueillez le saisir le pourcentage de l'avance démarrage."], Response::HTTP_BAD_REQUEST);
+                }
+                if (!is_numeric($project->getAvanceDemarrage())) {
+                    return new JsonResponse(["success" => false, 'message' => "Vueillez le saisir un nombre pour le pourcentage de l'avance démarrage."], Response::HTTP_BAD_REQUEST);
+                }
+                if (is_numeric($project->getAvanceDemarrage()) && $project->getAvanceDemarrage() <= 0) {
+                    return new JsonResponse(["success" => false, 'message' => "Le pourcentage de l'avance démarrage doit être strictement positif."], Response::HTTP_BAD_REQUEST);
+                }
+            } else {
+                $project->setAvanceDemarrage(0);
+            }
+            $project->setRemboursementAvanceOption($remboursementAvanceOption);
+            if ($project->getPercentTVA() == null || $project->getPercentTVA() == "") {
+                return new JsonResponse(["success" => false, 'message' => "Vueillez le saisir le pourcentage de la TVA."], Response::HTTP_BAD_REQUEST);
+            }
+            if (!is_numeric($project->getPercentTVA())) {
+                return new JsonResponse(["success" => false, 'message' => "Vueillez le saisir un nombre pour le pourcentage de la TVA"], Response::HTTP_BAD_REQUEST);
+            }
+            if ($project->getPercentIR() == null || $project->getPercentIR() == "") {
+                return new JsonResponse(["success" => false, 'message' => "Vueillez le saisir le pourcentage de l'IR."], Response::HTTP_BAD_REQUEST);
+            }
+            if (!is_numeric($project->getPercentTVA())) {
+                return new JsonResponse(["success" => false, 'message' => "Vueillez le saisir un nombre pour le pourcentage de l'IR."], Response::HTTP_BAD_REQUEST);
+            }
+            $project->setMtAvanceDemarrage($project->getProjectCost()*$project->getAvanceDemarrage()/100);
+            $project = $repositoryProject->updateProject($project);
+            $view = View::create(["message" => "Les paramètres du projet on été mis à jour avec succès.", "id_project" => $project->getId()]);
+            $view->setFormat('json');
+            return $view;
+        } else {
+            return new JsonResponse(["success" => false, 'message' => 'Le formulaire a été soumis avec les données incorrectes'], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    /**
+     * @Rest\View()
      * @Rest\Put("/projects/{id}/update", name="project_update", options={ "method_prefix" = false, "expose" = true })
      * @param Request $request
      */
@@ -457,24 +562,27 @@ class ProjectController extends Controller {
                 return new JsonResponse(["success" => false, 'message' => "Veuillez préciser les délais de votre projet."], Response::HTTP_BAD_REQUEST);
             }
             $projectEdit = $repositoryProject->findOneBy(array('numeroMarche' => $project->getNumeroMarche()));
-            if (!is_null($projectEdit) && $projectEdit->getId() != $project->getId()){
+            if (!is_null($projectEdit) && $projectEdit->getId() != $project->getId()) {
                 return new JsonResponse(["success" => false, 'message' => 'Un projet avec ce numero du marché existe déjà'], Response::HTTP_BAD_REQUEST);
+            }
+            if($request->get("priority-order-owner")){
+                $project->getOwner()->setOrdrePriorite(intval($request->get("priority-order-owner")));                
             }
             $startDate = $project->getStartDate();
             $endDate = $project->getEndDate();
-            if($project->getDelais() && $startDate == null && $endDate == null){
+            if ($project->getDelais() && $startDate == null && $endDate == null) {
                 $startDate = new \DateTime('now');
                 $project->setStartDate($startDate->format('Y-m-d'));
                 $startDateTime = strtotime(str_replace('/', '-', $project->getStartDate()));
                 $endDateTime = mktime(0, 0, 0, date("n", $startDateTime), date("j", $startDateTime) + $project->getDelais(), date("Y", $startDateTime));
                 $endDate = new \DateTime(date("Y-m-d", $endDateTime));
                 $project->setEndDate($endDate);
-            }elseif($project->getDelais() && $startDate != null && $endDate == null){
+            } elseif ($project->getDelais() && $startDate != null && $endDate == null) {
                 $startDateTime = strtotime(str_replace('/', '-', $project->getStartDate()));
                 $endDateTime = mktime(0, 0, 0, date("n", $startDateTime), date("j", $startDateTime) + $project->getDelais(), date("Y", $startDateTime));
                 $endDate = new \DateTime(date("Y-m-d", $endDateTime));
                 $project->setEndDate($endDate);
-            }elseif($project->getDelais() && $startDate == null && $endDate != null){
+            } elseif ($project->getDelais() && $startDate == null && $endDate != null) {
                 $endDateTime = strtotime(str_replace('/', '-', $project->getEndDate()));
                 $startDateTime = mktime(0, 0, 0, date("n", $endDateTime), date("j", $endDateTime) - $project->getDelais(), date("Y", $endDateTime));
                 $startDate = new \DateTime(date("Y-m-d", $startDateTime));
@@ -571,14 +679,11 @@ class ProjectController extends Controller {
             $project->setAnneeBudgetaire($anneeBudgetaire);
             $user = $this->getUser();
             $project->setUpdatedUser($user);
-//            $decompteTotal = $project->getDecompteTotal();
-//            if (is_null($decompteTotal)) {
-//                $decompteTotal = new DecompteTotal();
-//                $project->setDecompteTotal($decompteTotal);
-//            }
+            if($project->getAvanceDemarrage() == null){
+                $project->setAvanceDemarrage(0);
+                $project->setMtAvanceDemarrage(0);
+            }
             $project = $repositoryProject->updateProject($project);
-            //$decompte_manager->updateDecompteTotalOfProject($project);
-            //return $this->redirect($this->generateUrl('project_gen_infos_get', array('id' => $project->getId())));
             $view = View::create(["message" => 'Projet modifié avec succès. Vous serez redirigé dans bientôt!', "id_project" => $project->getId()]);
             $view->setFormat('json');
             return $view;

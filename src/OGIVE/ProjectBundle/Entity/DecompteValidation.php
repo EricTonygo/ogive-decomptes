@@ -5,7 +5,7 @@ namespace OGIVE\ProjectBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Decompte
+ * DecompteValidation
  *
  * @ORM\Table(name="decompte_validation")
  * @ORM\Entity(repositoryClass="\OGIVE\ProjectBundle\Repository\DecompteValidationRepository")
@@ -16,7 +16,7 @@ class DecompteValidation extends GeneralClass {
     /**
      * @var string
      *
-     * @ORM\Column(name="validation_place", type="string", length=255)
+     * @ORM\Column(name="validation_place", type="string", length=255, nullable=true)
      */
     private $validationPlace;
     
@@ -36,6 +36,30 @@ class DecompteValidation extends GeneralClass {
      * })
      */
     private $decompte;
+    
+    /**
+     * @var \OGIVE\UserBundle\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="\OGIVE\UserBundle\Entity\User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="user", referencedColumnName="id")
+     * })
+     */
+    private $user;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="CONTRIBUTOR_TYPE", type="string", length=255, nullable=true)
+     */
+    private $contributorType;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="priorityOrder", type="integer", length=255, nullable=true)
+     */
+    private $priorityOrder;
 
     /**
      * Constructor
@@ -50,7 +74,7 @@ class DecompteValidation extends GeneralClass {
      *
      * @param \OGIVE\ProjectBundle\Entity\Decompte $decompte
      *
-     * @return Decompte
+     * @return DecompteValidation
      */
     public function setDecompte(\OGIVE\ProjectBundle\Entity\Decompte $decompte=null) {
         $this->decompte = $decompte;
@@ -68,7 +92,7 @@ class DecompteValidation extends GeneralClass {
     }
 
     public function setSearchData() {
-        $this->searchData = $this->getMonthName();
+        $this->searchData = $this->getValidationPlace();
     }
 
 
@@ -77,7 +101,7 @@ class DecompteValidation extends GeneralClass {
      *
      * @param string $validationPlace
      *
-     * @return Decompte
+     * @return DecompteValidation
      */
     public function setValidationPlace($validationPlace) {
         $this->validationPlace = $validationPlace;
@@ -99,11 +123,11 @@ class DecompteValidation extends GeneralClass {
      *
      * @param \DateTime $validationDate
      *
-     * @return Decompte
+     * @return DecompteValidation
      */
     public function setValidationDate($validationDate) {
-        $this->validationDate = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $validationDate))));
-
+        //$this->validationDate = new \DateTime(date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $validationDate))));
+        $this->validationDate = $validationDate;
         return $this;
     }
 
@@ -113,7 +137,72 @@ class DecompteValidation extends GeneralClass {
      * @return \DateTime
      */
     public function getValidationDate() {
-        return $this->validationDate ? $this->validationDate->format('d-m-Y'): $this->validationDate;
+        //return $this->validationDate ? $this->validationDate->format('d-m-Y'): $this->validationDate;
+        return $this->validationDate;
         
+    }
+    
+    /**
+     * Set contributorType
+     *
+     * @param string $contributorType
+     *
+     * @return DecompteValidation
+     */
+    public function setContributorType($contributorType) {
+        $this->contributorType = $contributorType;
+        return $this;
+    }
+
+    /**
+     * Get contributorType
+     *
+     * @return string
+     */
+    public function getContributorType() {
+        return $this->contributorType;
+    }
+    
+    /**
+     * Set priorityOrder
+     *
+     * @param integer $priorityOrder
+     *
+     * @return DecompteValidation
+     */
+    public function setPriorityOrder($priorityOrder) {
+        $this->priorityOrder = $priorityOrder;
+        return $this;
+    }
+
+    /**
+     * Get priorityOrder
+     *
+     * @return integer
+     */
+    public function getPriorityOrder() {
+        return $this->priorityOrder;
+    }
+    
+    /**
+     * Set user
+     *
+     * @param \OGIVE\UserBundle\Entity\User $user
+     *
+     * @return DecompteValidation
+     */
+    public function setUser(\OGIVE\UserBundle\Entity\User $user = null) {
+        $this->user = $user;
+
+        return $this;
+    }
+    
+    /**
+     * Get user
+     *
+     * @return \OGIVE\UserBundle\Entity\User
+     */
+    public function getUser() {
+        return $this->user;
     }
 }

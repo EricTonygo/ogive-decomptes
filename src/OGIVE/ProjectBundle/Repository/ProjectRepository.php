@@ -121,6 +121,22 @@ class ProjectRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
     
+    public function getAllByOwner($idOwner = null) {
+        $qb = $this->createQueryBuilder('e');
+        $qb->where('e.status = 1');
+        
+        if ($idOwner && $idOwner != "0") {
+            $qb->join("e.owner", 'u');
+            $qb->andWhere('u.id = :owner');
+            $qb->setParameter("owner", intval($idOwner));
+        }        
+        try{
+            return $qb->getQuery()->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $ex) {
+            return null;
+        }
+    }
+    
     public function getProjectQueryBuilder() {
          return $this
           ->createQueryBuilder('e')

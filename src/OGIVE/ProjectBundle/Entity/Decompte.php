@@ -273,6 +273,12 @@ class Decompte extends GeneralClass {
      */
     private $mtRetenueGarantie;
     
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="remboursement_avance_intensity", type="float", precision=20, scale=0, nullable=true)
+     */
+    private $remboursementAvanceIntensity;
     
     /**
      * @var float
@@ -486,6 +492,20 @@ class Decompte extends GeneralClass {
     */
     private $decompteValidations;
     
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="\OGIVE\ProjectBundle\Entity\Penality", mappedBy="decompte", cascade={"remove", "persist"})
+    */
+    private $penalities;
+    
+    
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="\OGIVE\ProjectBundle\Entity\DecompteHistory", mappedBy="decompte", cascade={"remove", "persist"})
+    */
+    private $decompteHistories;
 
     /**
      * Constructor
@@ -494,6 +514,9 @@ class Decompte extends GeneralClass {
         parent::__construct();
         $this->decompteTasks = new \Doctrine\Common\Collections\ArrayCollection();
         $this->decomptes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->decompteValidations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->penalities = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->decompteHistories = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
     /**
@@ -1340,10 +1363,10 @@ class Decompte extends GeneralClass {
     /**
      * Add decompteValidation
      *
-     * @param \OGIVE\ProjectBundle\Entity\DecompteTask $decompteValidation 
+     * @param \OGIVE\ProjectBundle\Entity\DecompteValidation $decompteValidation 
      * @return Decompte
      */
-    public function addDecompteValidation(\OGIVE\ProjectBundle\Entity\DecompteTask $decompteValidation) {
+    public function addDecompteValidation(\OGIVE\ProjectBundle\Entity\DecompteValidation $decompteValidation) {
         $this->decompteValidations[] = $decompteValidation;
         return $this;
     }
@@ -1676,5 +1699,113 @@ class Decompte extends GeneralClass {
 
     function setMtCumulRemboursementAvance($mtCumulRemboursementAvance) {
         $this->mtCumulRemboursementAvance = $mtCumulRemboursementAvance;
+    }
+    
+    /**
+     * Add penality
+     *
+     * @param \OGIVE\ProjectBundle\Entity\Penality $penality 
+     * @return Decompte
+     */
+    public function addPenality(\OGIVE\ProjectBundle\Entity\Penality $penality) {
+        $this->penalities[] = $penality;
+        return $this;
+    }
+
+    /**
+     * Get penalities
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPenalities() {
+        return $this->penalities;
+    }
+
+    /**
+     * Set penalities
+     *
+     * @param \Doctrine\Common\Collections\Collection $penalities
+     * @return Decompte
+     */
+    public function setPenalities(\Doctrine\Common\Collections\Collection $penalities = null) {
+        $this->penalities = $penalities;
+
+        return $this;
+    }
+
+    /**
+     * Remove penality
+     *
+     * @param \OGIVE\ProjectBundle\Entity\Penality $penality
+     * @return Decompte
+     */
+    public function removePenality(\OGIVE\ProjectBundle\Entity\Penality $penality) {
+        $this->penalities->removeElement($penality);
+        return $this;
+    }
+    
+    /**
+     * Set remboursementAvanceIntensity
+     *
+     * @param float $remboursementAvanceIntensity
+     *
+     * @return Decompte
+     */
+    public function setRemboursementAvanceIntensity($remboursementAvanceIntensity) {
+        $this->remboursementAvanceIntensity = $remboursementAvanceIntensity;
+
+        return $this;
+    }
+
+    /**
+     * Get remboursementAvanceIntensity
+     *
+     * @return float
+     */
+    public function getRemboursementAvanceIntensity() {
+        return $this->remboursementAvanceIntensity;
+    }
+    
+    /**
+     * Add decompteHistory
+     *
+     * @param \OGIVE\ProjectBundle\Entity\DecompteHistory $decompteHistory 
+     * @return Decompte
+     */
+    public function addDecompteHistory(\OGIVE\ProjectBundle\Entity\DecompteHistory $decompteHistory) {
+        $this->decompteHistories[] = $decompteHistory;
+        return $this;
+    }
+
+    /**
+     * Get decompteHistories
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDecompteHistories() {
+        return $this->decompteHistories;
+    }
+
+    /**
+     * Set decompteHistories
+     *
+     * @param \Doctrine\Common\Collections\Collection $decompteHistories
+     * @return Decompte
+     */
+    public function setDecompteHistories(\Doctrine\Common\Collections\Collection $decompteHistories = null) {
+        $this->decompteHistories = $decompteHistories;
+
+        return $this;
+    }
+
+    /**
+     * Remove decompteHistory
+     *
+     * @param \OGIVE\ProjectBundle\Entity\DecompteHistory $decompteHistory
+     * @return Decompte
+     */
+    public function removeDecompteHistory(\OGIVE\ProjectBundle\Entity\DecompteHistory $decompteHistory) {
+        $this->decompteHistories->removeElement($decompteHistory);
+        return $this;
     }
 }

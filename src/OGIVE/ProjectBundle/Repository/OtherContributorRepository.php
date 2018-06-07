@@ -86,6 +86,26 @@ class OtherContributorRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
     
+    public function getAllByUser($offset = null, $limit = null, $user = null) {
+        $qb = $this->createQueryBuilder('e');
+        $qb->where('e.status = 1');
+        
+        if ($user && $user != "0") {
+            $qb->join("e.user", 'u');
+            $qb->andWhere('u.id = :user');
+            $qb->setParameter("user", intval($user));
+        }
+        $qb->orderBy('e.createDate', 'DESC');
+        
+        if ($offset) {
+            $qb->setFirstResult($offset);
+        }
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+        return $qb->getQuery()->getResult();
+    }
+    
     public function getOtherContributorQueryBuilder() {
          return $this
           ->createQueryBuilder('e')

@@ -29,6 +29,7 @@ class ProjectOwnerType extends AbstractType {
 //                                ->setParameter('enabled', true);
                     }
                 ))
+                ->add('ordrePriorite', null, array('required' => false))
         ;
     }
 

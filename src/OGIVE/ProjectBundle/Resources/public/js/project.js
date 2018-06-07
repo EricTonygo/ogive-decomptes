@@ -5,6 +5,19 @@ $(document).ready(function () {
         $('#form_message_success').hide();
         $('#od_add_project_form.ui.form').submit();
     });
+    $('#avance_demarrage_contracted_yes').change(function () {
+        if ($(this).is(':checked')) {
+            $('#repayment_advance').show();
+        }
+    });
+
+    $('#avance_demarrage_contracted_no').change(function () {
+        if ($(this).is(':checked')) {
+            $('#repayment_advance').hide();
+        }
+    });
+
+    $('#project_progress').progress();
     $('#od_add_project_form.ui.form')
             .form({
                 fields: {
@@ -181,6 +194,85 @@ $(document).ready(function () {
                 }
             }
             );
+
+
+    $('#od_update_project_parameters_form.ui.form')
+            .form({
+                fields: {
+                    percentTVA: {
+                        identifier: 'percentTVA',
+                        rules: [
+                            {
+                                type: 'empty',
+                                prompt: "Veuillez préciser le pourcentage de la TVA"
+                            }
+                        ]
+                    },
+                    percentIR: {
+                        identifier: 'percentIR',
+                        rules: [
+                            {
+                                type: 'empty',
+                                prompt: "Veuillez préciser le pourcentage de l'IR"
+                            }
+                        ]
+                    }
+                },
+                inline: true,
+                on: 'submit',
+                onSuccess: function (event, fields) {
+                    $.ajax({
+                        type: 'PUT',
+                        url: $('#od_update_project_parameters_form.ui.form').attr('action'),
+                        data: $('#od_update_project_parameters_form.ui.form').serialize(),
+                        dataType: 'json',
+                        processData: false,
+                        //contentType: false,
+                        cache: false,
+                        beforeSend: function () {
+                            $('#od_update_project_parameters_submit_btn').addClass('disabled');
+                            $('#od_update_project_parameters_cancel_btn').addClass('disabled');
+                            $('#od_update_project_parameters_form.ui.form').addClass('loading');
+                        },
+                        statusCode: {
+                            500: function (xhr) {
+                                $('#form_message_error span').html("Une erreur est survenue lors de la modification");
+                                $('#form_message_error').show();
+                            },
+                            400: function (response, textStatus, jqXHR) {
+                                var myerrors = response.responseJSON;
+                                if (myerrors.success === false) {
+                                    $('#od_update_project_parameters_submit_btn').removeClass('disabled');
+                                    $('#od_update_project_parameters_cancel_btn').removeClass('disabled');
+                                    $('#od_update_project_parameters_form.ui.form').removeClass('loading');
+                                    $('#form_message_error span').html(myerrors.message);
+                                    $('#form_message_error').show();
+
+                                } else {
+                                    $('#form_message_error span').html("Une erreur est survenue lors de la modification");
+                                    $('#form_message_error').show();
+                                }
+
+                            }
+                        },
+                        success: function (response, textStatus, jqXHR) {
+                            $('#od_update_project_parameters_form.ui.form').removeClass('loading');
+                            $('#form_message_success span').html(response.message);
+                            $('#form_message_success').show();
+                            var id_project = parseInt(response.id_project);
+                            window.location.replace(Routing.generate('project_gen_infos_get', {id: id_project}));
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            $('#od_update_project_parameters_submit_btn').removeClass('disabled');
+                            $('#od_update_project_parameters_cancel_btn').removeClass('disabled');
+                            $('#od_update_project_parameters_form.ui.form').removeClass('loading');
+                        }
+                    });
+                    return false;
+                }
+            }
+            );
+
 });
 
 $('#od_update_start_advance_form.ui.form').form({
@@ -257,6 +349,7 @@ function start_advance(id) {
 }
 
 
+
 function delete_project(id) {
     $('#confirm_delete_project.ui.small.modal')
             .modal('show');
@@ -302,3 +395,4 @@ function delete_project(id) {
         });
     });
 }
+

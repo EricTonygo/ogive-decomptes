@@ -16,11 +16,13 @@
                             <div class="content">
                                 <div class="ui text menu" style="margin: 0px;">                                    
                                     <div class="right menu">
-                                        <a class="item" data-tooltip="Déclarer une avance démarrage" data-position="bottom center" data-inverted="" data-variation="mini" onclick="start_advance({{project.id}});"><i class="blue plus icon"></i> Avance démarrage</a>
-                                        <a class="item" data-tooltip="Modifier" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('project_update_get', {'id': project.id})}}"><i class="blue write icon"></i></a>                                        
+                                        {#                                        <a class="item" data-tooltip="Déclarer une avance démarrage" data-position="bottom center" data-inverted="" data-variation="mini" onclick="start_advance({{project.id}});"><i class="blue plus icon"></i> Avance démarrage</a>#}
+{#                                        <a class="item" data-tooltip="Modifier" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('project_update_get', {'id': project.id})}}"><i class="blue write icon"></i> Modifier</a>                                        #}
                                         <div class="ui dropdown dropdown_actions item">
                                             <i class="large ellipsis horizontal icon"></i>
                                             <div class="menu">
+                                                <a class="item"  href="{{path('project_parameters_update_get', {'id': project.id})}}"><i class="blue setting icon"></i> Paramètres</a>
+                                                <a class="item"  href="{{path('project_update_get', {'id': project.id})}}"><i class="blue write icon"></i> Modifier</a>
                                                 <a id="delete_project_btn{{project.id}}" class="item" onclick="delete_project({{project.id}});"><i class="red trash icon"></i> Supprimer</a>
                                             </div>
                                         </div>
@@ -28,6 +30,12 @@
                                 </div>
                             </div>
                             <div class="content description">
+                                <div class="ui yellow progress" data-value="{{lastDecompte.pourcentRealisation}}" data-total="100" id="project_progress">
+                                    <div class="bar">
+                                        <div class="progress warning"></div>
+                                    </div>
+                                    <div class="label">{{lastDecompte.pourcentRealisation}}% de réalisation</div>
+                                </div>
                                 <div class="ui stackable grid">
                                     <div class="column">
                                         <!--<h4 class="ui dividing header">Personal Information</h4>-->
@@ -76,16 +84,16 @@
                                                         <td>
                                                             <label>AVANCE DE DEMARRAGE</label>
                                                         </td>
-                                                        <td>{{project.avanceDemarrage}} {{project.projectCostCurrency}}</td>
+                                                        <td>{{project.avanceDemarrage}}%</td>
                                                     </tr>
                                                 {% endif %}
                                                 {% if project.numeroLot %}
-                                                <tr>
-                                                    <td>
-                                                        <label>N° DE LOT</label>
-                                                    </td>
-                                                    <td>{{project.numeroLot}}</td>
-                                                </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <label>N° DE LOT</label>
+                                                        </td>
+                                                        <td>{{project.numeroLot}}</td>
+                                                    </tr>
                                                 {% endif %}
                                                 <tr>
                                                     <td>

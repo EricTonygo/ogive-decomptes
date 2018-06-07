@@ -1,0 +1,157 @@
+{% extends "OGIVEProjectBundle::layout.html.twig" %}
+{% trans_default_domain 'OGIVEProjectBundle' %}
+{% block title %}Informations générales du projet: {{project.numeroMarche}}{% endblock %}
+
+{% block content %}
+    <div class="ui basic fixed segment content">
+        <div class='ui container'>
+            {% include('OGIVEProjectBundle:project:top-content-project-page.html.twig') %}
+            <div class="ui top attached stackable tabular menu od_project_menu">
+                {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
+            </div>
+            <div class="ui bottom attached segment od_project_menu_content">
+                <div class="ui two column stackable grid padded">               
+                    <div class="eleven wide column">
+                        <div class="ui fluid card od_project_details_card">
+
+                            <div class="content description">
+
+                                <div class="ui stackable grid">
+                                    <div class="column">
+                                        <h4 class="ui dividing header">Mise à jour des paramètres du projet</h4>
+                                        {{ form_start(form, {'method': 'PUT', 'action': path('project_parameters_update_post', {'id': project.id}), 'attr': {'class': 'ui mini form', 'id': 'od_update_project_parameters_form', "autocomplete":"off"} }) }}
+
+                                                <div class="field">
+                                                    {{ form_label(form.percentTVA,"Pourcentage de la TVA") }}
+                                                    <div class="field"> 
+                                                        {{ form_widget(form.percentTVA,{'attr':{'placeholder':"Pourcentage de la TVA", 'data-validate': 'percentTVA'}})}}
+                                                    </div>
+                                                </div>
+                                                <div class="field">
+                                                    {{ form_label(form.percentIR,"Pourcentage de l'IR") }}
+                                                    <div class="field"> 
+                                                        {{ form_widget(form.percentIR,{'attr':{'placeholder':"Pourcentage de l'IR", 'data-validate': 'percentIR'}})}}
+                                                    </div>
+                                                </div>
+                                                <div class="inline fields">
+                                                    <label>Avance démarrage contractée ? </label>
+                                                    <div class="field">
+                                                        <div class="ui radio checkbox">
+                                                            <input id='avance_demarrage_contracted_yes' type="radio" name="avance_demarrage_contracted" value="yes" {%if project.avanceDemarrage is not null and project.avanceDemarrage > 0 %} checked="checked" {%endif%}>
+                                                            <label>Oui</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="field">
+                                                        <div class="ui radio checkbox">
+                                                            <input id='avance_demarrage_contracted_no' type="radio" name="avance_demarrage_contracted" value="no" {%if project.avanceDemarrage is null or project.avanceDemarrage == 0 %} checked="checked" {%endif%}>
+                                                            <label>Non</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div id='repayment_advance' class="field" {%if project.avanceDemarrage is null or project.avanceDemarrage == 0 %} style="display: none;" {%endif%}>
+                                                    {{ form_label(form.avanceDemarrage,"Pourcentage de l'avance démarrage") }}
+                                                    <div class="field"> 
+                                                        {{ form_widget(form.avanceDemarrage,{'attr':{'placeholder':"Pourcentage de l'avance démarrage", 'data-validate': 'avanceDemarrage'}})}}
+                                                    </div>
+                                                </div>
+                                                <div class="grouped fields">
+                                                    <label>Quelle option de remboursement de l'avance démarrage voulez-vous appliquer?</label>
+                                                    <div class="field">
+                                                        <div class="ui radio checkbox">
+                                                            <input type="radio" name="repayment_advance_option" value="1" {%if project.remboursementAvanceOption == 1 %} checked="checked" {%endif%}>
+                                                            <label>50% du montant des prestations entre décompte 40 et 80 % de réalisation</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="field">
+                                                        <div class="ui radio checkbox">
+                                                            <input type="radio" name="repayment_advance_option" value="2" {%if project.remboursementAvanceOption == 2 %} checked="checked" {%endif%}>
+                                                            <label>Préciser le taux de remboursement pour chaque prestation entre 40 et 80% de réalisation</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="field">
+                                                    {% include('OGIVEProjectBundle::form-message-success-error.html.twig') %}
+                                                </div>
+                                                <div class="field right aligned">
+                                                    <a id='od_update_project_parameters_cancel_btn' class="ui mini red button"  href="{{path('project_gen_infos_get', {'id': project.id})}}">Annuler</a>
+                                                    <button id='od_update_project_parameters_submit_btn'  class="ui mini yellow button" type="submit">Sauvegarder</button>
+                                                </div>
+                                                {{form_widget(form._token)}}
+                                                </form>
+                                        {#<div class="ui fluid card od_add_project_card">
+                                            <div class="content">
+                                                <div class="header">
+                                                    Mise à jour des paramètres du projet
+                                                </div>
+                                            </div>
+                                            <div class="content description">
+                                                
+                                            </div>
+                                        </div>#}
+
+                                    </div>
+                                </div>                                   
+                            </div>
+                        </div>
+                    </div>
+                    <div class="five wide column">
+                        {% include('OGIVEProjectBundle::right-aside-page.html.twig') %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block confirmation_modal %}
+    <div id="confirm_delete_project" class="ui small modal">
+        <i class="close icon"></i>
+        <div class="header">
+            Confirmation de la suppression
+        </div>
+        <div class="content">
+            <p>Vous êtes sur le point de supprimer cet projet.</p>
+            <p>Voulez-vous vraiment réaliser cette action ?</p>
+        </div>
+        <div class="actions">
+            <div class="ui red deny mini button">
+                Non
+            </div>
+            <div id="execute_delete_project"  class="ui green right labeled icon mini button">
+                Oui
+                <i class="checkmark icon"></i>
+            </div>
+        </div>
+    </div>
+    <div id="start_advance_modal" class="ui small modal">
+        <i class="close icon"></i>
+        <div class="header">
+            Déclarer une avance démarrage.
+        </div>
+        <div class="content">
+            {{ form_start(form, {'method': 'PUT', 'action': path('project_update_start_advance', {'id': project.id}), 'attr': {'class': 'ui mini form', 'id': 'od_update_start_advance_form', "autocomplete":"off"} }) }}
+            <div class="field">
+                <label>Montant avance démarrage [{{project.projectCostCurrency}}]</label>
+                <div class="field"> 
+                    {{ form_widget(form.avanceDemarrage,{'attr':{'placeholder':"Montant de l'avance de demarrage", 'data-validate': 'avanceDemarrage'}})}}
+                </div>
+            </div>
+            <div class="field">
+                {% include('OGIVEProjectBundle::form-message-success-error.html.twig') %}
+            </div>
+            {{form_end(form)}}
+        </div>
+        <div class="actions">
+            <div id="execute_start_advance_cancel" class="ui red deny mini button">
+                Annuler
+            </div>
+            <div id="execute_start_advance"  class="ui green mini button">
+                Sauvegarder
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent()}}
+    <script type="text/javascript" src="{{ asset('bundles/ogiveproject/js/project.js')}}"></script>       
+{% endblock %}

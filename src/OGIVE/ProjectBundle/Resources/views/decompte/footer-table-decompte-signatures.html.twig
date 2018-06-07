@@ -1,43 +1,94 @@
+{% if decompteValidations is not empty %}
+    <table class="ui celled structured small fluid table" style="font-weight: bold;">
+        <tbody>
+            <tr>
+                {%set begin = 0 %}
+                {% for i in 0..2 %}
+                    {%set decompteValidation = decompteValidations[i] %}
+                    <td colspan="4" style="font-weight: bold; text-align: center">{{decompteValidation.contributorType|upper}}</td>
+                    {%set begin = begin + 1 %}
+                {% endfor %}
+            </tr>
+            <tr>
+                {% for i in 0..2 %}
+                    {%set decompteValidation = decompteValidations[i] %}
+                    <td colspan="4"  style="text-align: center; font-weight: bold; height: 10em;">
+                        {%if app.user and app.user.id == decompteValidation.user.id %}
+                            {% if decompteValidation.state == 1 %}
+                                {% if decompteValidation.priorityOrder == decompteValidation.decompte.state %}
+                                    <div class="ui toggle checkbox">
+                                        <input type="checkbox" name="public" onclick="validate_decompte({{decompteValidation.id}});">
+                                        <label>Valider</label>
+                                    </div>
+                                {%else%}
+                                    <div id="form_message_success" class="ui success message" style="display: none;">
+                                        <i class="warning icon"></i>
+                                        <span>Vous n'est pas encore autorisé à valider</span>
+                                        <i class="close icon"></i>
+                                    </div>
 
-{%set holder = project.holders[0] %}
-{%set projectManager = project.projectManagers[0] %}
-<table class="ui celled structured small fluid table" style="font-weight: bold;">
-    <tbody>
-        <tr>
-            <td colspan="4" style="font-weight: bold; text-align: center">ENTREPRISE</td>
-            <td colspan="4" style="font-weight: bold; text-align: center">MAITRE D'OEUVRE</td>
-            <td colspan="4" style="font-weight: bold; text-align: center">INGENIEUR DU MARCHE</td>
-        </tr>
-        <tr>
-            <td colspan="4"  style="text-align: center; font-weight: bold; height: 10em;"></td>
-            <td colspan="4"  style="text-align: center; font-weight: bold; height: 10em;"></td>
-            <td colspan="4"  style="text-align: center; font-weight: bold; height: 10em;"></td>
-        </tr>
-        
-        <tr>
-            <td colspan="4" style="font-weight: bold;"></td>
-            <td colspan="4" style="font-weight: bold;"></td>
-            <td colspan="4" style="font-weight: bold;"></td>
-        </tr>
-        <tr>
-            <td colspan="3" style="font-weight: bold; text-align: center">CHEF DE SERVICE DU MARCHE</td>
-            <td colspan="3" style="font-weight: bold; text-align: center">MAITRE D'OUVRAGE <br>OU SON REPRESENTANT</td>
-            <td colspan="3" style="font-weight: bold; text-align: center">COORDONNATEUR DU SECRETARIAT <br>TECHNIQUE DE SUIVI DU PLANUT</td>
-            <td colspan="3" style="font-weight: bold; text-align: center">VISA MINMAP</td>
-        </tr>
-        <tr>
-            <td colspan="3"  style="text-align: center; font-weight: bold; height: 10em;"></td>
-            <td colspan="3"  style="text-align: center; font-weight: bold; height: 10em;"></td>
-            <td colspan="3"  style="text-align: center; font-weight: bold; height: 10em;"></td>
-            <td colspan="3"  style="text-align: center; font-weight: bold; height: 10em;"></td>
-        </tr>
-        
-        <tr>
-            <td colspan="3" style="font-weight: bold;"></td>
-            <td colspan="3" style="font-weight: bold;"></td>
-            <td colspan="3" style="font-weight: bold;"></td>
-            <td colspan="3" style="font-weight: bold;"></td>
-        </tr>
-        
-    </tbody>
-</table>
+                                {%endif %}
+
+                            {%elseif decompteValidation.state == 2 %}
+                                <div><i class="inverted green big check icon"></i> Validé</div>
+                            {%endif %}
+                        {%endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+
+            <tr>
+                {% for i in 0..2 %}
+                    {%set decompteValidation = decompteValidations[i] %}
+                    <td colspan="4" style="font-weight: bold; text-align: center;">
+                        {% if decompteValidation.state == 2 %}{{decompteValidation.validationPlace}}, le {{decompteValidation.validationDate|date('d/m/Y')}}{%endif %}                       
+                    </td>
+                {% endfor %}
+            </tr>
+            <tr>
+                {% for i in begin..decompteValidations|length-1 %}
+                    {%set decompteValidation = decompteValidations[i] %}
+                    <td colspan="4" style="font-weight: bold; text-align: center;">{{decompteValidation.contributorType|upper}}</td>
+                {% endfor %}
+
+            </tr>
+            <tr>
+                {% for i in begin..decompteValidations|length-1 %}
+                    {%set decompteValidation = decompteValidations[i] %}
+                    <td colspan="4"  style="text-align: center; font-weight: bold; height: 10em;">
+                        {%if app.user and app.user.id == decompteValidation.user.id %}
+                            {% if decompteValidation.state == 1 %}
+                                {% if decompteValidation.priorityOrder == decompteValidation.decompte.state %}
+                                    <div class="ui toggle checkbox">
+                                        <input type="checkbox" name="public" onclick="validate_decompte({{decompteValidation.id}});">
+                                        <label>Valider</label>
+                                    </div>
+                                {%else%}
+                                    <div id="form_message_success" class="ui success message" style="display: none;">
+                                        <i class="warning icon"></i>
+                                        <span>Vous n'est pas encore autorisé à valider</span>
+                                        <i class="close icon"></i>
+                                    </div>
+
+                                {%endif %}
+
+                            {%elseif decompteValidation.state == 2 %}
+                                <div><i class="inverted green big check icon"></i> Validé</div>
+                            {%endif %}
+                        {%endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+
+            <tr>
+                {% for i in begin..decompteValidations|length-1 %}
+                    {%set decompteValidation = decompteValidations[i] %}
+                    <td colspan="4" style="font-weight: bold; text-align: center;">
+                        {% if decompteValidation.state == 2 %}{{decompteValidation.validationPlace}}, le {{decompteValidation.validationDate|date('d/m/Y')}}{%endif %}                       
+                    </td>
+                {% endfor %}
+            </tr>
+
+        </tbody>
+    </table>
+{%endif %}

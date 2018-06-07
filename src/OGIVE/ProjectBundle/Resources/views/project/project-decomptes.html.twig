@@ -12,11 +12,13 @@
             <div class="ui bottom attached segment od_project_menu_content">
                 <div class="ui two column stackable grid padded">
                     <div class="eleven wide column">
+                        {%if can_create_decompte %}
                         <div class="ui fluid card od_card_top_table_action">
                             <div class="content">
                                 <a class="ui right floated yellow mini button" href="{{path('decompte_add_get', {'id': project.id})}}"><i class="plus icon"></i> Créer un décompte</a>
                             </div>
                         </div>
+                        {%endif %}
                         <table class="ui celled yellow small table">
                             <thead>
                                 <tr>

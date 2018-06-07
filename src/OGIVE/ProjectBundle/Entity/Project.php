@@ -107,6 +107,27 @@ class Project extends GeneralClass {
     /**
      * @var float
      *
+     * @ORM\Column(name="percent_tva", type="float", precision=20, scale=0, nullable=true)
+     */
+    private $percentTVA;
+    
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="percent_ir", type="float", precision=20, scale=0, nullable=true)
+     */
+    private $percentIR;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="remboursement_avance_option", type="integer", nullable=true)
+     */
+    private $remboursementAvanceOption;
+    
+    /**
+     * @var float
+     *
      * @ORM\Column(name="mt_avenant", type="float", precision=20, scale=0, nullable=true)
      */
     private $mtAvenant;
@@ -117,6 +138,13 @@ class Project extends GeneralClass {
      * @ORM\Column(name="avance_demarrage", type="float", precision=20, scale=0, nullable=true)
      */
     private $avanceDemarrage;
+    
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="mt_avance_demarrage", type="float", precision=20, scale=0, nullable=true)
+     */
+    private $mtAvanceDemarrage;
     
     /**
      * @var float
@@ -166,6 +194,13 @@ class Project extends GeneralClass {
      * @ORM\OneToMany(targetEntity="\OGIVE\ProjectBundle\Entity\Decompte", mappedBy="project", cascade={"remove", "persist"})
      */
     private $decomptes;
+    
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="\OGIVE\ProjectBundle\Entity\ProjectHistory", mappedBy="project", cascade={"remove", "persist"})
+     */
+    private $projectHistories;
     
     /**
      * @var \DecompteTotal 
@@ -915,5 +950,123 @@ class Project extends GeneralClass {
     public function setSearchData() {
         $this->searchData = $this->getSubject()." ".$this->getNumeroMarche()." ".$this->getProjectCost()." ".$this->getLieuExecution()." ".$this->getRegion()." ".$this->getDepartement();
     }
+
+    /**
+     * Set percentTVA
+     *
+     * @param float $percentTVA
+     *
+     * @return Project
+     */
+    public function setPercentTVA($percentTVA) {
+        $this->percentTVA = $percentTVA;
+
+        return $this;
+    }
+
+    /**
+     * Get percentTVA
+     *
+     * @return float
+     */
+    public function getPercentTVA() {
+        return $this->percentTVA;
+    }
+    
+    /**
+     * Set percentIR
+     *
+     * @param float $percentIR
+     *
+     * @return Project
+     */
+    public function setPercentIR($percentIR) {
+        $this->percentIR = $percentIR;
+
+        return $this;
+    }
+
+    /**
+     * Get percentIR
+     *
+     * @return float
+     */
+    public function getPercentIR() {
+        return $this->percentIR;
+    }
+    
+    /**
+     * Set remboursementAvanceOption
+     *
+     * @param integer $remboursementAvanceOption
+     *
+     * @return Project
+     */
+    public function setRemboursementAvanceOption($remboursementAvanceOption) {
+        $this->remboursementAvanceOption = $remboursementAvanceOption;
+
+        return $this;
+    }
+
+    /**
+     * Get remboursementAvanceOption
+     *
+     * @return integer
+     */
+    public function getRemboursementAvanceOption() {
+        return $this->remboursementAvanceOption;
+    }
+    
+    /**
+     * Add projectHistory
+     *
+     * @param \OGIVE\ProjectBundle\Entity\ProjectHistory $projectHistory 
+     * @return Project
+     */
+    public function addProjectHistory(\OGIVE\ProjectBundle\Entity\ProjectHistory $projectHistory) {
+        $this->projectHistories[] = $projectHistory;
+        return $this;
+    }
+
+    /**
+     * Get projectHistories
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProjectHistories() {
+        return $this->projectHistories;
+    }
+
+    /**
+     * Set projectHistories
+     *
+     * @param \Doctrine\Common\Collections\Collection $projectHistories
+     * @return Project
+     */
+    public function setProjectHistories(\Doctrine\Common\Collections\Collection $projectHistories = null) {
+        $this->projectHistories = $projectHistories;
+
+        return $this;
+    }
+
+    /**
+     * Remove projectHistory
+     *
+     * @param \OGIVE\ProjectBundle\Entity\ProjectHistory $projectHistory
+     * @return Project
+     */
+    public function removeProjectHistory(\OGIVE\ProjectBundle\Entity\ProjectHistory $projectHistory) {
+        $this->projectHistories->removeElement($projectHistory);
+        return $this;
+    }
+    
+    function getMtAvanceDemarrage() {
+        return $this->mtAvanceDemarrage;
+    }
+
+    function setMtAvanceDemarrage($mtAvanceDemarrage) {
+        $this->mtAvanceDemarrage = $mtAvanceDemarrage;
+    }
+
 
 }

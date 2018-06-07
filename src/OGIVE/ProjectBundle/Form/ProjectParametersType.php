@@ -5,18 +5,17 @@ namespace OGIVE\ProjectBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class DecompteValidationType extends AbstractType {
+class ProjectParametersType extends AbstractType {
+
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-                ->add('validationPlace', TextType::class, array('required' => false))
-//                ->add('validationDate', TextType::class, array('required' => false))
+                ->add('percentTVA', null, array('required' => false))
+                ->add('percentIR', null, array('required' => false))
+                ->add('avanceDemarrage', null, array('required' => false))
         ;
     }
 
@@ -25,7 +24,7 @@ class DecompteValidationType extends AbstractType {
      */
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
-            'data_class' => 'OGIVE\ProjectBundle\Entity\DecompteValidation'
+            'data_class' => 'OGIVE\ProjectBundle\Entity\Project'
         ));
     }
 
@@ -33,7 +32,7 @@ class DecompteValidationType extends AbstractType {
      * {@inheritdoc}
      */
     public function getBlockPrefix() {
-        return 'ogive_projectbundle_decompte';
+        return 'ogive_projectbundle_project_parameters';
     }
 
 }

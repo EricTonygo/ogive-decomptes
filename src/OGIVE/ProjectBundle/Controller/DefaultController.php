@@ -19,9 +19,18 @@ class DefaultController extends Controller {
                         'form' => $form->createView()
             ));
         }
+        $decompte_manager = $this->get('app.decompte_manager');
         $em = $this->getDoctrine()->getManager();
+        $repositoryProject = $em->getRepository('OGIVEProjectBundle:Project');
         $user = $this->getUser();
-        $projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(0, 8, null, $user->getId());
+        $search_query = null;
+        $projects = null;
+        //$projects = $em->getRepository('OGIVEProjectBundle:Project')->getAll(0, 8, null, $user->getId());
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+            $projects = $repositoryProject->getAll(null, null, $search_query, $user->getId());
+        }elseif ($this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+            $projects = $decompte_manager->getUserProjects($this->getUser());
+        }
         return $this->render('OGIVEProjectBundle::index.html.twig', array(
                     'projects' => $projects
         ));

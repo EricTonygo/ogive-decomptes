@@ -6,8 +6,10 @@ use Doctrine\ORM\EntityManager;
 use OGIVE\ProjectBundle\Entity\Decompte;
 use OGIVE\ProjectBundle\Entity\DecompteTask;
 use OGIVE\ProjectBundle\Entity\DecompteTotal;
+use OGIVE\ProjectBundle\Entity\DecompteValidation;
 use OGIVE\ProjectBundle\Entity\Task;
 use OGIVE\ProjectBundle\Entity\Project;
+use OGIVE\UserBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -279,7 +281,12 @@ class DecompteManager {
     }
 
     public function updateMontantTVAOfDecompte(Decompte $decompte) {
-        $tva = 19.5;
+        if ($decompte->getProject()->getPercentTVA()) {
+            $tva = $decompte->getProject()->getPercentTVA();
+        } else {
+            $tva = 19.5;
+        }
+
         if (is_numeric($decompte->getMtPrevueMarche())) {
             $decompte->setMtPrevueMarcheTVA(ceil($decompte->getMtPrevueMarche() * $tva / 100));
         }
@@ -298,7 +305,12 @@ class DecompteManager {
     }
 
     public function updateMontantIROfDecompte(Decompte $decompte) {
-        $ir = 2.2;
+
+        if ($decompte->getProject()->getPercentIR()) {
+            $ir = $decompte->getProject()->getPercentIR();
+        } else {
+            $ir = 2.2;
+        }
         if (is_numeric($decompte->getMtPrevueMarche())) {
             $decompte->setMtPrevueMarcheIR(ceil($decompte->getMtPrevueMarche() * $ir / 100));
         }
@@ -353,19 +365,9 @@ class DecompteManager {
     }
 
     public function updateAvanceDemarrage(Decompte $decompte, Decompte $decomptePrec = null) {
-        if (!is_null($decomptePrec)) {
-            $decompte->setMtAvanceDemarragePrec($decomptePrec->getMtAvanceDemarrage());
-        } else {
-            $decompte->setMtAvanceDemarragePrec(0);
-        }
-        if (is_null($decompte->getMtAvanceDemarrage())) {
-            $decompte->setMtAvanceDemarrage(0);
-        }
-        if (is_numeric($decompte->getMtAvanceDemarrage()) && is_numeric($decompte->getMtAvanceDemarragePrec())) {
-            $decompte->setMtAvanceDemarrageACD($decompte->getMtAvanceDemarrage() - $decompte->getMtAvanceDemarragePrec());
-        } else {
-            $decompte->setMtAvanceDemarrageACD(0);
-        }
+        $decompte->setMtAvanceDemarrage(0);
+        $decompte->setMtAvanceDemarragePrec(0);
+        $decompte->setMtAvanceDemarrageACD(0);
     }
 
     public function updatePrestationsWithAIR(Decompte $decompte) {
@@ -398,22 +400,32 @@ class DecompteManager {
     }
 
     public function updateRemboursementAvance(Decompte $decompte, Decompte $decomptePrec = null) {
-        if (!is_null($decomptePrec)) {
-            $decompte->setMtRemboursementAvancePrec($decomptePrec->getMtRemboursementAvance());
-            $decompte->setMtCumulRemboursementAvance($decomptePrec->getMtCumulRemboursementAvance());
-        } else {
-            $decompte->setMtRemboursementAvancePrec(0);
-            $decompte->setMtCumulRemboursementAvance(0);
-        }
-        $decompte->setMtCumulRemboursementAvance($decompte->getMtCumulRemboursementAvance() + $decompte->getMtRemboursementAvance());
-        if (is_null($decompte->getMtRemboursementAvance())) {
-            $decompte->setMtRemboursementAvance(0);
-        }
-        if (is_numeric($decompte->getMtRemboursementAvance()) && is_numeric($decompte->getMtRemboursementAvancePrec())) {
-            $decompte->setMtRemboursementAvanceACD($decompte->getMtRemboursementAvance() - $decompte->getMtRemboursementAvancePrec());
+        if ($decompte->getProject()->getAvanceDemarrage() > 0) {
+            if ($decompte->getPourcentRealisation() > 40 && $decompte->getPourcentRealisation() <= 80) {
+                if ($decompte->getRemboursementAvanceIntensity() && is_numeric($decompte->getRemboursementAvanceIntensity())) {
+                    $decompte->setMtRemboursementAvanceACD($decompte->getMtMoisNetAPercevoir() * $decompte->getRemboursementAvanceIntensity() * 0.001);
+                }
+            } elseif ($decompte->getPourcentRealisation() > 80) {
+                $remboursementAvance = $decompte->getProject()->getMtAvenant() - $decomptePrec->getMtRemboursementAvance();
+                if ($remboursementAvance > 0) {
+                    if ($decompte->getMtMoisNetAPercevoir() > $remboursementAvance) {
+                        $decompte->setMtRemboursementAvanceACD($remboursementAvance);
+                    } else {
+                        $decompte->setMtRemboursementAvanceACD($decompte->getMtMoisNetAPercevoir());
+                    }
+                }
+            } else {
+                $decompte->setMtRemboursementAvanceACD(0);
+            }
         } else {
             $decompte->setMtRemboursementAvanceACD(0);
         }
+        if (!is_null($decomptePrec)) {
+            $decompte->setMtRemboursementAvancePrec($decomptePrec->getMtRemboursementAvance());
+        } else {
+            $decompte->setMtRemboursementAvancePrec(0);
+        }
+        $decompte->setMtRemboursementAvance($decompte->getMtRemboursementAvanceACD() + $decompte->getMtRemboursementAvancePrec());
     }
 
     public function updatePenalite(Decompte $decompte, Decompte $decomptePrec = null) {
@@ -422,11 +434,11 @@ class DecompteManager {
         } else {
             $decompte->setMtPenalitePrec(0);
         }
-        if (is_null($decompte->getMtPenalite())) {
-            $decompte->setMtPenalite(0);
+        if (is_null($decompte->getMtPenaliteACD())) {
+            $decompte->setMtPenaliteACD(0);
         }
 
-        $decompte->setMtPenaliteACD($decompte->getMtPenalite());
+        $decompte->setMtPenalite($decompte->getMtPenaliteACD() + $decompte->getMtPenalitePrec());
     }
 
     public function updateTotalPaiements(Decompte $decompte) {
@@ -556,7 +568,7 @@ class DecompteManager {
         if (!is_dir($this->getExportExcelRootDir())) {
             mkdir($this->getExportExcelRootDir(), $mode = 0777, $recursive = true);
         }
-        $writer->writeToFile($this->getExportExcelRootDir() . '/decompte_mensuel_N°'.$decompte->getMonthNumber().'.xlsx');
+        $writer->writeToFile($this->getExportExcelRootDir() . '/decompte_mensuel_N°' . $decompte->getMonthNumber() . '.xlsx');
     }
 
     public function createAttachementRows(Decompte $decompte, $rows) {
@@ -585,22 +597,22 @@ class DecompteManager {
             }
         }
         $rows[] = array("", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
-        /*Content of general recap*/
+        /* Content of general recap */
         $rows[] = array("", "RECAPITULATIF GENERAL", "", "", "", "", "", "", "", "", "", "", "", "", "");
         if ($decompteTasks && count($decompteTasks) > 0) {
             foreach ($decompteTasks as $decompteTask) {
-                $rows[] = array($decompteTask->getNumero(), "LOT".$decompteTask->getNumero().": ", "", "", "", "", "", "", "", $decompteTask->getMtPrevueMarche(), $decompteTask->getMtPrevueProjetExec(), $decompteTask->getMtCumulMoisPrec(), $decompteTask->getMtMois(), $decompteTask->getMtCumulMois(), $decompteTask->getPourcentRealisation() . "%");
+                $rows[] = array($decompteTask->getNumero(), "LOT" . $decompteTask->getNumero() . ": ", "", "", "", "", "", "", "", $decompteTask->getMtPrevueMarche(), $decompteTask->getMtPrevueProjetExec(), $decompteTask->getMtCumulMoisPrec(), $decompteTask->getMtMois(), $decompteTask->getMtCumulMois(), $decompteTask->getPourcentRealisation() . "%");
             }
         }
-        /*Content of total general hors taxes */
+        /* Content of total general hors taxes */
         $rows[] = array("", "TOTAL GENERAL HORS TAXES", "", "", "", "", "", "", "", $decompte->getMtPrevueMarche(), $decompte->getMtPrevueProjetExec(), $decompte->getMtCumulMoisPrec(), $decompte->getMtMois(), $decompte->getMtCumulMois(), "");
-        /*Content of tva */
+        /* Content of tva */
         $rows[] = array("", "TVA: 19.25%", "", "", "", "", "", "", "", $decompte->getMtPrevueMarcheTVA(), $decompte->getMtPrevueProjetExecTVA(), $decompte->getMtCumulMoisPrecTVA(), $decompte->getMtMoisTVA(), $decompte->getMtCumulMoisTVA(), "");
-        /*Content of IR */
+        /* Content of IR */
         $rows[] = array("", "IR: 2.2%", "", "", "", "", "", "", "", $decompte->getMtPrevueMarcheIR(), $decompte->getMtPrevueProjetExecIR(), $decompte->getMtCumulMoisPrecIR(), $decompte->getMtMoisIR(), $decompte->getMtCumulMoisIR(), "");
-        /*Content of net à percevoir */
+        /* Content of net à percevoir */
         $rows[] = array("", "NET A PERCEVOIR", "", "", "", "", "", "", "", $decompte->getMtPrevueMarcheNetAPercevoir(), $decompte->getMtPrevueProjetExecNetAPercevoir(), $decompte->getMtCumulMoisPrecNetAPercevoir(), $decompte->getMtMoisNetAPercevoir(), $decompte->getMtCumulMoisNetAPercevoir(), "");
-        /*Content of total TTC */
+        /* Content of total TTC */
         $rows[] = array("", "TOTAL TTC", "", "", "", "", "", "", "", $decompte->getMtPrevueMarcheTTC(), $decompte->getMtPrevueProjetExecTTC(), $decompte->getMtCumulMoisPrecTTC(), $decompte->getMtMoisTTC(), $decompte->getMtCumulMoisTTC(), "");
     }
 
@@ -615,12 +627,159 @@ class DecompteManager {
             foreach ($subDecompteTasks as $subDecompteTask) {
                 $this->addDecompteTaskRow($subDecompteTask, $rows);
             }
-            $rows[] = array("", "SOUS TOTAL DU LOT".$decompteTask->getNumero(), "", "", "", "", "", "", "", $decompteTask->getMtPrevueMarche(), $decompteTask->getMtPrevueProjetExec(), $decompteTask->getMtCumulMoisPrec(), $decompteTask->getMtMois(), $decompteTask->getMtCumulMois(), $decompteTask->getPourcentRealisation() . "%");
+            $rows[] = array("", "SOUS TOTAL DU LOT" . $decompteTask->getNumero(), "", "", "", "", "", "", "", $decompteTask->getMtPrevueMarche(), $decompteTask->getMtPrevueProjetExec(), $decompteTask->getMtCumulMoisPrec(), $decompteTask->getMtMois(), $decompteTask->getMtCumulMois(), $decompteTask->getPourcentRealisation() . "%");
         }
     }
-    
+
     public function getExportExcelRootDir() {
         return __DIR__ . '/../../../../web/exports/excel';
+    }
+
+    public function getUserProjects(\OGIVE\UserBundle\Entity\User $user) {
+        $repositoryOwner = $this->em->getRepository('OGIVEProjectBundle:Owner');
+        $repositoryHolder = $this->em->getRepository('OGIVEProjectBundle:Holder');
+        $repositoryServiceProvider = $this->em->getRepository('OGIVEProjectBundle:ServiceProvider');
+        $repositoryProjectManager = $this->em->getRepository('OGIVEProjectBundle:ProjectManager');
+        $repositoryProject = $this->em->getRepository('OGIVEProjectBundle:Project');
+        $userAsOwners = $repositoryOwner->getAllByUser(null, null, $user->getId());
+        $userAsHolders = $repositoryHolder->getAllByUser(null, null, $user->getId());
+        $userAsServiceProviders = $repositoryServiceProvider->getAllByUser(null, null, $user->getId());
+        $userAsProjectManagers = $repositoryProjectManager->getAllByUser(null, null, $user->getId());
+        $projects = array();
+        $projects_id = array();
+        //Get all projects where user contribute as owner
+        if ($userAsOwners) {
+            foreach ($userAsOwners as $userAsOwner) {
+                $userAsOwnerProject = $repositoryProject->getAllByOwner($userAsOwner->getId());
+                if (!in_array($userAsOwnerProject->getId(), $projects_id)) {
+                    $projects[] = $userAsOwnerProject;
+                    $projects_id[] = $userAsOwnerProject->getId();
+                }
+            }
+        }
+
+        //Get all projects where user contribute as holder
+        if ($userAsHolders) {
+            foreach ($userAsHolders as $userAsHolder) {
+
+                if (!in_array($userAsHolder->getProject()->getId(), $projects_id)) {
+                    $projects[] = $userAsHolder->getProject();
+                    $projects_id[] = $userAsHolder->getProject()->getId();
+                }
+            }
+        }
+
+        //Get all projects where user contribute as project manager
+        if ($userAsProjectManagers) {
+            foreach ($userAsProjectManagers as $userAsProjectManager) {
+                if (!in_array($userAsProjectManager->getProject()->getId(), $projects_id)) {
+                    $projects[] = $userAsProjectManager->getProject();
+                    $projects_id[] = $userAsProjectManager->getProject()->getId();
+                }
+            }
+        }
+
+        //Get all projects where user contribute as service provider
+        if ($userAsServiceProviders) {
+            foreach ($userAsServiceProviders as $userAsServiceProvider) {
+                if (!in_array($userAsServiceProvider->getProject()->getId(), $projects_id)) {
+                    $projects[] = $userAsServiceProvider->getProject();
+                    $projects_id[] = $userAsServiceProvider->getProject()->getId();
+                }
+            }
+        }
+        return $projects;
+    }
+
+    public function user_can_create_decompte(User $user, Project $project) {
+        $holders = $project->getHolders();
+        foreach ($holders as $holder) {
+            if ($holder->getUser()->getId() == $user->getId()) {
+                return true;
+            }
+        }
+        $projectManagers = $project->getProjectManagers();
+        foreach ($projectManagers as $projectManager) {
+            if ($projectManager->getUser()->getId() == $user->getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function user_can_update_decompte(User $user, Project $project) {
+        $holders = $project->getHolders();
+        foreach ($holders as $holder) {
+            if ($holder->getUser()->getId() == $user->getId()) {
+                return true;
+            }
+        }
+        $projectManagers = $project->getProjectManagers();
+        foreach ($projectManagers as $projectManager) {
+            if ($projectManager->getUser()->getId() == $user->getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function user_can_submit_decompte_for_validation(User $user, Decompte $decompte) {
+        $holders = $decompte->getProject()->getHolders();
+        foreach ($holders as $holder) {
+            if ($holder->getUser()->getId() == $user->getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function initDecompteValidators(Decompte $decompte) {
+        $project = $decompte->getProject();
+        /*         * ******************initialise a list of decompte validation *********************************************** */
+        $order = 1;
+        //list of Holders
+        $holders = $project->getHolders();
+        foreach ($holders as $holder) {
+            $decompteValidation = new DecompteValidation();
+            $decompteValidation->setUser($holder->getUser());
+            $decompteValidation->setPriorityOrder($order);
+            $decompteValidation->setContributorType("entreprise");
+            $decompteValidation->setDecompte($decompte);
+            $decompte->addDecompteValidation($decompteValidation);
+            $order++;
+        }
+        //list of projects managers
+        $projectManagers = $project->getProjectManagers();
+        foreach ($projectManagers as $projectManager) {
+            $decompteValidation = new DecompteValidation();
+            $decompteValidation->setUser($projectManager->getUser());
+            $decompteValidation->setPriorityOrder($order);
+            $decompteValidation->setContributorType("Maître d'oeuvre");
+            $decompteValidation->setDecompte($decompte);
+            $decompte->addDecompteValidation($decompteValidation);
+            $order++;
+        }
+        //owner of project
+        $owner = $project->getOwner();
+        $decompteValidation = new DecompteValidation();
+        $decompteValidation->setUser($owner->getUser());
+        $decompteValidation->setPriorityOrder($order);
+        $decompteValidation->setContributorType("Maître d'ouvrage");
+        $decompteValidation->setDecompte($decompte);
+        $decompte->addDecompteValidation($decompteValidation);
+        $order++;
+        //list of other contributors
+        $othersContributors = $project->getOtherContributors();
+        foreach ($othersContributors as $otherContributor) {
+            $decompteValidation = new DecompteValidation();
+            $decompteValidation->setUser($otherContributor->getUser());
+            $decompteValidation->setPriorityOrder($order);
+            $decompteValidation->setContributorType($otherContributor->getContributorType());
+            $decompteValidation->setDecompte($decompte);
+            $decompte->addDecompteValidation($decompteValidation);
+            $order++;
+        }
+        return $decompte;
     }
 
 }

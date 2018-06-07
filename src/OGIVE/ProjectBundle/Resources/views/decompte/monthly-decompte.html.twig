@@ -395,12 +395,17 @@
                                     <a id="excel_export_decompte" class="item" href="/exports/excel/decompe_mensuel_N°{{decompte.monthNumber}}.xlsx"> <i class="green file excel icon"></i> Exporter en excel</a>
                                     <a class="item"> | </a>
                                     <a id="pdf_export_decompte" class="item" > <i class="red file pdf icon"></i> Exporter en PDF</a>
+                                    {%if can_submit_decompte %}
                                     <a class="item"> | </a>
                                     <a id="submit_decompte" class="item" onclick="submit_decompte_for_validation({{decompte.project.id}}, {{decompte.id}})"> <i class="inverted yellow send icon"></i> Soumettre</a>
-                                    <a class="item"> | </a>
-                                    <a id="vailidate_decompte" class="item" onclick="validate_decompte({{decompte.project.id}}, {{decompte.id}});"> <i class="inverted green check icon"></i> Valider</a>
+                                    {%endif %}
+                                    {#<a class="item"> | </a>
+                                    <a id="vailidate_decompte" class="item" onclick="validate_decompte({{decompte.project.id}}, {{decompte.id}});"> <i class="inverted green check icon"></i> Valider</a>#}
+                                    {%if can_update_decompte %}
                                     <a class="item"> | </a>
                                     <a id="edit_decompte" class="item"> <i class="inverted blue write icon"></i> Modifier</a>
+                                    {%endif %}
+                                    {%if app.user.id == decompte.createdUser.id %}
                                     <a class="item"> | </a>
                                     <div class="ui dropdown dropdown_actions item">
                                         <i class="large ellipsis horizontal icon"></i>
@@ -408,6 +413,7 @@
                                             <a id="delete_decompte" class="item" onclick="delete_decompte({{decompte.project.id}}, {{decompte.id}});"> <i class="inverted red trash icon"></i> Supprimer</a>
                                         </div>
                                     </div>
+                                    {%endif %}
                                 </div>
                             </div>
                             <div class="content description od_decompte_content">
@@ -558,7 +564,7 @@
                                             </tr>
                                             <tr>
                                                 <td >Montant de l'avance démarrage:</td>
-                                                <td>{{project.avanceDemarrage}}</td>
+                                                <td>{{project.mtAvanceDemarrage}}</td>
                                             </tr>
                                             <tr>
                                                 <td >Montant cumulé des travaux éxécutés</td>
@@ -578,12 +584,8 @@
                                                 <td>{{decompte.mtRemboursementAvance}}</td>
                                             </tr>
                                             <tr>
-                                                <td>Remboursement cumulé de l'avance de démarrage</td>
-                                                <td>{{decompte.mtCumulRemboursementAvance}}</td>
-                                            </tr>
-                                            <tr>
                                                 <td>Remboursement du mois</td>
-                                                <td>{{decompte.mtRemboursementAvance}}</td>
+                                                <td>{{decompte.mtRemboursementAvanceACD}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -600,7 +602,7 @@
                                     Mise à jour du décompte mensuel N°{{decompte.monthNumber}} de {{decompte.monthName}}
                                 </div>
                                 <div class="right floated meta">
-                                    <a class="item cancel_edit_decompte"> Cancel</a>
+                                    <a class="item cancel_edit_decompte">Cancel</a>
                                 </div>
                             </div>
                             <div class="content description">
@@ -637,21 +639,43 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="two fields">
+                                {%if project.remboursementAvanceOption and project.remboursementAvanceOption != 1 %}
+                                <div class="two fields">                                    
                                     <div class="ui field">
-                                        <label>{{ form_label(form.mtRemboursementAvance,"Remboursement de l'avance") }}</label>
+                                        <label>{{ form_label(form.remboursementAvanceIntensity,"Pourcentage de remboursement de l'avance") }}</label>
                                         <div class="field"> 
-                                            {{ form_widget(form.mtRemboursementAvance,{'attr':{'placeholder':"Remboursement de l'avance demarrage", 'data-validate': 'mt_remboursement_avance'}})}}
-                                        </div>
-                                    </div>
-                                    <div class="ui field">
-                                        <label>{{ form_label(form.mtPenalite,"Montant pénalités") }}</label>
-                                        <div class="field"> 
-                                            {{ form_widget(form.mtPenalite,{'attr':{'placeholder':"Montant des pénalités", 'data-validate': 'mt_penalite'}})}}
+                                            {{ form_widget(form.remboursementAvanceIntensity,{'attr':{'placeholder':"Pourcentage de remboursement de l'avance", 'data-validate': 'mt_remboursement_avance'}})}}
                                         </div>
                                     </div>
                                 </div>
+                                {%endif %}
 
+                                <h4 class="ui dividing header">Pénalités</h4>
+
+                                <div class="ui field">
+                                    <table class="ui very basic table">
+                                        <thead>
+                                            <tr><th>Nom</th>
+                                                <th>Montant</th>
+                                                <th>Description</th>
+                                                <th class="right aligned">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="Penalities" data-prototype="{{ forms.penality_prototype(form.penalities.vars.prototype)|e }}">
+                                            {% for penality in form.penalities %}
+                                                <tr>
+                                                    {{ forms.penality_prototype(penality) }}
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                        {% macro penality_prototype(childForm) %}
+                                            <td>{{ form_widget(childForm.name,{'attr':{'data-validate': 'penality_name', 'placeholder': 'Désignation de la pénalité'}}) }}</td>
+                                            <td>{{ form_widget(childForm.amount,{'attr':{'data-validate': 'penality_amount', 'placeholder': 'Montant de la pénalité'}}) }}</td>
+                                            <td>{{ form_widget(childForm.description,{'attr':{'data-validate': 'penality_description', 'placeholder': 'Description de la pénalité', 'rows': '3'}}) }}</td>
+                                        {% endmacro %}
+                                    </table>
+                                </div>
+                                
                                 <div class="field">
                                     <table class="ui celled structured yellow small table">
                                         <thead>
@@ -775,22 +799,11 @@
             Validation du décompte N°{{decompte.monthNumber}}
         </div>
         <div class="content">
-            <form class="ui mini form">
+            <form id="validate_decompte_form" class="ui mini form">
                 <div class="ui field">
                     <label>Lieu de validation</label>
                     <div class="field">
-                        {{ form_widget(formForValidation.validationPlace,{'attr':{'placeholder':"Lieu de validation", 'data-validate': 'validation_place'}})}}
-                    </div>
-                </div>
-                <div class="ui field">
-                    <label>Date de validation</label>
-                    <div class="field">
-                        <div class="ui calendar" >
-                            <div class="ui input left icon">
-                                <i class="calendar icon"></i>
-                                {{ form_widget(formForValidation.validationDate,{'attr':{'placeholder':"Date de validation", 'data-validate': 'validation_date'}})}}
-                            </div>
-                        </div>
+                        <input type="text" name="validation_place" placeholder="Lieu de validation"  data-validate="validation_place">
                     </div>
                 </div>
             </form>
@@ -828,5 +841,75 @@
 {% block javascripts %}
     {{ parent()}}
     <script type="text/javascript" src="{{ asset('bundles/ogiveproject/js/decompte.js')}}"></script>
+    <script>
+        function addPenalityForm($collectionPenality, $newLinkTrPenality) {
+            // Get the data-prototype explained earlier
+            var prototype = $collectionPenality.data('prototype');
 
+            // get the new index
+            var index = $collectionPenality.data('index');
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var $newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            $collectionPenality.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a projectManager" link li
+            var $newFormTr = $('<tr></tr>').append($newForm);
+            $newLinkTrPenality.before($newFormTr);
+            addPenalityFormDeleteLink($newFormTr);
+        }
+
+        function addPenalityFormDeleteLink($projectManagerFormTr) {
+            var $removeFormA = $('<td class="right aligned"><button class="ui mini red compact icon button" data-tooltip="Supprimer" data-position="bottom center" data-inverted="" data-variation="mini"><i class="trash icon"></i></button></td>');
+            $projectManagerFormTr.append($removeFormA);
+            $removeFormA.on('click', function (e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // remove the li for the projectManager form
+                $projectManagerFormTr.remove();
+            });
+        }
+        var $collectionPenality;
+
+        // setup an "add a projectManager" link
+        var $addPenalityLink = $('<button class="ui mini primary button"><i class="plus icon"></i> Ajouter une pénalité</button>');
+        var $newLinkTrPenality = $('<tr></tr>').append($addPenalityLink);
+
+        jQuery(document).ready(function () {
+            /******** suppression des projectManagers *********/
+            // Get the ul that holds the collection of projectManagers
+            $collectionPenality = $('tbody.Penalities');
+
+            // add a delete link to all of the existing projectManager form li elements
+            $collectionPenality.find('tr').each(function () {
+                addPenalityFormDeleteLink($(this));
+            });
+
+
+            /******** Ajout des projectManagers *********/
+
+            // Get the ul that holds the collection of projectManagers
+            $collectionPenality = $('tbody.Penalities');
+
+            // add the "add a projectManager" anchor and li to the projectManagers ul
+            $collectionPenality.append($newLinkTrPenality);
+
+            // count the current form inputs we have (e.g. 2), use that as the new
+            // index when inserting a new item (e.g. 2)
+            $collectionPenality.data('index', $collectionPenality.find(':input').length);
+
+            $addPenalityLink.on('click', function (e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // add a new projectManager form (see next code block)
+                addPenalityForm($collectionPenality, $newLinkTrPenality);
+            });
+
+        });
+    </script>
 {% endblock %}

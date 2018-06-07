@@ -43,15 +43,15 @@ class OtherContributorController extends Controller {
      * @Rest\View()
      * @Rest\Get("/projects/{idProject}/other-contributors/{id}/update" , name="other_contributor_update_get", options={ "method_prefix" = false, "expose" = true })
      */
-    public function getUpdateOtherContributorByIdAction(OtherContributor $other_contributor) {
+    public function getUpdateOtherContributorByIdAction(OtherContributor $otherContributor) {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
 
-        $form = $this->createForm('OGIVE\ProjectBundle\Form\OtherContributorType', $other_contributor, array('method' => 'PUT'));
+        $form = $this->createForm('OGIVE\ProjectBundle\Form\OtherContributorType', $otherContributor, array('method' => 'PUT'));
         return $this->render('OGIVEProjectBundle:other-contributor:update.html.twig', array(
-                    'projectManager' => $other_contributor,
-                    'project' => $other_contributor->getProject(),
+                    'otherContributor' => $otherContributor,
+                    'project' => $otherContributor->getProject(),
                     'tab' => 4,
                     'form' => $form->createView()
         ));
