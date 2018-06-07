@@ -35,7 +35,7 @@
                                         </div>
                                     </div>
                                 </div>#}
-                                <div class="three fields">
+                                <div class="two fields">
                                     <div  class="field">
                                         {{ form_label(form.user,"Nom d'utilisateur") }}
                                         {{ form_widget(form.user,{'attr':{'data-validate': 'user-contributor', 'class': 'ui search dropdown'}})}}
@@ -118,8 +118,8 @@
                                     {% include('OGIVEProjectBundle::form-message-success-error.html.twig') %}
                                 </div>
                                 <div class="field right aligned">
-                                    <button id="od_add_other_contributor_submit_btn" class="ui mini yellow button" type="submit">Sauvegarder</button>
                                     <a id="od_add_other_contributor_cancel_btn" class="ui mini red button"  href="{{path('project_contributors_get', {'id': project.id})}}">Annuler</a>
+                                    <button id="od_add_other_contributor_submit_btn" class="ui mini yellow button" type="submit">Sauvegarder</button>   
                                 </div>
                                 </form>
                             </div>
