@@ -223,6 +223,7 @@ class UserController extends Controller {
                 $session->getFlashBag()->add('error', "Un utilisateur avec ce nom d'utilisateur existe dejà!");
                 return $this->redirect($this->generateUrl('create_personal_account_get'));
             }
+            $user->setEnabled(true);
             $userManager->updateUser($user);
             $session->remove('new_user');
             $mail_service->sendAccountActivationLink($user);
