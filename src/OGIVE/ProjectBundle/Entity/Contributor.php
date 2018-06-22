@@ -15,7 +15,7 @@ class Contributor  extends GeneralClass{
     /**
      * @var string
      *
-     * @ORM\Column(name="nom", type="string", length=255)
+     * @ORM\Column(name="nom", type="string", length=255, nullable= true)
      */
     protected $nom;
     
@@ -106,6 +106,13 @@ class Contributor  extends GeneralClass{
      * @ORM\Column(name="ordre_priorite", type="integer", nullable=true)
      */
     private $ordrePriorite;
+    
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="signatory", type="boolean")
+     */
+    private $signatory;
     
     public function __construct() {
         parent::__construct();
@@ -389,6 +396,29 @@ class Contributor  extends GeneralClass{
      */
     public function getOrdrePriorite() {
         return $this->ordrePriorite;
+    }
+    
+    
+    /**
+     * Set signatory
+     *
+     * @param boolean $signatory
+     *
+     * @return Contributor
+     */
+    public function setSignatory($signatory) {
+        $this->signatory = $signatory;
+
+        return $this;
+    }
+
+    /**
+     * Get signatory
+     *
+     * @return boolean
+     */
+    public function isSignatory() {
+        return $this->signatory;
     }
 
     /**

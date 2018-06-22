@@ -30,8 +30,8 @@ class OtherContributorController extends Controller {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
-        $other_contributor = new OtherContributor();
-        $form = $this->createForm('OGIVE\ProjectBundle\Form\OtherContributorType', $other_contributor);
+        $otherContributor = new OtherContributor();
+        $form = $this->createForm('OGIVE\ProjectBundle\Form\OtherContributorType', $otherContributor);
         return $this->render('OGIVEProjectBundle:other-contributor:add.html.twig', array(
                     'form' => $form->createView(),
                     'tab' => 4,
@@ -65,36 +65,38 @@ class OtherContributorController extends Controller {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
-        $other_contributor = new OtherContributor();
+        $otherContributor = new OtherContributor();
         $repositoryOtherContributor = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:OtherContributor');
         $common_service = $this->get('app.common_service');
 
-        $form = $this->createForm('OGIVE\ProjectBundle\Form\OtherContributorType', $other_contributor);
+        $form = $this->createForm('OGIVE\ProjectBundle\Form\OtherContributorType', $otherContributor);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $common_service->setUserAttributesToContributorIfNotExists($other_contributor);
-            if ($other_contributor->getNom() == null || $other_contributor->getNom() == "") {
+            $common_service->setUserAttributesToContributorIfNotExists($otherContributor);
+            if ($otherContributor->getNom() == null || $otherContributor->getNom() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le nom du prestataire. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }
-            if ($other_contributor->getEmail() == null || $other_contributor->getEmail() == "") {
+            if ($otherContributor->getEmail() == null || $otherContributor->getEmail() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé l'adresse email du prestataire. Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
             }
-            if ($other_contributor->getPhone() == null || $other_contributor->getPhone() == "") {
+            if ($otherContributor->getPhone() == null || $otherContributor->getPhone() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le téléphone du prestataire. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }
-            if ($repositoryOtherContributor->findOneBy(array('email' => $other_contributor->getEmail(), "project" => $project))) {
+            if ($repositoryOtherContributor->findOneBy(array('email' => $otherContributor->getEmail(), "project" => $project))) {
                 return new JsonResponse(["success" => false, 'message' => "Un intervenant avec cette adresse email existe déjà"], Response::HTTP_BAD_REQUEST);
             }
-            if ($repositoryOtherContributor->findOneBy(array('phone' => $other_contributor->getPhone(), "project" => $project))) {
+            if ($repositoryOtherContributor->findOneBy(array('phone' => $otherContributor->getPhone(), "project" => $project))) {
                 return new JsonResponse(["success" => false, 'message' => "Un intervenant avec ce numero téléphone existe déjà"], Response::HTTP_BAD_REQUEST);
             }
-            $other_contributor->setProject($project);
+            $otherContributor->setProject($project);
 
             $user = $this->getUser();
-            $other_contributor->setCreatedUser($user);
-            $other_contributor = $repositoryOtherContributor->saveOtherContributor($other_contributor);
-            //return $this->redirect($this->generateUrl('project_contributors_get', array('id' => $other_contributor->getProject()->getId())));
+            $otherContributor->setCreatedUser($user);
+            $otherContributor = $repositoryOtherContributor->saveOtherContributor($otherContributor);
+            $mail_service = $this->get('app.user_mail_service');
+            $mail_service->sendNotificationToOtherContributorRegistration($otherContributor);
+            //return $this->redirect($this->generateUrl('project_contributors_get', array('id' => $otherContributor->getProject()->getId())));
             $view = View::create(["message" => "L'intervenant a été ajouté avec succès. Vous serez redirigé dans bientôt !", 'id_project' => $project->getId()]);
             $view->setFormat('json');
             return $view;
@@ -107,13 +109,13 @@ class OtherContributorController extends Controller {
      * @Rest\View(statusCode=Response::HTTP_OK)
      * @Rest\Delete("/projects/{idProject}/other-contributors/{id}/remove", name="other_contributor_delete", options={ "method_prefix" = false, "expose" = true })
      */
-    public function removeOtherContributorAction(OtherContributor $other_contributor) {
+    public function removeOtherContributorAction(OtherContributor $otherContributor) {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
         $repositoryOtherContributor = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:OtherContributor');
-        if ($other_contributor) {
-            $repositoryOtherContributor->deleteOtherContributor($other_contributor);
+        if ($otherContributor) {
+            $repositoryOtherContributor->deleteOtherContributor($otherContributor);
             $view = View::create(["message" => "Intervant supprimé avec succès !"]);
             $view->setFormat('json');
             return $view;
@@ -127,45 +129,50 @@ class OtherContributorController extends Controller {
      * @Rest\Put("/projects/{idProject}/other-contributors/{id}/update", name="other_contributor_update_post", options={ "method_prefix" = false, "expose" = true })
      * @param Request $request
      */
-    public function putOtherContributorAction(Request $request, OtherContributor $other_contributor) {
+    public function putOtherContributorAction(Request $request, OtherContributor $otherContributor) {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
-        return $this->updateOtherContributorAction($request, $other_contributor);
+        return $this->updateOtherContributorAction($request, $otherContributor);
     }
 
-    public function updateOtherContributorAction(Request $request, OtherContributor $other_contributor) {
+    public function updateOtherContributorAction(Request $request, OtherContributor $otherContributor) {
         $repositoryOtherContributor = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:OtherContributor');
 
         $common_service = $this->get('app.common_service');
-        $form = $this->createForm('OGIVE\ProjectBundle\Form\OtherContributorType', $other_contributor, array('method' => 'PUT'));
+        $form = $this->createForm('OGIVE\ProjectBundle\Form\OtherContributorType', $otherContributor, array('method' => 'PUT'));
+        $olderOtherContributor = $otherContributor;
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
-            $common_service->setUserAttributesToContributorIfNotExists($other_contributor);
-            if ($other_contributor->getNom() == null || $other_contributor->getNom() == "") {
+            $common_service->setUserAttributesToContributorIfNotExists($otherContributor);
+            if ($otherContributor->getNom() == null || $otherContributor->getNom() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le nom du prestataire. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }
-            if ($other_contributor->getEmail() == null || $other_contributor->getEmail() == "") {
+            if ($otherContributor->getEmail() == null || $otherContributor->getEmail() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé l'adresse email du prestataire. Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
             }
-            if ($other_contributor->getPhone() == null || $other_contributor->getPhone() == "") {
+            if ($otherContributor->getPhone() == null || $otherContributor->getPhone() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le téléphone du prestataire. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }
-            $otherContributorEdit = $repositoryOtherContributor->findOneBy(array('email' => $other_contributor->getEmail(), "project" => $other_contributor->getProject()));
-            if (!is_null($otherContributorEdit) && $otherContributorEdit->getId() != $other_contributor->getId()) {
+            $otherContributorEdit = $repositoryOtherContributor->findOneBy(array('email' => $otherContributor->getEmail(), "project" => $otherContributor->getProject()));
+            if (!is_null($otherContributorEdit) && $otherContributorEdit->getId() != $otherContributor->getId()) {
                 return new JsonResponse(["success" => false, 'message' => "Un titulaire avec cette adresse email existe déjà"], Response::HTTP_BAD_REQUEST);
             }
-            $otherContributorEditByPhone = $repositoryOtherContributor->findOneBy(array('phone' => $other_contributor->getEmail(), "project" => $other_contributor->getProject()));
-            if (!is_null($otherContributorEditByPhone) && $otherContributorEditByPhone->getId() != $other_contributor->getId()) {
+            $otherContributorEditByPhone = $repositoryOtherContributor->findOneBy(array('phone' => $otherContributor->getEmail(), "project" => $otherContributor->getProject()));
+            if (!is_null($otherContributorEditByPhone) && $otherContributorEditByPhone->getId() != $otherContributor->getId()) {
                 return new JsonResponse(["success" => false, 'message' => "Un titulaire avec ce numero de téléphone existe déjà"], Response::HTTP_BAD_REQUEST);
             }
             $user = $this->getUser();
-            $other_contributor->setUpdatedUser($user);
+            $otherContributor->setUpdatedUser($user);
 
-            $other_contributor = $repositoryOtherContributor->updateOtherContributor($other_contributor);
-            //return $this->redirect($this->generateUrl('project_contributors_get', array('id' => $other_contributor->getProject()->getId())));
-            $view = View::create(["message" => "L'intervenant a été modifié avec succès. Vous serez redirigé dans bientôt !", 'id_project' => $other_contributor->getProject()->getId()]);
+            $otherContributor = $repositoryOtherContributor->updateOtherContributor($otherContributor);
+            if($otherContributor->getUser()->getId() != $olderOtherContributor->getUser()->getId()){
+                $mail_service = $this->get('app.user_mail_service');
+                $mail_service->sendNotificationToOtherContributorRegistration($otherContributor);
+            }
+            //return $this->redirect($this->generateUrl('project_contributors_get', array('id' => $otherContributor->getProject()->getId())));
+            $view = View::create(["message" => "L'intervenant a été modifié avec succès. Vous serez redirigé dans bientôt !", 'id_project' => $otherContributor->getProject()->getId()]);
             $view->setFormat('json');
             return $view;
         } else {

@@ -27,7 +27,9 @@
                                     <th>Date de début</th>
                                     <th>Date de fin</th>
                                     <th>Etat</th>
+                                    {%if can_create_decompte %}
                                     <th>Actions</th>
+                                    {%endif %}
                                 </tr></thead>
                                 {%if decomptes %}
                                 <tbody>
@@ -43,6 +45,7 @@
                                             <td>{{decompte.startDate}}</td>
                                             <td>{{decompte.endDate}}</td>
                                             <td>{{decompte.decompteState}}</td>
+                                            {%if can_create_decompte %}
                                             <td style="padding: 0px;">
                                                 <div class="ui text menu" style="margin: 0px;">
                                                     <div class="left menu">
@@ -60,6 +63,7 @@
                                                     </div>
                                                 </div>                                                
                                             </td>
+                                            {%endif %}
                                         </tr>
                                         {% set i = i+1 %}
                                     {%endfor %}

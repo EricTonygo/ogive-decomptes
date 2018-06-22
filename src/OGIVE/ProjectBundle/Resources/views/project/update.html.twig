@@ -170,8 +170,8 @@
                                     <table class="ui very basic table">
                                         <thead>
                                             <tr><th>Nom d'utilisateur</th>
-                                                    <th>Ordre de validation</th>
-                                                    {#<th>Email</th>#}
+                                                <th></th>
+                                                <th>N° d'ordre de signature</th>                              
                                                 <th class="right aligned">Action</th>
                                             </tr>
                                         </thead>
@@ -185,13 +185,16 @@
                                         </tbody>
                                         {% macro projectManager_prototype(childForm) %}
                                             <td><div class="wide field">{{ form_widget(childForm.user,{'attr':{'data-validate': 'projectManager_username', 'class': 'ui search dropdown'}})}}</div></td>
-                                            <td>{{ form_widget(childForm.ordrePriorite,{'attr':{'data-validate': 'projectManager_ordrePriorite', 'placeholder': "Ordre de signature"}}) }}</td>
-                                            {#<td>{{ form_widget(childForm.email,{'attr':{'data-validate': 'projectManager_email', 'placeholder': 'Email'}}) }}</td>#} 
+                                            <td>
+                                                <div class="ui checkbox">
+                                                    {{ form_widget(childForm.signatory,{'attr':{'data-validate': 'holder_signatory'}}) }}
+                                                    <label>Chef de mission</label>
+                                                </div>
+                                            </td>
+                                            <td>{{ form_widget(childForm.ordrePriorite,{'attr':{'data-validate': 'projectManager_ordrePriorite', 'placeholder': "N° d'ordre de signature"}}) }}</td>
                                         {% endmacro %}
-
                                     </table>
                                 </div>
-
 
                                 <h4 class="ui dividing header">Titulaire</h4>
 
@@ -202,7 +205,8 @@
                                                 <th>Banque</th>
                                                 <th>Intitulé</th>
                                                 <th>N° de compte</th>
-                                                <th>Ordre de signature</th>
+                                                <th></th>
+                                                <th>N° d'ordre de signature</th>
                                                 <th class="right aligned">Action</th>
                                             </tr>
                                         </thead>
@@ -218,7 +222,13 @@
                                             <td>{{ form_widget(childForm.nomBanque,{'attr':{'data-validate': 'holder_bank_name', 'placeholder': 'Nom de la banque'}}) }}</td>
                                             <td>{{ form_widget(childForm.intitule,{'attr':{'data-validate': 'holder_bank_entite', 'placeholder': 'Intitutlé du compte'}}) }}</td>
                                             <td>{{ form_widget(childForm.numeroCompteBancaire,{'attr':{'data-validate': 'holder_numero_compte', 'placeholder': 'Numéro du compte'}}) }}</td>
-                                            <td>{{ form_widget(childForm.ordrePriorite,{'attr':{'data-validate': 'holder_ordre_priorite', 'placeholder': "Ordre de signature"}}) }}</td>
+                                            <td>
+                                                <div class="ui checkbox">
+                                                    {{ form_widget(childForm.signatory,{'attr':{'data-validate': 'holder_signatory'}}) }}
+                                                    <label>Mandataire</label>
+                                                </div>
+                                            </td>
+                                            <td>{{ form_widget(childForm.ordrePriorite,{'attr':{'data-validate': 'holder_ordre_priorite', 'placeholder': "N° d'ordre de signature"}}) }}</td>
                                         {% endmacro %}
                                     </table>
                                 </div>
@@ -229,9 +239,8 @@
                                     <table class="ui very basic table">
                                         <thead>
                                             <tr><th>Nom d'utilisateur</th>
-                                                <th>Ordre de signature</th>
-                                                {#<th>Intitulé</th>
-                                                <th>N° de compte</th>#}
+                                                <th></th>
+                                                <th>N° d'ordre de signature</th>
                                                 <th class="right aligned">Action</th>
                                             </tr>
                                         </thead>
@@ -244,9 +253,13 @@
                                         </tbody>
                                         {% macro service_provider_prototype(childForm) %}
                                             <td><div class="wide field">{{ form_widget(childForm.user,{'attr':{'data-validate': 'service_provider_username', 'class': 'ui search dropdown'}})}}</div></td>
-                                            <td>{{ form_widget(childForm.ordrePriorite,{'attr':{'data-validate': 'service_provider_ordre_priorite', 'placeholder': "Ordre de signature"}}) }}</td>
-                                            {#<td>{{ form_widget(childForm.intitule,{'attr':{'data-validate': 'service_provider_bank_entitle', 'placeholder': 'Intitutlé du compte'}}) }}</td>
-                                            <td>{{ form_widget(childForm.numeroCompteBancaire,{'attr':{'data-validate': 'service_provider_numero_compte', 'placeholder': 'Numéro du compte'}}) }}</td> #}
+                                            <td>
+                                                <div class="ui checkbox">
+                                                    {{ form_widget(childForm.signatory,{'attr':{'data-validate': 'holder_signatory'}}) }}
+                                                    {{ form_label(childForm.signatory) }}
+                                                </div>
+                                            </td>
+                                            <td>{{ form_widget(childForm.ordrePriorite,{'attr':{'data-validate': 'service_provider_ordre_priorite', 'placeholder': "N° d'ordre de signature"}}) }}</td>
                                         {% endmacro %}
                                     </table>
                                 </div>
@@ -257,10 +270,9 @@
                                     <table class="ui very basic table">
                                         <thead>
                                             <tr><th>Nom d'utilisateur</th>
-                                                {#<th>Téléphone</th>
-                                                <th>Email</th>#}
                                                 <th>Titre ou Nom du service</th>
-                                                <th>Ordre de signature</th>
+                                                <th></th>
+                                                <th>N° d'ordre de signature</th>
                                                 <th class="right aligned">Action</th>
                                             </tr>
                                         </thead>
@@ -274,45 +286,16 @@
                                         {% macro other_contributor_prototype(childForm) %}
                                             <td><div class="wide field">{{ form_widget(childForm.user,{'attr':{'data-validate': 'other_contributor_username', 'class': 'ui search dropdown'}})}}</div></td>
                                             <td><div class="wide field">{{ form_widget(childForm.contributorType,{'attr':{'data-validate': 'other_contributor_type', 'placeholder': "Titre ou nom du service"}})}}</div></td>
-                                            <td>{{ form_widget(childForm.ordrePriorite,{'attr':{'data-validate': 'holder_ordre_priorite', 'placeholder': "Ordre de validation"}}) }}</td>
-                                            {#<td>{{ form_widget(childForm.email,{'attr':{'data-validate': 'holder_email', 'placeholder': 'Email'}}) }}</td> #}
+                                            <td>
+                                                <div class="ui checkbox">
+                                                    {{ form_widget(childForm.signatory,{'attr':{'data-validate': 'holder_signatory'}}) }}
+                                                    {{ form_label(childForm.signatory) }}
+                                                </div>
+                                            </td>
+                                            <td>{{ form_widget(childForm.ordrePriorite,{'attr':{'data-validate': 'holder_ordre_priorite', 'placeholder': "N° d'ordre de signature"}}) }}</td>
                                         {% endmacro %}
                                     </table>
                                 </div>
-
-                                {#<h4 class="ui dividing header">Tâches</h4>
-                                <div class="ui field">
-                                    <table class="ui very basic table">
-                                        <thead>
-                                            <tr><th>Numero</th>
-                                                <th>Désignation des ouvrages</th>
-                                                <th>Unité</th>
-                                                <th>Prix Unitaire</th>
-                                                <th>Qté Marché</th>
-                                                <th>Qté projet Exec</th>                                                   
-                                                <th class="right aligned">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="tasks" data-prototype="{{ forms.task_prototype(form.tasks.vars.prototype)|e }}">
-                                            {% for task in form.tasks %}
-                                                <tr>
-                                                    {{ forms.task_prototype(task) }}
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                        {% macro task_prototype(childForm) %}
-                                            {% import _self as forms %}
-                                            <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'task_name', 'placeholder': 'Numero du prix'}}) }}</td>
-                                            <td style="width: 35%">{{ form_widget(childForm.nom,{'attr':{'data-validate': 'task_number', 'placeholder':"Désignation de l'ouvrage"}}) }}</td>
-                                            <td>{{ form_widget(childForm.unite,{'attr':{'data-validate': 'task_unite', 'placeholder': 'Unité du prix'}}) }}</td>
-                                            <td>{{ form_widget(childForm.prixUnitaire,{'attr':{'data-validate': 'task_prixUnitaire', 'placeholder': 'Prix unitaire du prix'}}) }}</td>
-                                            <td>{{ form_widget(childForm.qtePrevueMarche,{'attr':{'data-validate': 'task_qtePrevueMarche', 'placeholder': 'Qté prevue marché'}}) }}</td>
-                                            <td>{{ form_widget(childForm.qtePrevueProjetExec,{'attr':{'data-validate': 'task_qtePrevueProjetExec', 'placeholder': "Qté projet d'exécution"}}) }}</td>
-                                                                  
-                                        {% endmacro %}
-                                    </table>
-                                </div>#}
-
                                 {{form_widget(form._token)}}
                                 <div class="field">
                                     {% include('OGIVEProjectBundle::form-message-success-error.html.twig') %}

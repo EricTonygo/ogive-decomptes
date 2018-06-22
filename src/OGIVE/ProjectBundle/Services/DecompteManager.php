@@ -740,24 +740,28 @@ class DecompteManager {
         //list of Holders
         $holders = $project->getHolders();
         foreach ($holders as $holder) {
-            $decompteValidation = new DecompteValidation();
-            $decompteValidation->setUser($holder->getUser());
-            $decompteValidation->setPriorityOrder($order);
-            $decompteValidation->setContributorType("entreprise");
-            $decompteValidation->setDecompte($decompte);
-            $decompte->addDecompteValidation($decompteValidation);
-            $order++;
+            if ($holder->isSignatory()) {
+                $decompteValidation = new DecompteValidation();
+                $decompteValidation->setUser($holder->getUser());
+                $decompteValidation->setPriorityOrder($order);
+                $decompteValidation->setContributorType("entreprise");
+                $decompteValidation->setDecompte($decompte);
+                $decompte->addDecompteValidation($decompteValidation);
+                $order++;
+            }
         }
         //list of projects managers
         $projectManagers = $project->getProjectManagers();
         foreach ($projectManagers as $projectManager) {
-            $decompteValidation = new DecompteValidation();
-            $decompteValidation->setUser($projectManager->getUser());
-            $decompteValidation->setPriorityOrder($order);
-            $decompteValidation->setContributorType("Maître d'oeuvre");
-            $decompteValidation->setDecompte($decompte);
-            $decompte->addDecompteValidation($decompteValidation);
-            $order++;
+            if ($projectManager->isSignatory()) {
+                $decompteValidation = new DecompteValidation();
+                $decompteValidation->setUser($projectManager->getUser());
+                $decompteValidation->setPriorityOrder($order);
+                $decompteValidation->setContributorType("Maître d'oeuvre");
+                $decompteValidation->setDecompte($decompte);
+                $decompte->addDecompteValidation($decompteValidation);
+                $order++;
+            }
         }
         //owner of project
         $owner = $project->getOwner();
@@ -771,13 +775,27 @@ class DecompteManager {
         //list of other contributors
         $othersContributors = $project->getOtherContributors();
         foreach ($othersContributors as $otherContributor) {
-            $decompteValidation = new DecompteValidation();
-            $decompteValidation->setUser($otherContributor->getUser());
-            $decompteValidation->setPriorityOrder($order);
-            $decompteValidation->setContributorType($otherContributor->getContributorType());
-            $decompteValidation->setDecompte($decompte);
-            $decompte->addDecompteValidation($decompteValidation);
-            $order++;
+            if ($otherContributor->isSignatory()) {
+                $decompteValidation = new DecompteValidation();
+                $decompteValidation->setUser($otherContributor->getUser());
+                $decompteValidation->setPriorityOrder($order);
+                $decompteValidation->setContributorType($otherContributor->getContributorType());
+                $decompteValidation->setDecompte($decompte);
+                $decompte->addDecompteValidation($decompteValidation);
+                $order++;
+            }
+        }
+        return $decompte;
+    }
+
+    public function removeAllDecompteValidations(Decompte $decompte) {
+        $decompteValidations = $decompte->getDecompteValidations();
+        //$repositoryDecompteValidation = $this->em->getRepository('OGIVEProjectBundle:DecompteValidation');
+        foreach ($decompteValidations as $decompteValidation) {
+            // remove the $decompteValidation from the $decompte
+            $decompte->getDecompteValidations()->removeElement($decompteValidation);
+            // if you wanted to delete the DecompteValidation entirely, you can also do that
+            $this->em->remove($decompteValidation);
         }
         return $decompte;
     }

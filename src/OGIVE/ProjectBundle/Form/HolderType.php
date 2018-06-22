@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use OGIVE\UserBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
@@ -30,10 +31,14 @@ class HolderType extends AbstractType {
 //                                ->setParameter('enabled', true);
                     }
                 ))
+                ->add('signatory', CheckboxType::class, array(
+                    'label' => 'Signataire de décomptes',
+                    'required' => false,
+                ))
                 ->add('nom', TextType::class, array('required' => false))
-                ->add('email', TextType::class, array('required' => false))  
-                ->add('phone', TextType::class, array('required' => false))  
-                ->add('codePostal', TextType::class, array('required' => false))            
+                ->add('email', TextType::class, array('required' => false))
+                ->add('phone', TextType::class, array('required' => false))
+                ->add('codePostal', TextType::class, array('required' => false))
                 ->add('faxNumber', TextType::class, array('required' => false))
                 ->add('rc', TextType::class, array('required' => false))
                 ->add('numeroContribuable', TextType::class, array('required' => false))

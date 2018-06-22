@@ -41,18 +41,22 @@
                         </table>
 
                         <h4 class="ui dividing header">Mission de contrôle</h4>
-                        <div class="ui fluid card od_card_top_table_action">
-                            <div class="content">
-                                <a class="ui right floated yellow mini button" href="{{path('project_manager_add_get', {'id': project.id})}}"><i class="plus icon"></i> Ajouter une mission de contrôle</a>
+                        {%if app.user.id == project.createdUser.id %}
+                            <div class="ui fluid card od_card_top_table_action">
+                                <div class="content">
+                                    <a class="ui right floated yellow mini button" href="{{path('project_manager_add_get', {'id': project.id})}}"><i class="plus icon"></i> Ajouter une mission de contrôle</a>
+                                </div>
                             </div>
-                        </div>
+                        {%endif %}
                         <table class="ui celled yellow small table">
                             <thead>
                                 <tr>
                                     <th>Nom</th>
                                     <th>Téléphone</th>
-                                    <th>Email</th>                                   
+                                    <th>Email</th>
+                                    {%if app.user.id == project.createdUser.id %}
                                     <th>Actions</th>
+                                    {%endif %}
                                 </tr></thead>
                                 {%if projectManagers %}
                                 <tbody>
@@ -66,6 +70,7 @@
                                                 {{projectManager.phone}}                                               
                                             </td>
                                             <td>{{projectManager.email}}</td>
+                                            {%if app.user.id == project.createdUser.id %}
                                             <td style="padding: 0px;">
                                                 <div class="ui text menu" style="margin: 0px;">
                                                     <div class="left menu">
@@ -83,6 +88,7 @@
                                                     </div>
                                                 </div>
                                             </td>
+                                            {%endif %}
                                         </tr>
                                     {%endfor %}
 
@@ -94,18 +100,22 @@
                                     {%endif %}
                         </table>
                         <h4 class="ui dividing header">Titulaire</h4>
-                        <div class="ui fluid card od_card_top_table_action">
-                            <div class="content">
-                                <a class="ui right floated yellow mini button" href="{{path('holder_add_get', {'id': project.id})}}"><i class="plus icon"></i> Ajouter un titulaire</a>
+                        {%if app.user.id == project.createdUser.id %}
+                            <div class="ui fluid card od_card_top_table_action">
+                                <div class="content">
+                                    <a class="ui right floated yellow mini button" href="{{path('holder_add_get', {'id': project.id})}}"><i class="plus icon"></i> Ajouter un titulaire</a>
+                                </div>
                             </div>
-                        </div>
+                        {%endif %}
                         <table class="ui celled yellow small table">
                             <thead>
                                 <tr>
                                     <th>Nom</th>
                                     <th>Téléphone</th>
-                                    <th>Email</th>                                   
+                                    <th>Email</th>
+                                    {%if app.user.id == project.createdUser.id %}
                                     <th>Actions</th>
+                                    {%endif %}
                                 </tr></thead>
                                 {%if holders %}
                                 <tbody>
@@ -119,6 +129,7 @@
                                                 {{holder.phone}}                                               
                                             </td>
                                             <td>{{holder.email}}</td>
+                                            {%if app.user.id == project.createdUser.id %}
                                             <td style="padding: 0px;">
                                                 <div class="ui text menu" style="margin: 0px;">
                                                     <div class="left menu">
@@ -136,6 +147,7 @@
                                                     </div>
                                                 </div>
                                             </td>
+                                            {%endif %}
                                         </tr>
                                     {%endfor %}
 
@@ -148,18 +160,22 @@
                         </table>
 
                         <h4 class="ui dividing header">Sous traitance</h4>
-                        <div class="ui fluid card od_card_top_table_action">
-                            <div class="content">
-                                <a class="ui right floated yellow mini button" href="{{path('service_provider_add_get', {'id': project.id})}}"><i class="plus icon"></i> Ajouter un sous traitant</a>
+                        {%if app.user.id == project.createdUser.id %}
+                            <div class="ui fluid card od_card_top_table_action">
+                                <div class="content">
+                                    <a class="ui right floated yellow mini button" href="{{path('service_provider_add_get', {'id': project.id})}}"><i class="plus icon"></i> Ajouter un sous traitant</a>
+                                </div>
                             </div>
-                        </div>
+                        {%endif %}
                         <table class="ui celled yellow small table">
                             <thead>
                                 <tr>
                                     <th>Nom</th>
                                     <th>Téléphone</th>
-                                    <th>Email</th>                                   
+                                    <th>Email</th>
+                                    {%if app.user.id == project.createdUser.id %}
                                     <th>Actions</th>
+                                    {%endif %}
                                 </tr></thead>
                                 {%if serviceProviders %}
                                 <tbody>
@@ -173,6 +189,7 @@
                                                 {{serviceProvider.phone}}                                               
                                             </td>
                                             <td>{{serviceProvider.email}}</td>
+                                            {%if app.user.id == project.createdUser.id %}
                                             <td style="padding: 0px;">
                                                 <div class="ui text menu" style="margin: 0px;">
                                                     <div class="left menu">
@@ -190,6 +207,7 @@
                                                     </div>
                                                 </div>
                                             </td>
+                                            {%endif %}
                                         </tr>
                                     {%endfor %}
 
@@ -206,19 +224,23 @@
                         </table>
 
                         <h4 class="ui dividing header">Autres intervenants</h4>
-                        <div class="ui fluid card od_card_top_table_action">
-                            <div class="content">
-                                <a class="ui right floated yellow mini button" href="{{path('other_contributor_add_get', {'id': project.id})}}"><i class="plus icon"></i> Ajouter un intervenant</a>
+                        {%if app.user.id == project.createdUser.id %}
+                            <div class="ui fluid card od_card_top_table_action">
+                                <div class="content">
+                                    <a class="ui right floated yellow mini button" href="{{path('other_contributor_add_get', {'id': project.id})}}"><i class="plus icon"></i> Ajouter un intervenant</a>
+                                </div>
                             </div>
-                        </div>
+                        {%endif %}
                         <table class="ui celled yellow small table">
                             <thead>
                                 <tr>
                                     <th>Nom</th>
                                     <th>Nom du poste</th>
                                     <th>Téléphone</th>
-                                    <th>Email</th>                                   
+                                    <th>Email</th>
+                                    {%if app.user.id == project.createdUser.id %}
                                     <th>Actions</th>
+                                    {%endif %}
                                 </tr></thead>
                                 {%if otherContributors %}
                                 <tbody>
@@ -235,6 +257,7 @@
                                                 {{otherContributor.phone}}                                               
                                             </td>
                                             <td>{{otherContributor.email}}</td>
+                                            {%if app.user.id == project.createdUser.id %}
                                             <td style="padding: 0px;">
                                                 <div class="ui text menu" style="margin: 0px;">
                                                     <div class="left menu">
@@ -252,6 +275,7 @@
                                                     </div>
                                                 </div>
                                             </td>
+                                            {%endif %}
                                         </tr>
                                     {%endfor %}
 

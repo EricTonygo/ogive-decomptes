@@ -124,3 +124,7 @@ fos_js_routing:
         smaxage: null   # integer value, e.g. 300
         expires: null   # anything that can be fed to "new \DateTime($expires)", e.g. "5 minutes"
         vary: []        # string or array, e.g. "Cookie" or [ Cookie, Accept ]
+        
+cmen_google_charts:
+    version: "current"
+    language: "fr"

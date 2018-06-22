@@ -30,6 +30,10 @@ class TaskController extends Controller {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
+        $user = $this->getUser();
+        if ($user->getId() != $project->getCreatedUser()->getId()) {
+            return $this->generateUrl("project_tasks_get", array("id" => $project->getId()));
+        }
         $task = new Task();
         $form = $this->createForm('OGIVE\ProjectBundle\Form\TaskType', $task);
         return $this->render('OGIVEProjectBundle:task:add.html.twig', array(
@@ -46,6 +50,10 @@ class TaskController extends Controller {
     public function addSubTaskAction(Request $request, Task $parentTask) {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+        $user = $this->getUser();
+        if ($user->getId() != $parentTask->getProjectTask()->getCreatedUser()->getId()) {
+            return $this->generateUrl("project_tasks_get", array("id" => $parentTask->getProjectTask()->getId()));
         }
         $task = new Task();
         $form = $this->createForm('OGIVE\ProjectBundle\Form\TaskType', $task);
@@ -65,7 +73,10 @@ class TaskController extends Controller {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
-
+        $user = $this->getUser();
+        if ($user->getId() != $task->getProjectTask()->getCreatedUser()->getId()) {
+            return $this->generateUrl("project_tasks_get", array("id" => $task->getProjectTask()->getId()));
+        }
         $form = $this->createForm('OGIVE\ProjectBundle\Form\TaskType', $task, array('method' => 'PUT'));
         return $this->render('OGIVEProjectBundle:task:update.html.twig', array(
                     'task' => $task,
@@ -82,6 +93,10 @@ class TaskController extends Controller {
     public function postTaskAction(Request $request, Project $project) {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+        $user = $this->getUser();
+        if ($user->getId() != $project->getCreatedUser()->getId()) {
+            return $this->generateUrl("project_tasks_get", array("id" => $project->getId()));
         }
         $task = new Task();
         $repositoryTask = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Task');
@@ -175,6 +190,10 @@ class TaskController extends Controller {
     public function postSubTaskAction(Request $request, Task $parentTask) {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+        $user = $this->getUser();
+        if ($user->getId() != $parentTask->getProjectTask()->getCreatedUser()->getId()) {
+            return $this->generateUrl("project_tasks_get", array("id" => $parentTask->getProjectTask()->getId()));
         }
         $task = new Task();
         $repositoryTask = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Task');
@@ -275,6 +294,10 @@ class TaskController extends Controller {
         $decompte_manager = $this->get('app.decompte_manager');
         $repositoryTask = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Task');
         if ($task) {
+            $user = $this->getUser();
+            if ($user->getId() != $task->getProjectTask()->getCreatedUser()->getId()) {
+                return $this->generateUrl("project_tasks_get", array("id" => $task->getProjectTask()->getId()));
+            }
             $repositoryTask->deleteTask($task);
             $decompte_manager->updateAllDecomptes($task->getProjectTask());
             $view = View::create(["message" => "Tâche supprimée avec succès !"]);
@@ -293,6 +316,10 @@ class TaskController extends Controller {
     public function putTaskAction(Request $request, Task $task) {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+        $user = $this->getUser();
+        if ($user->getId() != $task->getProjectTask()->getCreatedUser()->getId()) {
+            return $this->generateUrl("project_tasks_get", array("id" => $task->getProjectTask()->getId()));
         }
         return $this->updateTaskAction($request, $task);
     }

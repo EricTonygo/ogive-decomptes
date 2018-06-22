@@ -226,7 +226,8 @@ class UserController extends Controller {
             $user->setEnabled(true);
             $userManager->updateUser($user);
             $session->remove('new_user');
-            $mail_service->sendAccountActivationLink($user);
+            //$mail_service->sendAccountActivationLink($user);
+            $mail_service->sendWelcomeNewUserEmail($user);
             $session->getFlashBag()->add('success', "Votre compte a été créer avec succes. Veuillez activer votre compte en cliquant sur le lien envoyé à l'adresse mail de votre compte.");
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         } else {

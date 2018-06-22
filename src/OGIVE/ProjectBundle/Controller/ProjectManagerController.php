@@ -30,8 +30,8 @@ class ProjectManagerController extends Controller {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
-        $project_manager = new ProjectManager();
-        $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectManagerType', $project_manager);
+        $projectManager = new ProjectManager();
+        $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectManagerType', $projectManager);
         return $this->render('OGIVEProjectBundle:project-manager:add.html.twig', array(
                     'form' => $form->createView(),
                     'tab' => 4,
@@ -43,15 +43,15 @@ class ProjectManagerController extends Controller {
      * @Rest\View()
      * @Rest\Get("/projects/{idProject}/project-managers/{id}/update" , name="project_manager_update_get", options={ "method_prefix" = false, "expose" = true })
      */
-    public function getUpdateProjectManagerByIdAction(ProjectManager $project_manager) {
+    public function getUpdateProjectManagerByIdAction(ProjectManager $projectManager) {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
 
-        $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectManagerType', $project_manager, array('method' => 'PUT'));
+        $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectManagerType', $projectManager, array('method' => 'PUT'));
         return $this->render('OGIVEProjectBundle:project-manager:update.html.twig', array(
-                    'projectManager' => $project_manager,
-                    'project' => $project_manager->getProject(),
+                    'projectManager' => $projectManager,
+                    'project' => $projectManager->getProject(),
                     'tab' => 4,
                     'form' => $form->createView()
         ));
@@ -65,36 +65,38 @@ class ProjectManagerController extends Controller {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
-        $project_manager = new ProjectManager();
+        $projectManager = new ProjectManager();
         $repositoryProjectManager = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:ProjectManager');
         $common_service = $this->get('app.common_service');
 
-        $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectManagerType', $project_manager);
+        $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectManagerType', $projectManager);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $common_service->setUserAttributesToContributorIfNotExists($project_manager);
-            if ($project_manager->getNom() == null || $project_manager->getNom() == "") {
+            $common_service->setUserAttributesToContributorIfNotExists($projectManager);
+            if ($projectManager->getNom() == null || $projectManager->getNom() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le nom du maître d'oeuvre. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }
-            if ($project_manager->getEmail() == null || $project_manager->getEmail() == "") {
+            if ($projectManager->getEmail() == null || $projectManager->getEmail() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé l'adresse email du maître d'oeuvre. Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
             }
-            if ($project_manager->getPhone() == null || $project_manager->getPhone() == "") {
+            if ($projectManager->getPhone() == null || $projectManager->getPhone() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le téléphone du maître d'oeuvre. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }
-            if ($repositoryProjectManager->findOneBy(array('email' => $project_manager->getEmail(), "project" => $project))) {
+            if ($repositoryProjectManager->findOneBy(array('email' => $projectManager->getEmail(), "project" => $project))) {
                 return new JsonResponse(["success" => false, 'message' => "Un maitre d'oeuvre avec cette adresse email existe déjà"], Response::HTTP_BAD_REQUEST);
             }
-            if ($repositoryProjectManager->findOneBy(array('email' => $project_manager->getEmail(), "project" => $project))) {
+            if ($repositoryProjectManager->findOneBy(array('email' => $projectManager->getEmail(), "project" => $project))) {
                 return new JsonResponse(["success" => false, 'message' => "Un maitre d'oeuvre avec ce numero téléphone existe déjà"], Response::HTTP_BAD_REQUEST);
             }
             
-            $project_manager->setProject($project);
+            $projectManager->setProject($project);
             $user = $this->getUser();
-            $project_manager->setCreatedUser($user);
-            $project_manager = $repositoryProjectManager->saveProjectManager($project_manager);
-            //return $this->redirect($this->generateUrl('project_contributors_get', array('id' => $project_manager->getProject()->getId())));
+            $projectManager->setCreatedUser($user);
+            $projectManager = $repositoryProjectManager->saveProjectManager($projectManager);
+            $mail_service = $this->get('app.user_mail_service');
+            $mail_service->sendNotificationToProjectManagerRegistration($projectManager);
+            //return $this->redirect($this->generateUrl('project_contributors_get', array('id' => $projectManager->getProject()->getId())));
             $view = View::create(["message" => "Le maître d'oeuvre a été ajouté avec succès. Vous serez redirigé dans bientôt !", 'id_project' => $project->getId()]);
             $view->setFormat('json');
             return $view;
@@ -107,13 +109,13 @@ class ProjectManagerController extends Controller {
      * @Rest\View(statusCode=Response::HTTP_OK)
      * @Rest\Delete("/projects/{idProject}/project-managers/{id}/remove", name="project_manager_delete", options={ "method_prefix" = false, "expose" = true })
      */
-    public function removeProjectManagerAction(ProjectManager $project_manager) {
+    public function removeProjectManagerAction(ProjectManager $projectManager) {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
         $repositoryProjectManager = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:ProjectManager');
-        if ($project_manager) {
-            $repositoryProjectManager->deleteProjectManager($project_manager);
+        if ($projectManager) {
+            $repositoryProjectManager->deleteProjectManager($projectManager);
             $view = View::create(["message" => "Maître d'oeuvre supprimé avec succès !"]);
             $view->setFormat('json');
             return $view;
@@ -127,44 +129,48 @@ class ProjectManagerController extends Controller {
      * @Rest\Put("/projects/{idProject}/project-managers/{id}/update", name="project_manager_update_post", options={ "method_prefix" = false, "expose" = true })
      * @param Request $request
      */
-    public function putProjectManagerAction(Request $request, ProjectManager $project_manager) {
+    public function putProjectManagerAction(Request $request, ProjectManager $projectManager) {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
-        return $this->updateProjectManagerAction($request, $project_manager);
+        return $this->updateProjectManagerAction($request, $projectManager);
     }
 
-    public function updateProjectManagerAction(Request $request, ProjectManager $project_manager) {
+    public function updateProjectManagerAction(Request $request, ProjectManager $projectManager) {
         $repositoryProjectManager = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:ProjectManager');
-        $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectManagerType', $project_manager, array('method' => 'PUT'));
+        $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectManagerType', $projectManager, array('method' => 'PUT'));
         $common_service = $this->get('app.common_service');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $common_service->setUserAttributesToContributorIfNotExists($project_manager);
-            if ($project_manager->getNom() == null || $project_manager->getNom() == "") {
+            $common_service->setUserAttributesToContributorIfNotExists($projectManager);
+            if ($projectManager->getNom() == null || $projectManager->getNom() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le nom du maître d'oeuvre. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }
-            if ($project_manager->getEmail() == null || $project_manager->getEmail() == "") {
+            if ($projectManager->getEmail() == null || $projectManager->getEmail() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé l'adresse email du maître d'oeuvre. Vueillez la remplir. "], Response::HTTP_BAD_REQUEST);
             }
-            if ($project_manager->getPhone() == null || $project_manager->getPhone() == "") {
+            if ($projectManager->getPhone() == null || $projectManager->getPhone() == "") {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'avez pas précisé le téléphone du maître d'oeuvre. Vueillez le remplir. "], Response::HTTP_BAD_REQUEST);
             }
-            $projectManagerEdit = $repositoryProjectManager->findOneBy(array('email' => $project_manager->getEmail(), "project" => $project_manager->getProject()));
-            if (!is_null($projectManagerEdit) && $projectManagerEdit->getId() != $project_manager->getId()) {
+            $projectManagerEdit = $repositoryProjectManager->findOneBy(array('email' => $projectManager->getEmail(), "project" => $projectManager->getProject()));
+            if (!is_null($projectManagerEdit) && $projectManagerEdit->getId() != $projectManager->getId()) {
                 return new JsonResponse(["success" => false, 'message' => "Un maître d'oeuvre avec cette adresse email existe déjà"], Response::HTTP_BAD_REQUEST);
             }
-            $projectManagerEditByPhone = $repositoryProjectManager->findOneBy(array('phone' => $project_manager->getEmail(), "project" => $project_manager->getProject()));
-            if (!is_null($projectManagerEditByPhone) && $projectManagerEditByPhone->getId() != $project_manager->getId()) {
+            $projectManagerEditByPhone = $repositoryProjectManager->findOneBy(array('phone' => $projectManager->getEmail(), "project" => $projectManager->getProject()));
+            if (!is_null($projectManagerEditByPhone) && $projectManagerEditByPhone->getId() != $projectManager->getId()) {
                 return new JsonResponse(["success" => false, 'message' => "Un maître d'oeuvre avec ce numero de téléphone existe déjà"], Response::HTTP_BAD_REQUEST);
             }
             $user = $this->getUser();
-            $project_manager->setUpdatedUser($user);
+            $projectManager->setUpdatedUser($user);
 
-            $project_manager = $repositoryProjectManager->updateProjectManager($project_manager);
-//            return $this->redirect($this->generateUrl('project_contributors_get', array('id' => $project_manager->getProject()->getId())));
-            $view = View::create(["message" => "Le maître d'oeuvre a été modifié avec succès. Vous serez redirigé dans bientôt !", 'id_project' => $project_manager->getProject()->getId()]);
+            $projectManager = $repositoryProjectManager->updateProjectManager($projectManager);
+            if($projectManager->getUser()->getId() != $projectManager->getUser()->getId()){
+                $mail_service = $this->get('app.user_mail_service');
+                $mail_service->sendNotificationToProjectManagerRegistration($projectManager);
+            }
+//            return $this->redirect($this->generateUrl('project_contributors_get', array('id' => $projectManager->getProject()->getId())));
+            $view = View::create(["message" => "Le maître d'oeuvre a été modifié avec succès. Vous serez redirigé dans bientôt !", 'id_project' => $projectManager->getProject()->getId()]);
             $view->setFormat('json');
             return $view;
         } else {

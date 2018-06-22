@@ -169,7 +169,6 @@ class DecompteController extends Controller {
             }else{
                 return new JsonResponse(["success" => false, 'message' => "Vous n'êtes pas encore autorisé à valider ce décompte !"], Response::HTTP_BAD_REQUEST);
             }
-
             return $view;
         } else {
             return new JsonResponse(["success" => false, 'message' => "Erreur lors de la soumission du décompte !"], Response::HTTP_BAD_REQUEST);
@@ -295,7 +294,8 @@ class DecompteController extends Controller {
                 }
                 $decompte->setMtPenaliteACD($mtPenalites);
                 $decompte_manager->updateDecompteAttributes($decompte, $decomptePrec);
-                /*                 * ******************initialise a list of decompte validation *********************************************** */
+                
+                /********************initialise a list of decompte validation ************************************************/
                 $decompte = $decompte_manager->initDecompteValidators($decompte);
                 $decompte = $repositoryDecompte->saveDecompte($decompte);
                 $view = View::create(["message" => 'Décompte créé avec succès. Vous serez redirigé dans bientôt, pour préciser les quantités mensuelles de vos prestations', 'id_project' => $project->getId(), 'id_decompte' => $decompte->getId()]);
@@ -384,9 +384,10 @@ class DecompteController extends Controller {
                     $decompte->setRemboursementAvanceIntensity(0);
                 }
             }
-            //$decompte->setDecompteValidations(new \Doctrine\Common\Collections\ArrayCollection());
+            /********************remove all decompte validations of decompte ************************************************/
+            $decompte  = $decompte_manager->removeAllDecompteValidations($decompte);
             /********************initialise a list of decompte validation *********************************************** */
-            //$decompte = $decompte_manager->initDecompteValidators($decompte);
+            $decompte = $decompte_manager->initDecompteValidators($decompte);
             $decompte = $decompte_manager->updateDecompte($decompte);
             $decompte_manager->updateNextDecomptesOfProject($decompte);
             $decompte_manager->exportDecompteToExcel($decompte);

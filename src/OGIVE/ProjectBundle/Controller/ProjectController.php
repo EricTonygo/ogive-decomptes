@@ -331,7 +331,7 @@ class ProjectController extends Controller {
             if ($repositoryProject->findOneBy(array('numeroMarche' => $project->getNumeroMarche()))) {
                 return new JsonResponse(["success" => false, 'message' => 'Une tâche avec ce numéro existe déjà.'], Response::HTTP_BAD_REQUEST);
             }
-            if($request->get("priority-order-owner")){
+            if ($request->get("priority-order-owner")) {
                 $project->getOwner()->setOrdrePriorite(intval($request->get("priority-order-owner")));
             }
             $startDate = $project->getStartDate();
@@ -358,6 +358,7 @@ class ProjectController extends Controller {
             $project->setCreatedUser($user);
             $owner = $project->getOwner();
             $common_service->setUserAttributesToContributor($owner);
+            $owner->setSignatory(true);
             $project->setOwner($owner);
             //***************gestion des projectManagers du projet ************************** */
             $projectManagers = $project->getProjectManagers();
@@ -387,16 +388,18 @@ class ProjectController extends Controller {
                 $common_service->setUserAttributesToContributor($otherContributor);
             }
 
-            $numerMarcheTab = explode("/", $project->getNumeroMarche());
-            $anneeBudgetaire = $numerMarcheTab[count($numerMarcheTab) - 1];
+            $numeroMarcheTab = explode("/", $project->getNumeroMarche());
+            $anneeBudgetaire = $numeroMarcheTab[count($numeroMarcheTab) - 1];
             $project->setAnneeBudgetaire($anneeBudgetaire);
 //            $decompteTotal = new DecompteTotal();
 //            $project->setDecompteTotal($decompteTotal);
-            if($project->getAvanceDemarrage() == null){
+            if ($project->getAvanceDemarrage() == null) {
                 $project->setAvanceDemarrage(0);
                 $project->setMtAvanceDemarrage(0);
             }
             $project = $repositoryProject->saveProject($project);
+            $mail_service = $this->get('app.user_mail_service');
+            $mail_service->sendNotificationToContributors($project);
             //return $this->redirect($this->generateUrl('project_gen_infos_get', array('id' => $project->getId())));
             $view = View::create(["message" => 'Projet créé avec succès. Vous serez redirigé dans bientôt!', "id_project" => $project->getId()]);
             $view->setFormat('json');
@@ -416,6 +419,10 @@ class ProjectController extends Controller {
         }
         $repositoryProject = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Project');
         if ($project) {
+            $user = $this->getUser();
+            if ($user->getId() != $project->getCreatedUser()->getId()) {
+                return $this->generateUrl("project_gen_infos_get", array("id" => $project->getId()));
+            }
             $repositoryProject->deleteProject($project);
             $view = View::create(["message" => "Projet supprimé avec succès !"]);
             $view->setFormat('json');
@@ -498,7 +505,7 @@ class ProjectController extends Controller {
             if (!is_numeric($project->getPercentTVA())) {
                 return new JsonResponse(["success" => false, 'message' => "Vueillez le saisir un nombre pour le pourcentage de l'IR."], Response::HTTP_BAD_REQUEST);
             }
-            $project->setMtAvanceDemarrage($project->getProjectCost()*$project->getAvanceDemarrage()/100);
+            $project->setMtAvanceDemarrage($project->getProjectCost() * $project->getAvanceDemarrage() / 100);
             $project = $repositoryProject->updateProject($project);
             $view = View::create(["message" => "Les paramètres du projet on été mis à jour avec succès.", "id_project" => $project->getId()]);
             $view->setFormat('json');
@@ -516,6 +523,10 @@ class ProjectController extends Controller {
     public function putProjectAction(Request $request, Project $project) {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+        $user = $this->getUser();
+        if ($user->getId() != $project->getCreatedUser()->getId()) {
+            return $this->generateUrl("project_gen_infos_get", array("id" => $project->getId()));
         }
         return $this->updateProjectAction($request, $project);
     }
@@ -565,8 +576,8 @@ class ProjectController extends Controller {
             if (!is_null($projectEdit) && $projectEdit->getId() != $project->getId()) {
                 return new JsonResponse(["success" => false, 'message' => 'Un projet avec ce numero du marché existe déjà'], Response::HTTP_BAD_REQUEST);
             }
-            if($request->get("priority-order-owner")){
-                $project->getOwner()->setOrdrePriorite(intval($request->get("priority-order-owner")));                
+            if ($request->get("priority-order-owner")) {
+                $project->getOwner()->setOrdrePriorite(intval($request->get("priority-order-owner")));
             }
             $startDate = $project->getStartDate();
             $endDate = $project->getEndDate();
@@ -679,7 +690,7 @@ class ProjectController extends Controller {
             $project->setAnneeBudgetaire($anneeBudgetaire);
             $user = $this->getUser();
             $project->setUpdatedUser($user);
-            if($project->getAvanceDemarrage() == null){
+            if ($project->getAvanceDemarrage() == null) {
                 $project->setAvanceDemarrage(0);
                 $project->setMtAvanceDemarrage(0);
             }

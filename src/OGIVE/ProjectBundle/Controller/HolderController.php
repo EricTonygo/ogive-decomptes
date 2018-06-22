@@ -93,6 +93,8 @@ class HolderController extends Controller {
             $user = $this->getUser();
             $holder->setCreatedUser($user);
             $holder = $repositoryHolder->saveHolder($holder);
+            $mail_service = $this->get('app.user_mail_service');
+            $mail_service->sendNotificationToHolderRegistration($holder);
             //return $this->redirect($this->generateUrl('project_contributors_get', array('id' => $holder->getProject()->getId())));
             $view = View::create(["message" => "Le titulaire a été ajouté avec succès. Vous serez redirigé dans bientôt !", 'id_project' => $project->getId()]);
             $view->setFormat('json');
@@ -136,7 +138,7 @@ class HolderController extends Controller {
     public function updateHolderAction(Request $request, Holder $holder) {
         $repositoryHolder = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Holder');
         $common_service = $this->get('app.common_service');
-
+        $oldHolder = $holder;
         $form = $this->createForm('OGIVE\ProjectBundle\Form\HolderType', $holder, array('method' => 'PUT'));
         $form->handleRequest($request);
 
@@ -163,6 +165,10 @@ class HolderController extends Controller {
             $holder->setUpdatedUser($user);
 
             $holder = $repositoryHolder->updateHolder($holder);
+            if($holder->getUser()->getId() != $oldHolder->getUser()->getId()){
+                $mail_service = $this->get('app.user_mail_service');
+                $mail_service->sendNotificationToHolderRegistration($holder);
+            }
             //return $this->redirect($this->generateUrl('project_contributors_get', array('id' => $holder->getProject()->getId())));
             $view = View::create(["message" => "Le titulaire a été modifié avec succès. Vous serez redirigé dans bientôt !", 'id_project' => $holder->getProject()->getId()]);
             $view->setFormat('json');

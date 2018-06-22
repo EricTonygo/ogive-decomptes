@@ -31,6 +31,7 @@
             <td>
                 {%if task.startDate %}{{task.endDate|date('d/m/Y')}}{%endif %}                                              
             </td>
+            {%if app.user.id == project.createdUser.id %}
             <td style="text-align: center; padding: 0px;">
                 <div class="ui text menu" style="margin: 0px;">
                     <div class="left menu">
@@ -48,10 +49,8 @@
                     <div class="right menu">
                     </div>
                 </div>
-                {#<a class="ui mini compact icon button" data-tooltip="Ajouter sous tâche" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('sub_task_add_get', {'idProject': task.projectTask.id, 'id': task.id,})}}"><i class="plus icon"></i></a> |
-                <a class="ui mini compact icon button" data-tooltip="Modifier" data-position="bottom center" data-inverted="" data-variation="mini" href="{{path('task_update_get', {'idProject': task.projectTask.id, 'id': task.id})}}"><i class="edit icon"></i></a> |
-                <a id="delete_task_btn{{task.id}}" class="ui mini red compact icon button" data-tooltip="Supprimer" data-position="bottom center" data-inverted="" data-variation="mini" onclick="delete_task({{task.projectTask.id}}, {{task.id}});"><i class="trash icon"></i></a>#}
             </td>
+            {%endif %}
         </tr>
         {%if task.subTasks %}
             {%for task in task.subTasks %}
@@ -68,11 +67,13 @@
                         {% include('OGIVEProjectBundle:project:single-project-header.html.twig') %}
                     </div>
                     <div class="ui bottom attached segment od_project_menu_content">
+                        {%if app.user.id == project.createdUser.id %}
                         <div class="ui fluid card od_card_top_table_action">
                             <div class="content">
                                 <a class="ui right floated yellow mini button" href="{{path('task_add_get', {'id': project.id})}}"><i class="plus icon"></i> Ajouter une tâche</a>
                             </div>
                         </div>
+                        {%endif %}
 {#                        {{ form_start(form, {'method': 'PUT', 'action': '', 'attr': {'class': '', 'id': 'od_create_task_form', "autocomplete":"off"} }) }}#}
                         <table class="ui celled structured yellow small table">
                             <thead>
@@ -83,8 +84,10 @@
                                     <th rowspan="2" class='center aligned'>P.U</th>                                   
                                     <th colspan="2" class='center aligned'>Quantité</th>
                                     <th rowspan="2" class='center aligned'>Date début</th>
-                                    <th rowspan="2" class='center aligned'>Date fin</th> 
+                                    <th rowspan="2" class='center aligned'>Date fin</th>
+                                    {%if app.user.id == project.createdUser.id %}
                                     <th rowspan="2" class='center aligned'>Actions</th>
+                                    {%endif %}
                                 </tr>
                                 <tr>
                                     <th class='center aligned' class='center aligned'>marché</th>

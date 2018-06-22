@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use OGIVE\UserBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
@@ -29,6 +30,10 @@ class OtherContributorType extends AbstractType {
                                 ->orderBy('u.username', 'ASC');
 //                                ->setParameter('enabled', true);
                     }
+                ))
+                ->add('signatory', CheckboxType::class, array(
+                    'label' => 'Signataire de décomptes',
+                    'required' => false,
                 ))
                 ->add('contributorType', TextType::class, array('required' => false))
                 ->add('nom', TextType::class, array('required' => false))

@@ -224,7 +224,9 @@ function delete_decompte(idProject, id) {
 function validate_decompte(id) {
     $('#validate_decompte.ui.small.modal')
             .modal('show');
-
+//    if($('#div_checkbox'+id).checkbox('is checked')){
+//        $('#div_checkbox'+id).checkbox('uncheck');
+//    }
     $('#execute_validate_decompte').click(function (e) {
         e.preventDefault();
         $('#validate_decompte.ui.small.modal')
@@ -237,7 +239,7 @@ function validate_decompte(id) {
             url: Routing.generate('decompte_validation_post', {id: id}),
             dataType: 'json',
             beforeSend: function () {
-                //$("#delete_decompte_btn" + id).addClass("loading");
+                $('#div_checkbox'+id).hide();
             },
             statusCode: {
                 500: function (xhr) {
@@ -256,6 +258,7 @@ function validate_decompte(id) {
                 }
             },
             success: function (response, textStatus, jqXHR) {
+                $('#div_checkbox'+id).checkbox('check');
                 window.location.reload();
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -263,8 +266,6 @@ function validate_decompte(id) {
             }
         });
     });
-
-
 }
 
 

@@ -63,7 +63,7 @@
         {%else%}
             <tr>
                 <td>
-                   {{ decompteTask.numero }}                                             
+                    {{ decompteTask.numero }}                                             
                 </td>
                 <td colspan="14">
                     {{ decompteTask.nom }}                                              
@@ -204,7 +204,7 @@
             <td>
             </td>
             <td>
-                TVA : 19,25%                                          
+                TVA : {{decompte.project.percentTVA}}%                                          
             </td>
             <td>
             </td>
@@ -243,7 +243,7 @@
             <td>
             </td>
             <td>
-                I.R :  2,2%                                          
+                I.R :  {{decompte.project.percentIR}}%                                          
             </td>
             <td>
             </td>
@@ -357,6 +357,105 @@
             </td>
         </tr>
     {% endmacro %}
+
+    {% macro show_decompte_validations(decompteValidations, begin) %}
+        {% import _self as forms %}
+        {%set nextIndex = begin %}
+        {% if begin+2 <= decompteValidations|length-1 %}
+            <tr>
+                {% for i in begin..begin+2 %}
+                    {%set decompteValidation = decompteValidations[i] %}
+                    <td colspan="4" style="font-weight: bold; text-align: center">{{decompteValidation.contributorType|upper}}</td>
+                    {%set nextIndex = nextIndex + 1 %}
+                {% endfor %}
+            </tr>
+            <tr>
+                {% for i in 0..2 %}
+                    {%set decompteValidation = decompteValidations[i] %}
+                    <td colspan="4"  style="text-align: center; font-weight: bold; height: 10em;">
+                        {%if app.user and app.user.id == decompteValidation.user.id %}
+                            {% if decompteValidation.state == 1 %}
+                                {% if decompteValidation.priorityOrder == decompteValidation.decompte.state %}
+                                    <div id="div_checkbox{{decompteValidation.id}}" class="ui toggle checkbox">
+                                        <input type="checkbox" name="public" onclick="validate_decompte({{decompteValidation.id}});">
+                                        <label>Valider</label>
+                                    </div>
+                                {%else%}
+                                    <div class="ui warning message">
+                                        <i class="warning icon"></i>
+                                        <span>Vous n'est pas encore autorisé à valider</span>
+                                        <i class="close icon"></i>
+                                    </div>
+
+                                {%endif %}
+
+                            {%elseif decompteValidation.state == 2 %}
+                                <div><i class="inverted green big check icon"></i> {{decompteValidation.user.lastname}} a validé</div>
+                            {%endif %}
+                        {%endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+
+            <tr>
+                {% for i in begin..begin+2 %}
+                    {%set decompteValidation = decompteValidations[i] %}
+                    <td colspan="4" style="font-weight: bold; text-align: center;">
+                        {% if decompteValidation.state == 2 %}{{decompteValidation.validationPlace}}, le {{decompteValidation.validationDate|date('d/m/Y')}}{%endif %}                       
+                    </td>
+                {% endfor %}
+            </tr>
+        {% elseif begin <= decompteValidations|length-1 %}
+            <tr>
+                {% for i in begin..decompteValidations|length-1 %}
+                    {%set decompteValidation = decompteValidations[i] %}
+                    <td colspan="4" style="font-weight: bold; text-align: center;">{{decompteValidation.contributorType|upper}}</td>
+                    {%set nextIndex = nextIndex + 1 %}
+                {% endfor %}
+
+            </tr>
+            <tr>
+                {% for i in begin..decompteValidations|length-1 %}
+                    {%set decompteValidation = decompteValidations[i] %}
+                    <td colspan="4"  style="text-align: center; font-weight: bold; height: 10em;">
+                        {%if app.user and app.user.id == decompteValidation.user.id %}
+                            {% if decompteValidation.state == 1 %}
+                                {% if decompteValidation.priorityOrder == decompteValidation.decompte.state %}
+                                    <div id="div_checkbox{{decompteValidation.id}}" class="ui toggle checkbox">
+                                        <input type="checkbox" name="public" onclick="validate_decompte({{decompteValidation.id}});">
+                                        <label>Valider</label>
+                                    </div>
+                                {%else%}
+                                    <div class="ui warning message">
+                                        <i class="warning icon"></i>
+                                        <span>Vous n'est pas encore autorisé à valider</span>
+                                        <i class="close icon"></i>
+                                    </div>
+
+                                {%endif %}
+
+                            {%elseif decompteValidation.state == 2 %}
+                                <div><i class="inverted green big check icon"></i> {{decompteValidation.user.lastname}} a validé</div>
+                            {%endif %}
+                        {%endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+
+            <tr>
+                {% for i in begin..decompteValidations|length-1 %}
+                    {%set decompteValidation = decompteValidations[i] %}
+                    <td colspan="4" style="font-weight: bold; text-align: center;">
+                        {% if decompteValidation.state == 2 %}{{decompteValidation.validationPlace}}, le {{decompteValidation.validationDate|date('d/m/Y')}}{%endif %}                       
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endif %}
+        {% if nextIndex <= decompteValidations|length-1 %}
+            {{forms.show_decompte_validations(decompteValidations, nextIndex)}}
+        {% endif %}
+    {% endmacro %}
+
     <div class="ui basic fixed segment content">
         <div class='ui container' style="width: 100%">
             {% include('OGIVEProjectBundle:project:top-content-project-page.html.twig') %}
@@ -396,23 +495,23 @@
                                     <a class="item"> | </a>
                                     <a id="pdf_export_decompte" class="item" > <i class="red file pdf icon"></i> Exporter en PDF</a>
                                     {%if can_submit_decompte %}
-                                    <a class="item"> | </a>
-                                    <a id="submit_decompte" class="item" onclick="submit_decompte_for_validation({{decompte.project.id}}, {{decompte.id}})"> <i class="inverted yellow send icon"></i> Soumettre</a>
+                                        <a class="item"> | </a>
+                                        <a id="submit_decompte" class="item" onclick="submit_decompte_for_validation({{decompte.project.id}}, {{decompte.id}})"> <i class="inverted yellow send icon"></i> Soumettre</a>
                                     {%endif %}
                                     {#<a class="item"> | </a>
                                     <a id="vailidate_decompte" class="item" onclick="validate_decompte({{decompte.project.id}}, {{decompte.id}});"> <i class="inverted green check icon"></i> Valider</a>#}
                                     {%if can_update_decompte %}
-                                    <a class="item"> | </a>
-                                    <a id="edit_decompte" class="item"> <i class="inverted blue write icon"></i> Modifier</a>
+                                        <a class="item"> | </a>
+                                        <a id="edit_decompte" class="item"> <i class="inverted blue write icon"></i> Modifier</a>
                                     {%endif %}
                                     {%if app.user.id == decompte.createdUser.id %}
-                                    <a class="item"> | </a>
-                                    <div class="ui dropdown dropdown_actions item">
-                                        <i class="large ellipsis horizontal icon"></i>
-                                        <div class="menu">
-                                            <a id="delete_decompte" class="item" onclick="delete_decompte({{decompte.project.id}}, {{decompte.id}});"> <i class="inverted red trash icon"></i> Supprimer</a>
+                                        <a class="item"> | </a>
+                                        <div class="ui dropdown dropdown_actions item">
+                                            <i class="large ellipsis horizontal icon"></i>
+                                            <div class="menu">
+                                                <a id="delete_decompte" class="item" onclick="delete_decompte({{decompte.project.id}}, {{decompte.id}});"> <i class="inverted red trash icon"></i> Supprimer</a>
+                                            </div>
                                         </div>
-                                    </div>
                                     {%endif %}
                                 </div>
                             </div>
@@ -592,7 +691,14 @@
                                 </div>
                             </div>
                             <div class="content description od_decompte_content">
-                                {% include 'OGIVEProjectBundle:decompte:footer-table-decompte-signatures.html.twig' %}
+                                {#                                {% include 'OGIVEProjectBundle:decompte:footer-table-decompte-signatures.html.twig' %}#}
+                                {% if decompteValidations is not empty %}
+                                    <table class="ui celled structured small fluid table" style="font-weight: bold;">
+                                        <tbody>
+                                            {{forms.show_decompte_validations(decompteValidations, 0)}}
+                                        </tbody>
+                                    </table>
+                                {%endif %}
                             </div>
                         </div>
 
@@ -640,14 +746,14 @@
                                     </div>
                                 </div>
                                 {%if project.remboursementAvanceOption and project.remboursementAvanceOption != 1 %}
-                                <div class="two fields">                                    
-                                    <div class="ui field">
-                                        <label>{{ form_label(form.remboursementAvanceIntensity,"Pourcentage de remboursement de l'avance") }}</label>
-                                        <div class="field"> 
-                                            {{ form_widget(form.remboursementAvanceIntensity,{'attr':{'placeholder':"Pourcentage de remboursement de l'avance", 'data-validate': 'mt_remboursement_avance'}})}}
+                                    <div class="two fields">                                    
+                                        <div class="ui field">
+                                            <label>{{ form_label(form.remboursementAvanceIntensity,"Pourcentage de remboursement de l'avance") }}</label>
+                                            <div class="field"> 
+                                                {{ form_widget(form.remboursementAvanceIntensity,{'attr':{'placeholder':"Pourcentage de remboursement de l'avance", 'data-validate': 'mt_remboursement_avance'}})}}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                                 {%endif %}
 
                                 <h4 class="ui dividing header">Pénalités</h4>
@@ -675,7 +781,7 @@
                                         {% endmacro %}
                                     </table>
                                 </div>
-                                
+
                                 <div class="field">
                                     <table class="ui celled structured yellow small table">
                                         <thead>
@@ -737,10 +843,10 @@
                                                     {%else %}
                                                         <td>{{ form_widget(childForm.numero,{'attr':{'data-validate': 'decompteTask_number', 'class': 'ui mini disabled input'}}) }}{{childForm.numero.vars.value}}</td>
                                                         <td colspan="15">{{ form_widget(childForm.nom,{'attr':{'data-validate': 'decompteTask_name', 'class': 'ui mini disabled input'}}) }}{{childForm.nom.vars.value}}</td>
-                                                       {# {%for subDecompteTask in childForm.subDecompteTasks %}
-                                                            {{ forms.decompteTask_prototype(subDecompteTask) }}
-
-                                                        {%endfor %}#}
+                                                        {# {%for subDecompteTask in childForm.subDecompteTasks %}
+                                                             {{ forms.decompteTask_prototype(subDecompteTask) }}
+ 
+                                                         {%endfor %}#}
                                                     {% endif %}
                                                 </tr>
                                             {% endmacro %}
@@ -843,73 +949,58 @@
     <script type="text/javascript" src="{{ asset('bundles/ogiveproject/js/decompte.js')}}"></script>
     <script>
         function addPenalityForm($collectionPenality, $newLinkTrPenality) {
-            // Get the data-prototype explained earlier
-            var prototype = $collectionPenality.data('prototype');
-
-            // get the new index
-            var index = $collectionPenality.data('index');
-
-            // Replace '__name__' in the prototype's HTML to
-            // instead be a number based on how many items we have
-            var $newForm = prototype.replace(/__name__/g, index);
-
-            // increase the index with one for the next item
-            $collectionPenality.data('index', index + 1);
-
-            // Display the form in the page in an li, before the "Add a projectManager" link li
-            var $newFormTr = $('<tr></tr>').append($newForm);
-            $newLinkTrPenality.before($newFormTr);
-            addPenalityFormDeleteLink($newFormTr);
+        // Get the data-prototype explained earlier
+        var prototype = $collectionPenality.data('prototype');
+        // get the new index
+        var index = $collectionPenality.data('index');
+        // Replace '__name__' in the prototype's HTML to
+        // instead be a number based on how many items we have
+        var $newForm = prototype.replace(/__name__/g, index);
+        // increase the index with one for the next item
+        $collectionPenality.data('index', index + 1);
+        // Display the form in the page in an li, before the "Add a projectManager" link li
+        var $newFormTr = $('<tr></tr>').append($newForm);
+        $newLinkTrPenality.before($newFormTr);
+        addPenalityFormDeleteLink($newFormTr);
         }
 
         function addPenalityFormDeleteLink($projectManagerFormTr) {
-            var $removeFormA = $('<td class="right aligned"><button class="ui mini red compact icon button" data-tooltip="Supprimer" data-position="bottom center" data-inverted="" data-variation="mini"><i class="trash icon"></i></button></td>');
-            $projectManagerFormTr.append($removeFormA);
-            $removeFormA.on('click', function (e) {
-                // prevent the link from creating a "#" on the URL
-                e.preventDefault();
-
-                // remove the li for the projectManager form
-                $projectManagerFormTr.remove();
-            });
+        var $removeFormA = $('<td class="right aligned"><button class="ui mini red compact icon button" data-tooltip="Supprimer" data-position="bottom center" data-inverted="" data-variation="mini"><i class="trash icon"></i></button></td>');
+        $projectManagerFormTr.append($removeFormA);
+        $removeFormA.on('click', function (e) {
+        // prevent the link from creating a "#" on the URL
+        e.preventDefault();
+        // remove the li for the projectManager form
+        $projectManagerFormTr.remove();
+        });
         }
         var $collectionPenality;
-
         // setup an "add a projectManager" link
         var $addPenalityLink = $('<button class="ui mini primary button"><i class="plus icon"></i> Ajouter une pénalité</button>');
         var $newLinkTrPenality = $('<tr></tr>').append($addPenalityLink);
-
         jQuery(document).ready(function () {
-            /******** suppression des projectManagers *********/
-            // Get the ul that holds the collection of projectManagers
-            $collectionPenality = $('tbody.Penalities');
+        /******** suppression des projectManagers *********/
+        // Get the ul that holds the collection of projectManagers
+        $collectionPenality = $('tbody.Penalities');
+        // add a delete link to all of the existing projectManager form li elements
+        $collectionPenality.find('tr').each(function () {
+        addPenalityFormDeleteLink($(this));
+        });
+        /******** Ajout des projectManagers *********/
 
-            // add a delete link to all of the existing projectManager form li elements
-            $collectionPenality.find('tr').each(function () {
-                addPenalityFormDeleteLink($(this));
-            });
-
-
-            /******** Ajout des projectManagers *********/
-
-            // Get the ul that holds the collection of projectManagers
-            $collectionPenality = $('tbody.Penalities');
-
-            // add the "add a projectManager" anchor and li to the projectManagers ul
-            $collectionPenality.append($newLinkTrPenality);
-
-            // count the current form inputs we have (e.g. 2), use that as the new
-            // index when inserting a new item (e.g. 2)
-            $collectionPenality.data('index', $collectionPenality.find(':input').length);
-
-            $addPenalityLink.on('click', function (e) {
-                // prevent the link from creating a "#" on the URL
-                e.preventDefault();
-
-                // add a new projectManager form (see next code block)
-                addPenalityForm($collectionPenality, $newLinkTrPenality);
-            });
-
+        // Get the ul that holds the collection of projectManagers
+        $collectionPenality = $('tbody.Penalities');
+        // add the "add a projectManager" anchor and li to the projectManagers ul
+        $collectionPenality.append($newLinkTrPenality);
+        // count the current form inputs we have (e.g. 2), use that as the new
+        // index when inserting a new item (e.g. 2)
+        $collectionPenality.data('index', $collectionPenality.find(':input').length);
+        $addPenalityLink.on('click', function (e) {
+        // prevent the link from creating a "#" on the URL
+        e.preventDefault();
+        // add a new projectManager form (see next code block)
+        addPenalityForm($collectionPenality, $newLinkTrPenality);
+        });
         });
     </script>
 {% endblock %}

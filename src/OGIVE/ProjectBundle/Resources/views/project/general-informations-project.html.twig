@@ -13,6 +13,7 @@
                 <div class="ui two column stackable grid padded">               
                     <div class="eleven wide column">
                         <div class="ui fluid card od_project_details_card">
+                            {%if app.user.id == project.createdUser.id %}
                             <div class="content">
                                 <div class="ui text menu" style="margin: 0px;">                                    
                                     <div class="right menu">
@@ -29,6 +30,7 @@
                                     </div>
                                 </div>
                             </div>
+                            {%endif %}
                             <div class="content description">
                                 <div class="ui yellow progress" data-value="{{lastDecompte.pourcentRealisation}}" data-total="100" id="project_progress">
                                     <div class="bar">
