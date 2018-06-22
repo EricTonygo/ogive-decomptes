@@ -220,6 +220,7 @@ function delete_decompte(idProject, id) {
 
 }
 
+$('td .ui.toggle.checkbox input').unbind()('click');
 
 function validate_decompte(id) {
     $('#validate_decompte.ui.small.modal')
@@ -268,6 +269,7 @@ function validate_decompte(id) {
     });
 }
 
+$('#submit_decompte').unbind('click');
 
 function submit_decompte_for_validation(idProject, id) {
     $('#confirm_submission_decompte.ui.small.modal')
@@ -308,6 +310,7 @@ function submit_decompte_for_validation(idProject, id) {
                 setTimeout(function () {
                     $('#message_success').hide();
                 }, 4000);
+                window.location.reload();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 $("#submit_decompte").removeClass("loading");

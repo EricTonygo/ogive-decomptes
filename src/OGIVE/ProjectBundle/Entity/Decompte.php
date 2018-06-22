@@ -506,6 +506,13 @@ class Decompte extends GeneralClass {
      * @ORM\OneToMany(targetEntity="\OGIVE\ProjectBundle\Entity\DecompteHistory", mappedBy="decompte", cascade={"remove", "persist"})
     */
     private $decompteHistories;
+    
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="submitted", type="boolean", nullable=true)
+     */
+    private $submitted;
 
     /**
      * Constructor
@@ -517,6 +524,28 @@ class Decompte extends GeneralClass {
         $this->decompteValidations = new \Doctrine\Common\Collections\ArrayCollection();
         $this->penalities = new \Doctrine\Common\Collections\ArrayCollection();
         $this->decompteHistories = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Set submitted
+     *
+     * @param string $submitted
+     *
+     * @return Decompte
+     */
+    public function setSubmitted($submitted) {
+        $this->submitted = $submitted;
+
+        return $this;
+    }
+
+    /**
+     * Get submitted
+     *
+     * @return boolean
+     */
+    public function isSubmitted() {
+        return $this->submitted;
     }
     
     /**

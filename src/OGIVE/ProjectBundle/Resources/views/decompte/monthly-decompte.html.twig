@@ -494,7 +494,7 @@
                                     <a id="excel_export_decompte" class="item" href="/exports/excel/decompe_mensuel_N°{{decompte.monthNumber}}.xlsx"> <i class="green file excel icon"></i> Exporter en excel</a>
                                     <a class="item"> | </a>
                                     <a id="pdf_export_decompte" class="item" > <i class="red file pdf icon"></i> Exporter en PDF</a>
-                                    {%if can_submit_decompte %}
+                                    {%if can_submit_decompte and not decompte.submitted %}
                                         <a class="item"> | </a>
                                         <a id="submit_decompte" class="item" onclick="submit_decompte_for_validation({{decompte.project.id}}, {{decompte.id}})"> <i class="inverted yellow send icon"></i> Soumettre</a>
                                     {%endif %}

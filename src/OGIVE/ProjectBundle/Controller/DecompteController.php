@@ -187,6 +187,7 @@ class DecompteController extends Controller {
         $currentUser = $this->getUser();
         $project_mail_service = $this->get("app.project_mail_service");
         $repositoryHolder = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Holder');
+        $repositoryDecompte = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Decompte');
         if ($decompte_manager->user_can_submit_decompte_for_validation($currentUser, $decompte)) {
             $owner = $decompte->getProject()->getOwner();
             $holder = $repositoryHolder->getHolderByUser($currentUser->getId());
@@ -199,6 +200,10 @@ class DecompteController extends Controller {
             foreach ($othersContributors as $contributor) {
                 $project_mail_service->sendSubmittedDecompteLink($decompte, $holder, $contributor);
             }
+            /********************initialise a list of decompte validation *********************************************** */
+            $decompte = $decompte_manager->initDecompteValidators($decompte);
+            $decompte->setSubmitted(true);
+            $repositoryDecompte->updateDecompte($decompte);
             $view = View::create(["message" => "Votre décompte a été soumis pour validation !"]);
             $view->setFormat('json');
             return $view;
@@ -295,8 +300,6 @@ class DecompteController extends Controller {
                 $decompte->setMtPenaliteACD($mtPenalites);
                 $decompte_manager->updateDecompteAttributes($decompte, $decomptePrec);
                 
-                /********************initialise a list of decompte validation ************************************************/
-                $decompte = $decompte_manager->initDecompteValidators($decompte);
                 $decompte = $repositoryDecompte->saveDecompte($decompte);
                 $view = View::create(["message" => 'Décompte créé avec succès. Vous serez redirigé dans bientôt, pour préciser les quantités mensuelles de vos prestations', 'id_project' => $project->getId(), 'id_decompte' => $decompte->getId()]);
                 $view->setFormat('json');
