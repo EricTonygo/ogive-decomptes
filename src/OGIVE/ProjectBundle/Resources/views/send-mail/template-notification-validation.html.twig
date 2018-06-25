@@ -1,0 +1,10 @@
+<div style="font-size: 12.8px;">Bonjour spécial à vous les responsables de {{recipientValidation.user.lastname}} pour le compte du projet: {{submittedDecompte.project.subject}}</div>
+<div><br></div>
+<div style="font-size: 12.8px;">L'intervenant au projet {{senderValidation.user.lastname}} a l'honneur de vous informer de la validation du decompte mensuel de <a href="{{url("decompte_show_get", {'idProject': submittedDecompte.project.id, 'id': submittedDecompte.id})}}">{{submittedDecompte.monthName}}</a> en vue du payement des prestations réalisées du {{submittedDecompte.startDate|date('d/m/Y')}} au {{submittedDecompte.endDate|date('d/m/Y')}}. </div>
+<div><br></div>
+<div style="font-size: 12.8px;">N'hésitez pas à <a href='mailto:contact@siogive.com'>nous contacter</a> si vous rencontrer des difficultés !</div>
+<div><br></div>
+<div>
+    <p style="margin:0px;padding:0px;border:0px;font-size:12.8px;font-stretch:normal;line-height:normal;font-family:Tahoma;width:auto;height:auto;float:none;color:rgb(0,0,0)">Cordialement,</p>
+    <p style="margin:0px 0px 1em;padding:0px;border:0px;font-size:12.8px;font-stretch:normal;line-height:normal;font-family:Tahoma;width:auto;height:auto;float:none;color:rgb(0,0,0)">Société d'ingénierie OGIVE.</p>
+</div>

@@ -156,6 +156,7 @@ class DecompteController extends Controller {
         }
         $repositoryDecompteValidation = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:DecompteValidation');
         $repositoryDecompte = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:Decompte');
+        $project_mail_service = $this->get("app.project_mail_service");
         if ($request->isMethod("PUT")) {
             if ($decompteValidation->getDecompte()->getState() == $decompteValidation->getPriorityOrder()) {
                 $decompteValidation->setState(2);
@@ -164,9 +165,17 @@ class DecompteController extends Controller {
                 $decompteValidation->setCreatedUser($this->getUser());
                 $repositoryDecompteValidation->updateDecompteValidation($decompteValidation);
                 $repositoryDecompte->updateDecompte($decompteValidation->getDecompte()->setState($decompteValidation->getPriorityOrder() + 1));
+                $decompteValidations = $decompteValidation->getDecompte()->getDecompteValidations();
+                foreach ($decompteValidations as $otherDecompteValidation) {
+                    if($otherDecompteValidation->getId() != $decompteValidation->getId()){
+                        $project_mail_service->sendNotificationForDecompteValidation($decompteValidation->getDecompte(), $decompteValidation, $otherDecompteValidation);
+                    }else{
+                        $project_mail_service->sendNotificationForSenderDecompteValidation($decompteValidation->getDecompte(), $decompteValidation);
+                    }
+                }
                 $view = View::create(["message" => "Votre décompte a été validé avec succès !"]);
                 $view->setFormat('json');
-            }else{
+            } else {
                 return new JsonResponse(["success" => false, 'message' => "Vous n'êtes pas encore autorisé à valider ce décompte !"], Response::HTTP_BAD_REQUEST);
             }
             return $view;
@@ -200,9 +209,12 @@ class DecompteController extends Controller {
             foreach ($othersContributors as $contributor) {
                 $project_mail_service->sendSubmittedDecompteLink($decompte, $holder, $contributor);
             }
-            /********************initialise a list of decompte validation *********************************************** */
+            /******************** remove all decompte validations of decompte *********************************************** */
+            $decompte = $decompte_manager->removeAllDecompteValidations($decompte);
+            /******************** initialise a list of decompte validation *********************************************** */
             $decompte = $decompte_manager->initDecompteValidators($decompte);
             $decompte->setSubmitted(true);
+            $decompte->setState(1);
             $repositoryDecompte->updateDecompte($decompte);
             $view = View::create(["message" => "Votre décompte a été soumis pour validation !"]);
             $view->setFormat('json');
@@ -299,7 +311,7 @@ class DecompteController extends Controller {
                 }
                 $decompte->setMtPenaliteACD($mtPenalites);
                 $decompte_manager->updateDecompteAttributes($decompte, $decomptePrec);
-                
+                $decompte->setState(1);
                 $decompte = $repositoryDecompte->saveDecompte($decompte);
                 $view = View::create(["message" => 'Décompte créé avec succès. Vous serez redirigé dans bientôt, pour préciser les quantités mensuelles de vos prestations', 'id_project' => $project->getId(), 'id_decompte' => $decompte->getId()]);
                 $view->setFormat('json');
@@ -387,10 +399,13 @@ class DecompteController extends Controller {
                     $decompte->setRemboursementAvanceIntensity(0);
                 }
             }
-            /********************remove all decompte validations of decompte ************************************************/
-            $decompte  = $decompte_manager->removeAllDecompteValidations($decompte);
-            /********************initialise a list of decompte validation *********************************************** */
-            $decompte = $decompte_manager->initDecompteValidators($decompte);
+            if ($decompte->isSubmitted()) {
+                /*                 * ******************remove all decompte validations of decompte *********************************************** */
+                $decompte = $decompte_manager->removeAllDecompteValidations($decompte);
+                /*                 * ******************initialise a list of decompte validation *********************************************** */
+                $decompte = $decompte_manager->initDecompteValidators($decompte);
+                $decompte->setState(1);
+            }
             $decompte = $decompte_manager->updateDecompte($decompte);
             $decompte_manager->updateNextDecomptesOfProject($decompte);
             $decompte_manager->exportDecompteToExcel($decompte);

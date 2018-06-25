@@ -31,7 +31,7 @@
             <td>
                 {%if task.startDate %}{{task.endDate|date('d/m/Y')}}{%endif %}                                              
             </td>
-            {%if app.user.id == project.createdUser.id %}
+            {%if app.user.id == task.projectTask.createdUser.id %}
             <td style="text-align: center; padding: 0px;">
                 <div class="ui text menu" style="margin: 0px;">
                     <div class="left menu">
