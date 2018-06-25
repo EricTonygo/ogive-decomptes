@@ -16,10 +16,15 @@ class DecompteRepository extends EntityRepository
         $em= $this->_em;
         $em->getConnection()->beginTransaction();
         $repositoryDecompteTask = $em->getRepository("OGIVEProjectBundle:DecompteTask");
+        $repositoryDecompteValidation = $em->getRepository("OGIVEProjectBundle:DecompteValidation");
         try{
             $decompteTasks = $decompte->getDecompteTasks();
             foreach ($decompteTasks as $decompteTask) {
                 $repositoryDecompteTask->deleteDecompteTask($decompteTask);
+            }
+            $decompteValidations = $decompte->getDecompteValidations();
+            foreach ($decompteValidations as $decompteValidation) {
+                $repositoryDecompteValidation->deleteDecompteValidation($decompteValidation);
             }
             $em->remove($decompte);
             $em->flush();
