@@ -210,6 +210,7 @@ function delete_decompte(idProject, id) {
                 setTimeout(function () {
                     $('#message_success').hide();
                 }, 4000);
+                window.location.reload();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 $("#delete_decompte_btn" + id).removeClass("loading");
@@ -317,6 +318,4 @@ function submit_decompte_for_validation(idProject, id) {
             }
         });
     });
-
-
 }
