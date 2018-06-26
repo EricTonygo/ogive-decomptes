@@ -21,21 +21,8 @@
                             <div class="content description">
                                 {{ form_start(form, {'method': 'POST', 'action': path('project_manager_add_post', {'id': project.id}), 'attr': {'class': 'ui mini form', 'id': 'od_add_project_manager_form', "autocomplete":"off"} }) }}
                                 <h4 class="ui dividing header">Information du maître d'oeuvre</h4>
-                                {#<div class="two fields">
-                                    <div class="field">
-                                        <label>{{ form_label(form.nom,"Nom") }}</label>
-                                        <div class="field"> 
-                                            {{ form_widget(form.nom,{'attr':{'placeholder':"Nom", 'data-validate': 'nom'}})}}
-                                        </div>
-                                    </div>
-                                    <div class="field">
-                                        <label>{{ form_label(form.email,"Email") }}</label>
-                                        <div class="field"> 
-                                            {{ form_widget(form.email,{'attr':{'placeholder':"Email", 'data-validate': 'email'}})}}
-                                        </div>
-                                    </div>
-                                </div>#}
-                                <div class="two fields">
+                                
+                                <div class="three fields">
                                     <div  class="field">
                                         {{ form_label(form.user,"Nom d'utilisateur") }}
                                         {{ form_widget(form.user,{'attr':{'data-validate': 'user-contributor', 'class': 'ui search dropdown'}})}}
@@ -44,6 +31,12 @@
                                         <label>{{ form_label(form.ordrePriorite,"Numéro d'ordre de signature") }}</label>
                                         <div class="field"> 
                                             {{ form_widget(form.ordrePriorite,{'attr':{'placeholder':"Numéro d'ordre de signature", 'data-validate': 'ordre_priorite'}})}}
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="ui checkbox">
+                                            {{ form_widget(childForm.signatory,{'attr':{'data-validate': 'holder_signatory'}}) }}
+                                            {{ form_label(childForm.signatory) }}
                                         </div>
                                     </div>
                                 </div>

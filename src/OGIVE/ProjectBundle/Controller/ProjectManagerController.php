@@ -68,7 +68,6 @@ class ProjectManagerController extends Controller {
         $projectManager = new ProjectManager();
         $repositoryProjectManager = $this->getDoctrine()->getManager()->getRepository('OGIVEProjectBundle:ProjectManager');
         $common_service = $this->get('app.common_service');
-
         $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectManagerType', $projectManager);
         $form->handleRequest($request);
 
@@ -141,7 +140,7 @@ class ProjectManagerController extends Controller {
         $form = $this->createForm('OGIVE\ProjectBundle\Form\ProjectManagerType', $projectManager, array('method' => 'PUT'));
         $common_service = $this->get('app.common_service');
         $form->handleRequest($request);
-
+        $oldProjectManager = $projectManager;
         if ($form->isSubmitted() && $form->isValid()) {
             $common_service->setUserAttributesToContributorIfNotExists($projectManager);
             if ($projectManager->getNom() == null || $projectManager->getNom() == "") {
@@ -165,7 +164,7 @@ class ProjectManagerController extends Controller {
             $projectManager->setUpdatedUser($user);
 
             $projectManager = $repositoryProjectManager->updateProjectManager($projectManager);
-            if($projectManager->getUser()->getId() != $projectManager->getUser()->getId()){
+            if($projectManager->getUser()->getId() != $oldProjectManager->getUser()->getId()){
                 $mail_service = $this->get('app.user_mail_service');
                 $mail_service->sendNotificationToProjectManagerRegistration($projectManager);
             }

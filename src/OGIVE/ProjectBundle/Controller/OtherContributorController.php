@@ -141,7 +141,7 @@ class OtherContributorController extends Controller {
 
         $common_service = $this->get('app.common_service');
         $form = $this->createForm('OGIVE\ProjectBundle\Form\OtherContributorType', $otherContributor, array('method' => 'PUT'));
-        $olderOtherContributor = $otherContributor;
+        $oldOtherContributor = $otherContributor;
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
@@ -167,7 +167,7 @@ class OtherContributorController extends Controller {
             $otherContributor->setUpdatedUser($user);
 
             $otherContributor = $repositoryOtherContributor->updateOtherContributor($otherContributor);
-            if($otherContributor->getUser()->getId() != $olderOtherContributor->getUser()->getId()){
+            if($otherContributor->getUser()->getId() != $oldOtherContributor->getUser()->getId()){
                 $mail_service = $this->get('app.user_mail_service');
                 $mail_service->sendNotificationToOtherContributorRegistration($otherContributor);
             }
